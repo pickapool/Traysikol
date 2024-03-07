@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "235863241434",
+    "project_id": "traysikol-f873d",
+    "storage_bucket": "traysikol-f873d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:235863241434:android:ece4939b0b435f861cabe3",
+        "android_client_info": {
+          "package_name": "com.example.traysikol"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC7aP08p6NafQ8-RuT6N-6ZWV1b7V2OdOQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

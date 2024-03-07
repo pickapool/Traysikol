@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="20dp"
+    >
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:layout_width="120dp"
+        android:id="@+id/driverPicture"
+        android:layout_height="120dp"
+        android:src="@drawable/app_logo"
+        />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:padding="10dp"
+        android:layout_toRightOf="@id/driverPicture"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawablePadding="10dp"
+            android:text="Cyrille Con Morales"
+            android:gravity="center"
+            android:textSize="18dp" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawablePadding="10dp"
+            android:text="Tibiao, Antique"
+            android:gravity="center"
+            android:textSize="18dp" />
+        <RatingBar
+            android:id="@+id/ratingBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleY="0.6"
+            android:scaleX="0.6"
+            android:layout_gravity="center" />
+    </LinearLayout>
+</RelativeLayout>

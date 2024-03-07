@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+            <item
+                android:id="@+id/commute"
+                android:title="Commute"
+                android:icon="@drawable/route_svgrepo_com"
+                android:checkable="true"
+                app:showAsAction="ifRoom"/>
+            <item
+                android:id="@+id/destinations"
+                android:title="Save Destinations"
+                android:checkable="true"
+                android:icon="@drawable/destination_4_svgrepo_com"
+                app:showAsAction="ifRoom"/>
+            <item
+                android:id="@+id/recent"
+                android:title="Recent History"
+                android:icon="@drawable/history_svgrepo_com"
+                android:checkable="true"
+                app:showAsAction="ifRoom"/>
+            <item
+                android:id="@+id/drivers"
+                android:title="Drivers"
+                android:icon="@drawable/taxi_4_svgrepo_com"
+                android:checkable="true"
+                app:showAsAction="ifRoom"/>
+
+    <item
+        android:id="@+id/labels_item"
+        android:title="Settings">
+        <menu>
+            <item
+                android:id="@+id/profile"
+                android:title="Profile"
+                android:checkable="true"
+                android:icon="@drawable/profile"
+                app:showAsAction="ifRoom"/>
+            <item
+                android:id="@+id/logout"
+                android:title="Logout"
+                android:checkable="true"
+                android:icon="@drawable/logout_svgrepo_com__1_"
+                app:showAsAction="ifRoom"/>
+        </menu>
+    </item>
+
+</menu>
