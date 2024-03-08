@@ -1,4 +1,4 @@
-package com.example.traysikol.Models.OSRModels;
+package com.example.traysikol.Models.OSRDirectionModels;
 
 public class ORSMetadata {
     public String attribution;

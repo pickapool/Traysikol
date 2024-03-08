@@ -1,4 +1,4 @@
-package com.example.traysikol.Models.OSRModels;
+package com.example.traysikol.Models.OSRDirectionModels;
 
 public class ORSGeometry {
     public double[][] coordinates;

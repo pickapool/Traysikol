@@ -6,12 +6,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
-import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,11 +18,11 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.traysikol.GlobalClass;
-import com.example.traysikol.Models.OSRModels.ORSFeature;
-import com.example.traysikol.Models.OSRModels.ORSGeometry;
-import com.example.traysikol.Models.OSRModels.ORSProperties;
-import com.example.traysikol.Models.OSRModels.ORSResponse;
-import com.example.traysikol.Models.OSRModels.ORSSegment;
+import com.example.traysikol.Models.OSRDirectionModels.ORSFeature;
+import com.example.traysikol.Models.OSRDirectionModels.ORSGeometry;
+import com.example.traysikol.Models.OSRDirectionModels.ORSProperties;
+import com.example.traysikol.Models.OSRDirectionModels.ORSResponse;
+import com.example.traysikol.Models.OSRDirectionModels.ORSSegment;
 import com.example.traysikol.R;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -217,12 +214,20 @@ public class PassengerCommute extends AppCompatActivity implements OnMapReadyCal
         int hours = (int) (totalTimeSeconds / 3600);
         int minutes = (int) ((totalTimeSeconds % 3600) / 60);
 
-        if (hours > 0) {
+        if (hours > 0 && minutes > 0) {
             // Return hours and minutes format
-            return hours + " hours " + minutes + " minutes";
+            return hours + " hour" + (hours > 1 ? "s" : "") + " " + minutes + " minute" + (minutes > 1 ? "s" : "");
+        } else if (hours > 0) {
+            // Return hours only format
+            return hours + " hour" + (hours > 1 ? "s" : "");
         } else {
             // Return minutes only format
-            return minutes + " minutes";
+            return minutes + " minute" + (minutes > 1 ? "s" : "");
         }
+    }
+    private String PlacesAPI(String query)
+    {
+        return "\n" +
+                "https://api.openrouteservice.org/geocode/autocomplete?api_key=5b3ce3597851110001cf6248865cba12d4c44f36b368b2b065a07c00&text="+query;
     }
 }

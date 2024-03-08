@@ -1,6 +1,4 @@
-package com.example.traysikol.Models.OSRModels;
-
-import com.google.gson.annotations.SerializedName;
+package com.example.traysikol.Models.OSRDirectionModels;
 
 import java.util.List;
 

@@ -1,6 +1,4 @@
-package com.example.traysikol.Models.OSRModels;
-
-import java.util.List;
+package com.example.traysikol.Models.OSRDirectionModels;
 
 public class ORSRoute {
     public ORSSummary summary;
