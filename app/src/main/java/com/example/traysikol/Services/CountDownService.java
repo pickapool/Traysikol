@@ -43,6 +43,8 @@ public class CountDownService extends Service {
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putString("IsPlaying", "false");
                 editor.apply();
+                //send to firebase
+
                 stopSelf();
             }
         }.start();

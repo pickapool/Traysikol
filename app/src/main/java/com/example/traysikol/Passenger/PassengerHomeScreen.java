@@ -465,7 +465,7 @@ public class PassengerHomeScreen extends AppCompatActivity implements OnMapReady
                 finish();
             });
             ridelater.setOnClickListener(view -> {
-                PassengerCountDown countDown = new PassengerCountDown();
+                PassengerCountDown countDown = new PassengerCountDown(myAddress, myDestinationAddress, fare, distance, time);
                 countDown.show(getSupportFragmentManager(), "PassengerHomeScreen");
             });
             confirmBtn.setOnClickListener(new View.OnClickListener() {

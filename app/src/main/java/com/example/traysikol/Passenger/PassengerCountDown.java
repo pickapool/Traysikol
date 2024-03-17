@@ -26,9 +26,20 @@ import java.util.Calendar;
 public class PassengerCountDown extends DialogFragment {
 
     TextView hourTxt, minuteTxt, secondTxt;
+    TextView add1, add2, fr, dis,time;
     ImageView play, close;
     final Calendar calendar = Calendar.getInstance();
     boolean IsPlaying = false;
+    String address1, address2, fare, distance, times;
+    public PassengerCountDown(){}
+    public PassengerCountDown(String address1, String address2, String fare, String dis, String t)
+    {
+        this.address1 = address1;
+        this.address2 = address2;
+        this.fare = fare;
+        this.distance = dis;
+        this.times = t;
+    }
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,6 +62,17 @@ public class PassengerCountDown extends DialogFragment {
         secondTxt = view.findViewById(R.id.seconds);
         play = view.findViewById(R.id.play);
         close = view.findViewById(R.id.closeDialog);
+        add1 = view.findViewById(R.id.address1);
+        add2 = view.findViewById(R.id.address2);
+        fr = view.findViewById(R.id.fare);
+        dis = view.findViewById(R.id.distance);
+        time = view.findViewById(R.id.duration);
+
+        add1.setText(address1);
+        add2.setText(address2);
+        fr.setText(fare);
+        dis.setText(distance);
+        time.setText(times);
 
         hourTxt.setOnClickListener(view1 -> SelectTime());
         minuteTxt.setOnClickListener(view1 -> SelectTime());
@@ -66,19 +88,19 @@ public class PassengerCountDown extends DialogFragment {
             String minute = sharedPreferences.getString("minute", "0");
             String second = sharedPreferences.getString("second", "0");
             startCountdownTimer(1000, hour, minute, second);
-            play.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if(!IsPlaying) {
-                        startCountdownTimer(1000, hourTxt.getText().toString(),
-                                minuteTxt.getText().toString(),
-                                secondTxt.getText().toString());
-                    }
-                }
-            });
         } else {
 
         }
+        play.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(!IsPlaying) {
+                    startCountdownTimer(1000, hourTxt.getText().toString(),
+                            minuteTxt.getText().toString(),
+                            secondTxt.getText().toString());
+                }
+            }
+        });
 
         close.setOnClickListener(new View.OnClickListener() {
             @Override
