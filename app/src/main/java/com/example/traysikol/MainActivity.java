@@ -88,15 +88,11 @@ public class MainActivity extends AppCompatActivity {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 //GO to Login
                 GoToLogin();
+
             } else {
                 CheckPermissionLocation();
             }
         }
-    }
-    private void OpenRegister()
-    {
-        PassengerRegister dialogFragment = new PassengerRegister();
-        dialogFragment.show(getSupportFragmentManager(), "PassengerRegister");
     }
 
     @Override

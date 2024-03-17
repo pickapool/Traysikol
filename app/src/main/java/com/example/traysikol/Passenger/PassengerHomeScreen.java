@@ -459,13 +459,14 @@ public class PassengerHomeScreen extends AppCompatActivity implements OnMapReady
                 dialog.dismiss();
                 ChangeIcons(1);
             });
-            rideNow.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent ii = new Intent(PassengerHomeScreen.this, PassengerDoneRequest.class);
-                    startActivity(ii);
-                    finish();
-                }
+            rideNow.setOnClickListener(view -> {
+                Intent ii = new Intent(PassengerHomeScreen.this, PassengerDoneRequest.class);
+                startActivity(ii);
+                finish();
+            });
+            ridelater.setOnClickListener(view -> {
+                PassengerCountDown countDown = new PassengerCountDown();
+                countDown.show(getSupportFragmentManager(), "PassengerHomeScreen");
             });
             confirmBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
