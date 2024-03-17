@@ -11,7 +11,7 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -23,7 +23,14 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Traysikol"
         tools:targetApi="31">
-        <uses-library android:name="org.apache.http.legacy" android:required="false" />
+        <activity
+            android:name=".Passenger.PassengerDoneRequest"
+            android:exported="false" />
+
+        <uses-library
+            android:name="org.apache.http.legacy"
+            android:required="false" />
+
         <activity
             android:name=".Passenger.PassengerCommute"
             android:exported="false" />

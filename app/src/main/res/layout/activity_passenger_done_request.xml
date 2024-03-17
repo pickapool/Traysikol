@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#16253B"
+    tools:context=".Passenger.PassengerDoneRequest">
+    <ImageView
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:src="@drawable/check"
+        android:layout_above="@+id/text2"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="20dp"
+        />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/text2"
+        android:text="Request received"
+        android:gravity="center"
+        android:textSize="40dp"
+        android:textColor="#FFFFFF"
+        android:layout_above="@+id/centerText"
+        android:textStyle="bold"
+        android:layout_marginBottom="40dp"
+        android:layout_centerInParent="true"
+        />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/centerText"
+        android:text="We'll notify you once a driver accepts. Thanks for your patience"
+        android:textColor="#FFFFFF"
+        android:textStyle="bold"
+        android:textAlignment="center"
+        android:gravity="center"
+        android:padding="10dp"
+        android:layout_centerInParent="true"
+        />
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Return"
+        android:layout_below="@id/centerText"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:backgroundTint="#16253F"
+        android:drawableLeft="@drawable/back"
+        android:id="@+id/goBack"
+        />
+</RelativeLayout>
