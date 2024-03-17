@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -28,6 +27,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:gravity="center"
+            android:textStyle="bold"
             android:text="LOGIN"
             android:textSize="30dp" />
 
@@ -36,17 +36,16 @@
             android:layout_height="wrap_content"
             android:elevation="4dp"
             android:hint="Username"
+            app:boxStrokeColor="@color/buttonColors"
             app:helperText="Required*"
             app:helperTextEnabled="true"
             app:hintEnabled="true"
-            app:boxStrokeColor="@color/buttonColors"
             app:startIconDrawable="@drawable/baseline_person_24">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/username"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                />
+                android:layout_height="wrap_content" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -66,31 +65,27 @@
                 android:inputType="textPassword" />
         </com.google.android.material.textfield.TextInputLayout>
 
+        <Button
+            android:id="@+id/loginButton"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/buttonshape"
+            android:text="SIGN IN"
+            android:textSize="16dp"
+            android:textStyle="bold" />
+
         <TextView
             android:id="@+id/forgotPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Forgot Password?"
+            android:textSize="15dp"
+            android:textAlignment="textEnd"
             android:textColor="#1D2E92"
             android:textStyle="italic" />
 
-        <androidx.coordinatorlayout.widget.CoordinatorLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-                android:id="@+id/loginButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_margin="16dp"
-                android:contentDescription=""
-                android:text="LOGIN"
-                android:textColor="@color/colorOnPrimary"
-                app:backgroundTint="@color/colorPrimary"
-                app:icon="@drawable/baseline_login_24"
-                app:iconTint="@color/colorOnPrimary" />
-        </androidx.coordinatorlayout.widget.CoordinatorLayout>
     </LinearLayout>
 
     <LinearLayout
@@ -111,8 +106,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
-            android:text="Sign up"
             android:clickable="true"
+            android:text="Sign up"
             android:textColor="#1D2E92"
 
             />

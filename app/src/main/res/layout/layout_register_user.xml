@@ -254,23 +254,17 @@
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
-        <androidx.coordinatorlayout.widget.CoordinatorLayout
+        <Button
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-                android:id="@+id/signupButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_margin="16dp"
-                android:contentDescription=""
-                android:text="SIGN UP"
-                android:textColor="@color/colorOnPrimary"
-                app:backgroundTint="@color/colorPrimary"
-                app:icon="@drawable/baseline_person_add_alt_24"
-                app:iconTint="@color/colorOnPrimary" />
-        </androidx.coordinatorlayout.widget.CoordinatorLayout>
+            android:layout_height="50dp"
+            android:id="@+id/signupButton"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            android:text="SIGN UP"
+            android:textStyle="bold"
+            android:textSize="16dp"
+            android:background="@drawable/buttonshape"
+            />
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

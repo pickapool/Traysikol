@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -53,7 +54,7 @@ public class PassengerRegister extends DialogFragment {
         TextView login = view.findViewById(R.id.login);
         CheckBox agree = view.findViewById(R.id.agree);
 
-        ExtendedFloatingActionButton signUpBtn = view.findViewById(R.id.signupButton);
+        Button signUpBtn = view.findViewById(R.id.signupButton);
 
 
         login.setOnClickListener(view12 -> dismissWithAnimation());

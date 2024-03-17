@@ -16,7 +16,7 @@ import com.google.android.material.floatingactionbutton.ExtendedFloatingActionBu
 
 public class Login extends AppCompatActivity {
     TextView signUp;
-    ExtendedFloatingActionButton login;
+    Button login;
     BottomSheetDialogFragment dialogFragment;
 
     @Override

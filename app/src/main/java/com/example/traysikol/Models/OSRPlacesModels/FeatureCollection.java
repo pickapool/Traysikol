@@ -4,7 +4,7 @@ import java.util.List;
 
 public class FeatureCollection {
     private String type;
-    private List<Feature> features;
+    public List<Features> features;
     private double[] bbox;
 
 }

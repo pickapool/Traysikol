@@ -20,7 +20,9 @@
     <color name="colorOnTertiaryContainer">#34484D</color>4
     <color name="colorAccent">#FFFFFFFF</color>
 
-    <color name="baseBackground">#F6FFE8</color>
+    <color name="baseBackground">#FFFFFF</color>
+    <color name="transparent">#00000000</color>
     <color name="containers">#FFEFF0</color>
     <color name="buttonColors">#7D222F</color>
+    <color name="buttonColorTeal">#16C4C4</color>
 </resources>

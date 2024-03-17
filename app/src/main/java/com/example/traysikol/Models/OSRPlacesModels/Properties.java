@@ -6,7 +6,7 @@ public class Properties {
     private String layer;
     private String source;
     private String source_id;
-    private String name;
+    public String name;
     private String accuracy;
     private String country;
     private String country_gid;
@@ -20,7 +20,8 @@ public class Properties {
     private String locality_gid;
     private String continent;
     private String continent_gid;
-    private String label;
+    public String label;
     private Addendum addendum;
     private double[] bbox;
+
 }
