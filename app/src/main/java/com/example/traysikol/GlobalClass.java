@@ -1,8 +1,10 @@
 package com.example.traysikol;
 
+import android.accounts.Account;
 import android.location.Address;
 import android.location.Location;
 
+import com.example.traysikol.Enums.AccountType;
 import com.example.traysikol.Models.OSRDirectionModels.ORSFeature;
 import com.example.traysikol.Models.OSRDirectionModels.ORSGeometry;
 import com.example.traysikol.Models.OSRDirectionModels.ORSProperties;
@@ -15,6 +17,7 @@ import java.util.List;
 public class GlobalClass {
 
     public static List<Address> currentLocation = null;
+    public static AccountType AccountType;
     private static DecimalFormat df = new DecimalFormat("#.##");
 
     public static String convertDistance(double distance) {

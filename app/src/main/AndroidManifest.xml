@@ -23,7 +23,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Traysikol"
         tools:targetApi="31">
+        <activity
+            android:name=".ChooseAccount"
+            android:exported="false" />
+
         <service android:name=".Services.CountDownService" />
+
         <activity
             android:name=".Passenger.PassengerDoneRequest"
             android:exported="false" />

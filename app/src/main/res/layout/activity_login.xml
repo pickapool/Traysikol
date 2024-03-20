@@ -7,7 +7,13 @@
     android:background="@color/baseBackground"
     android:padding="10dp"
     tools:context=".Login">
-
+    <ImageView
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:src="@drawable/back"
+        android:clickable="true"
+        android:id="@+id/back"
+        />
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

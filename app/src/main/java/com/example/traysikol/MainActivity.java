@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
                 ContextCompat.checkSelfPermission(MainActivity.this, android.Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED &&
                 ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED
         ){
-            GoToLogin();
+            GoToChoose();
         }else{
             requestLocationPermission();
         }
@@ -70,12 +70,12 @@ public class MainActivity extends AppCompatActivity {
                     Manifest.permission.POST_NOTIFICATIONS},PERMISSION_CODE);
         }
     }
-    private void GoToLogin()
+    private void GoToChoose()
     {
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
-                Intent ii = new Intent(MainActivity.this, Login.class);
+                Intent ii = new Intent(MainActivity.this, ChooseAccount.class);
                 startActivity(ii);
                 finish();
             }
@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == PERMISSION_CODE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 //GO to Login
-                GoToLogin();
+                GoToChoose();
 
             } else {
                 CheckPermissionLocation();

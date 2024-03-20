@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.traysikol.Passenger.PassengerHomeScreen;
@@ -17,6 +18,7 @@ import com.google.android.material.floatingactionbutton.ExtendedFloatingActionBu
 public class Login extends AppCompatActivity {
     TextView signUp;
     Button login;
+    ImageView back;
     BottomSheetDialogFragment dialogFragment;
 
     @Override
@@ -25,8 +27,16 @@ public class Login extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         signUp = findViewById(R.id.signup);
         login = findViewById(R.id.loginButton);
+        back = findViewById(R.id.back);
 
-
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent ii = new Intent(Login.this, ChooseAccount.class);
+                startActivity(ii);
+                finish();
+            }
+        });
 
         signUp.setOnClickListener(new View.OnClickListener() {
             @Override

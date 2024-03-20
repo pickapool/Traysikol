@@ -2,46 +2,45 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-            <item
-                android:id="@+id/commute"
-                android:title="Commute"
-                android:icon="@drawable/route_svgrepo_com"
-                android:checkable="true"
-                app:showAsAction="ifRoom"/>
-            <item
-                android:id="@+id/destinations"
-                android:title="Save Destinations"
-                android:checkable="true"
-                android:icon="@drawable/destination_4_svgrepo_com"
-                app:showAsAction="ifRoom"/>
-            <item
-                android:id="@+id/recent"
-                android:title="Recent History"
-                android:icon="@drawable/history_svgrepo_com"
-                android:checkable="true"
-                app:showAsAction="ifRoom"/>
-            <item
-                android:id="@+id/drivers"
-                android:title="Drivers"
-                android:icon="@drawable/taxi_4_svgrepo_com"
-                android:checkable="true"
-                app:showAsAction="ifRoom"/>
-
+    <item
+        android:id="@+id/drivers"
+        android:title="Drivers"
+        android:icon="@drawable/new_drivers_icon"
+        android:checkable="true"
+        app:showAsAction="ifRoom"/>
+    <item
+        android:id="@+id/history"
+        android:title="Drivers"
+        android:icon="@drawable/new_history_icon"
+        android:checkable="true"
+        app:showAsAction="ifRoom"/>
+    <item
+        android:id="@+id/notification"
+        android:title="Drivers"
+        android:icon="@drawable/new_notification_icon"
+        android:checkable="true"
+        app:showAsAction="ifRoom"/>
     <item
         android:id="@+id/labels_item"
         android:title="Settings">
         <menu>
             <item
                 android:id="@+id/profile"
-                android:title="Profile"
+                android:title="Contact Us"
                 android:checkable="true"
-                android:icon="@drawable/profile"
+                android:icon="@drawable/new_contact_us_icon"
+                app:showAsAction="ifRoom"/>
+            <item
+                android:id="@+id/aboutUs"
+                android:title="About Us"
+                android:checkable="true"
+                android:icon="@drawable/new_people_icon"
                 app:showAsAction="ifRoom"/>
             <item
                 android:id="@+id/logout"
                 android:title="Logout"
                 android:checkable="true"
-                android:icon="@drawable/logout_svgrepo_com__1_"
+                android:icon="@drawable/new_logout_icon"
                 app:showAsAction="ifRoom"/>
         </menu>
     </item>
