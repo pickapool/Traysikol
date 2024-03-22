@@ -145,7 +145,7 @@ public class Extensions {
                 stackBuilder.getPendingIntent(0,
                         PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
-        NotificationManager mNotificationManager = (NotificationManager) ((AppCompatActivity) activity).getSystemService( NOTIFICATION_SERVICE ) ;
+        NotificationManager mNotificationManager = (NotificationManager) activity.getSystemService( NOTIFICATION_SERVICE ) ;
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(activity , default_notification_channel_id ) ;
         mBuilder.setContentTitle( "Traysikol" ) ;
         mBuilder.setContentText( message ) ;
