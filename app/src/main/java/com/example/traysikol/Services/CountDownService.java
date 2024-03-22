@@ -1,10 +1,17 @@
 package com.example.traysikol.Services;
 
+import android.app.Activity;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.app.Service;
+import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.IBinder;
@@ -12,12 +19,15 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.NotificationCompat;
 
 import com.example.traysikol.Enums.CommuteStatus;
+import com.example.traysikol.Extensions;
 import com.example.traysikol.GlobalClass;
 import com.example.traysikol.Models.CommuteModel;
 import com.example.traysikol.Passenger.PassengerDoneRequest;
 import com.example.traysikol.Passenger.PassengerHomeScreen;
+import com.example.traysikol.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
@@ -92,6 +102,7 @@ public class CountDownService extends Service {
                     if (task.isSuccessful()) {
                         //notify
                         //
+                        Extensions.CreateNotification(getApplicationContext(), PassengerHomeScreen.class, "Your request has been sent to drivers!");
                     } else {
                         Toast.makeText(getApplicationContext(), task.getException().toString(), Toast.LENGTH_SHORT).show();
                     }
@@ -106,8 +117,6 @@ public class CountDownService extends Service {
             System.out.println("123c" + ee.getMessage());
         }
     }
-
-
     private void updateSharedPreferences(long millisUntilFinished) {
         // Calculate remaining time in hours, minutes, and seconds
         int remainingHours = (int) (millisUntilFinished / 3600000);
@@ -128,4 +137,6 @@ public class CountDownService extends Service {
     public IBinder onBind(Intent intent) {
         return null;
     }
+
+
 }

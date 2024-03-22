@@ -115,10 +115,11 @@ public class Register extends DialogFragment {
                         userAccountModel.setEmail(email.getText().toString());
                         userAccountModel.setPassword(password.getText().toString());
                         userAccountModel.setUid(FirebaseAuth.getInstance().getCurrentUser().getUid());
-                        userAccountModel.setProfilePicture("");
                         userAccountModel.setUsername(username.getText().toString());
                         userAccountModel.setAccountType(GlobalClass.AccountType);
+                        userAccountModel.setProfilePicture("");
                         userAccountModel.setDateofBirth("");
+                        userAccountModel.setAddress("");
                         reference.child("Accounts").child(FirebaseAuth.getInstance().getCurrentUser().getUid())
                                 .setValue(userAccountModel).addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override

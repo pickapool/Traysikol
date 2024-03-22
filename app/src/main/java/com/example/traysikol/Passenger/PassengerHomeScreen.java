@@ -203,8 +203,9 @@ public class PassengerHomeScreen extends AppCompatActivity implements OnMapReady
                     Toast.makeText(PassengerHomeScreen.this, "asdasd", Toast.LENGTH_SHORT).show();
                 } else if (itemId == R.id.history) {
                     // Handle History menu item click
-                } else if (itemId == R.id.notification) {
-                    // Handle Notifications menu item click
+                } else if (itemId == R.id.myRide) {
+                    // Handle reuqest menu item click
+                    //Check if existed and
                 } else if (itemId == R.id.profile) {
                     // Handle Profile menu item click
                 } else if (itemId == R.id.aboutUs) {
@@ -280,7 +281,7 @@ public class PassengerHomeScreen extends AppCompatActivity implements OnMapReady
         googleMaps.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 15));
         googleMaps.addMarker(new MarkerOptions()
                 .position(myLocation)
-                .title("Your are here")
+                .title("Location")
                 .icon(smallMarkerIcon));
         GlobalClass.CommuteModel.setPassengerLatitude(myLocation.latitude);
         GlobalClass.CommuteModel.setPassengerLongitude(myLocation.longitude);
@@ -300,8 +301,15 @@ public class PassengerHomeScreen extends AppCompatActivity implements OnMapReady
                         Geocoder geocoder = new Geocoder(PassengerHomeScreen.this, Locale.getDefault());
                         try {
                             progressBar.dismiss();
-                            GlobalClass.currentLocation = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
-                            myAddress = GlobalClass.currentLocation.get(0).getAddressLine(0);
+                            if (GlobalClass.IsUseLocation) {
+                                GlobalClass.currentLocation = geocoder
+                                        .getFromLocation(GlobalClass.currentLocation.get(0).getLatitude(),
+                                                GlobalClass.currentLocation.get(0).getLongitude(), 1);
+                            } else {
+                                GlobalClass.currentLocation = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+                                myAddress = GlobalClass.currentLocation.get(0).getAddressLine(0);
+                            }
+                            GlobalClass.IsUseLocation = false;
                             SetLocation();
                         } catch (IOException e) {
                             //progressBar.dismiss();

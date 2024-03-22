@@ -3,6 +3,7 @@ package com.example.traysikol.Models;
 import android.accounts.Account;
 
 import com.example.traysikol.Enums.AccountType;
+import com.google.firebase.database.Exclude;
 
 public class UserAccountModel {
     public String uid;
@@ -15,10 +16,11 @@ public class UserAccountModel {
     public String profilePicture;
     public AccountType accountType;
     public String dateofBirth;
+    public String address;
 
     public UserAccountModel(){}
 
-    public UserAccountModel(String uid, String firstname, String lastname, String email, String phoneNumber, String username, String password, String profilePicture, AccountType accountType, String dateofBirth) {
+    public UserAccountModel(String uid, String firstname, String lastname, String email, String phoneNumber, String username, String password, String profilePicture, AccountType accountType, String dateofBirth, String address) {
         this.uid = uid;
         this.firstname = firstname;
         this.lastname = lastname;
@@ -29,6 +31,7 @@ public class UserAccountModel {
         this.profilePicture = profilePicture;
         this.accountType = accountType;
         this.dateofBirth = dateofBirth;
+        this.address = address;
     }
 
     public String getUid() {
@@ -88,7 +91,7 @@ public class UserAccountModel {
     }
 
     public String getProfilePicture() {
-        return profilePicture;
+        return profilePicture == null? "" : profilePicture;
     }
 
     public void setProfilePicture(String profilePicture) {
@@ -109,5 +112,19 @@ public class UserAccountModel {
 
     public void setDateofBirth(String dateofBirth) {
         this.dateofBirth = dateofBirth;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    @Exclude
+    public String getFullName()
+    {
+        return firstname + " " + lastname;
     }
 }

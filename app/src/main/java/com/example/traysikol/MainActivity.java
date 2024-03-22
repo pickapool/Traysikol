@@ -14,8 +14,10 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 
 import com.example.traysikol.Enums.AccountType;
+import com.example.traysikol.Models.SaveDestinationModel;
 import com.example.traysikol.Models.UserAccountModel;
 import com.example.traysikol.Passenger.PassengerHomeScreen;
+import com.example.traysikol.Passenger.PassengerSaveDestination;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;

@@ -15,9 +15,9 @@
         android:checkable="true"
         app:showAsAction="ifRoom"/>
     <item
-        android:id="@+id/notification"
-        android:title="Notifications"
-        android:icon="@drawable/new_notification_icon"
+        android:id="@+id/myRide"
+        android:title="My Request"
+        android:icon="@drawable/request_icon"
         android:checkable="true"
         app:showAsAction="ifRoom"/>
     <item

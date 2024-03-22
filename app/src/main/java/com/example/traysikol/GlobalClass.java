@@ -22,6 +22,7 @@ public class GlobalClass {
     public static AccountType AccountType;
     public static UserAccountModel UserAccount = new UserAccountModel();
     public static CommuteModel CommuteModel = new CommuteModel();
+    public static boolean IsUseLocation = false;
     private static DecimalFormat df = new DecimalFormat("#.##");
 
     public static String convertDistance(double distance) {

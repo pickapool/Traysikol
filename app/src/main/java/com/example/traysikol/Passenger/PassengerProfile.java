@@ -19,7 +19,13 @@ public class PassengerProfile extends AppCompatActivity {
         setContentView(R.layout.activity_passenger_profile);
         back = findViewById(R.id.back);
         profDetail = findViewById(R.id.profile_details_btn);
+        saveDestination = findViewById(R.id.save_destination_btn);
 
+        saveDestination.setOnClickListener(view -> {
+            Intent ii = new Intent(PassengerProfile.this, PassengerSaveDestination.class);
+            startActivity(ii);
+            finish();
+        });
         back.setOnClickListener(view -> {
             Intent ii = new Intent(PassengerProfile.this, PassengerHomeScreen.class);
             startActivity(ii);

@@ -19,8 +19,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
+import com.example.traysikol.DialogHelper;
 import com.example.traysikol.Enums.CommuteStatus;
 import com.example.traysikol.GlobalClass;
+import com.example.traysikol.Models.SaveDestinationModel;
 import com.example.traysikol.R;
 import com.example.traysikol.Services.CountDownService;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -32,7 +34,7 @@ import com.google.gson.Gson;
 
 import java.util.Calendar;
 
-public class PassengerCountDown extends DialogFragment {
+public class PassengerCountDown extends DialogFragment implements DialogHelper.ConfirmationListener {
 
     TextView hourTxt, minuteTxt, secondTxt;
     TextView add1, add2, fr, dis, time;
@@ -115,7 +117,7 @@ public class PassengerCountDown extends DialogFragment {
                     startCountdownTimer(1000, hourTxt.getText().toString(),
                             minuteTxt.getText().toString(),
                             secondTxt.getText().toString());
-
+                    DialogHelper.showConfirmationDialog(getActivity(), PassengerCountDown.this);
                 }
             }
         });
@@ -220,5 +222,29 @@ public class PassengerCountDown extends DialogFragment {
         Intent serviceIntent = new Intent(getContext(), CountDownService.class);
         getContext().startService(serviceIntent);
         super.onPause();
+    }
+
+    @Override
+    public void onConfirmation(boolean confirmed) {
+        if (confirmed) {
+            // Yes button clicked
+            SaveDestinationModel destinationModel = new SaveDestinationModel();
+            String key = reference.push().getKey();
+            destinationModel.setKey(key);
+            destinationModel.setPassengerUid(FirebaseAuth.getInstance().getCurrentUser().getUid());
+            destinationModel.setLatitude(GlobalClass.CommuteModel.getPassengerLatitude());
+            destinationModel.setLongitude(GlobalClass.CommuteModel.getPassengerDestinationLongitude());
+            reference.child("SaveDestinations").child(key).setValue(destinationModel)
+                    .addOnCompleteListener(task -> {
+                        if(task.isSuccessful())
+                        {
+                            Toast.makeText(getActivity(), "Destination has been saved.", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(getActivity(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        } else {
+            // No button clicked
+        }
     }
 }

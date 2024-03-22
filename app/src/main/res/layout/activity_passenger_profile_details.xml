@@ -27,10 +27,12 @@
         android:layout_height="100dp"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
+        android:id="@+id/profilePicture"
         android:src="@drawable/app_logo"
         android:layout_gravity="center"
         />
     <TextView
+        android:id="@+id/fullName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAlignment="center"
@@ -38,8 +40,21 @@
         android:textStyle="bold"
         android:gravity="center"
         android:textColor="#000000"
+        android:drawableRight="@drawable/edit_icon"
         android:layout_marginBottom="30dp"
         android:textSize="20dp"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Email"
+        />
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:id="@+id/email"
+        android:layout_marginBottom="20dp"
+        />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -50,6 +65,8 @@
         android:layout_height="wrap_content"
         android:drawableRight="@drawable/edit_icon"
         android:text=""
+        android:editable="false"
+        android:id="@+id/address"
         android:layout_marginBottom="20dp"
         />
     <TextView
@@ -63,18 +80,8 @@
         android:inputType="number"
         android:drawableRight="@drawable/edit_icon"
         android:text=""
-        android:layout_marginBottom="20dp"
-        />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Address"
-        />
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:drawableRight="@drawable/edit_icon"
-        android:text=""
+        android:editable="false"
+        android:id="@+id/phoneNumber"
         android:layout_marginBottom="20dp"
         />
     <TextView
@@ -85,6 +92,8 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:editable="false"
+        android:id="@+id/dateOfBirth"
         android:drawableRight="@drawable/edit_icon"
         android:text=""
         />
