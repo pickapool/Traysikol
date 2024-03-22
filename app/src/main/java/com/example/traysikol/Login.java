@@ -1,25 +1,41 @@
 package com.example.traysikol;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.traysikol.Enums.AccountType;
+import com.example.traysikol.Models.UserAccountModel;
 import com.example.traysikol.Passenger.PassengerHomeScreen;
-import com.example.traysikol.Passenger.PassengerRegister;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
-import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class Login extends AppCompatActivity {
     TextView signUp;
     Button login;
     ImageView back;
     BottomSheetDialogFragment dialogFragment;
+    TextInputEditText username, password;
+    FirebaseAuth firebaseAuth;
+    DatabaseReference reference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +44,11 @@ public class Login extends AppCompatActivity {
         signUp = findViewById(R.id.signup);
         login = findViewById(R.id.loginButton);
         back = findViewById(R.id.back);
+        username = findViewById(R.id.username);
+        password = findViewById(R.id.password);
+
+        firebaseAuth = FirebaseAuth.getInstance();
+        reference = FirebaseDatabase.getInstance().getReference();
 
         back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -41,15 +62,66 @@ public class Login extends AppCompatActivity {
         signUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                PassengerRegister dialog = new PassengerRegister();
+                Register dialog = new Register();
                 dialog.show(getSupportFragmentManager(), dialog.getTag());
             }
         });
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent ii = new Intent(Login.this , PassengerHomeScreen.class);
-                startActivity(ii);
+                if (TextUtils.isEmpty(username.getText()) || TextUtils.isEmpty(password.getText())) {
+                    Toast.makeText(Login.this, "All fields are required.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                ProgressDialog dialog = new ProgressDialog(Login.this);
+                dialog.setCancelable(false);
+                dialog.setTitle("Singing in");
+                dialog.setMessage("Loading...");
+                dialog.show();
+                reference.child("Accounts").orderByChild("username").equalTo(username.getText().toString())
+                        .addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                if (snapshot.exists()) {
+                                    for (DataSnapshot snapshot1 : snapshot.getChildren()) {
+                                        UserAccountModel acc = snapshot1.getValue(UserAccountModel.class);
+                                        if (acc.getAccountType() != GlobalClass.AccountType) {
+                                            dialog.dismiss();
+                                            Toast.makeText(Login.this, "Sorry we can't find your account as a " + acc.getAccountType().toString(), Toast.LENGTH_SHORT).show();
+                                            return;
+                                        }
+                                        firebaseAuth.signInWithEmailAndPassword(acc.getEmail(), password.getText().toString()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                                if (task.isSuccessful()) {
+                                                    if (acc.accountType == AccountType.Commuter) {
+                                                        //Passenger home
+                                                        Intent ii = new Intent(Login.this, PassengerHomeScreen.class);
+                                                        startActivity(ii);
+                                                    } else {
+                                                        //Driver home
+                                                        Intent ii = new Intent(Login.this, PassengerHomeScreen.class);
+                                                        startActivity(ii);
+                                                    }
+                                                } else {
+                                                    dialog.dismiss();
+                                                    Toast.makeText(Login.this, task.getException().toString(), Toast.LENGTH_SHORT).show();
+                                                }
+                                            }
+                                        });
+
+                                    }
+                                } else {
+                                    dialog.dismiss();
+                                    Toast.makeText(Login.this, "Sorry we can't find your account.", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
             }
         });
 

@@ -104,6 +104,8 @@
         app:menu="@menu/nav_menu"
         android:background="#16253B"
         app:itemIconTint="#FFFFFF"
-        app:itemTextColor="#FFFFFF"/>
+        app:itemTextColor="#FFFFFF"
+        app:itemBackground="@android:color/transparent"
+        />
 
 </androidx.drawerlayout.widget.DrawerLayout>

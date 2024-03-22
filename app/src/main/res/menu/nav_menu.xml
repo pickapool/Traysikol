@@ -10,13 +10,13 @@
         app:showAsAction="ifRoom"/>
     <item
         android:id="@+id/history"
-        android:title="Drivers"
+        android:title="History"
         android:icon="@drawable/new_history_icon"
         android:checkable="true"
         app:showAsAction="ifRoom"/>
     <item
         android:id="@+id/notification"
-        android:title="Drivers"
+        android:title="Notifications"
         android:icon="@drawable/new_notification_icon"
         android:checkable="true"
         app:showAsAction="ifRoom"/>

@@ -12,6 +12,8 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_SURFACE_FLINGER"
+        tools:ignore="ProtectedPermissions" />
 
     <application
         android:allowBackup="true"
@@ -23,6 +25,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Traysikol"
         tools:targetApi="31">
+        <activity
+            android:name=".Passenger.PassengerProfileDetails"
+            android:exported="false" />
+        <activity
+            android:name=".Passenger.PassengerProfile"
+            android:exported="false" />
         <activity
             android:name=".ChooseAccount"
             android:exported="false" />

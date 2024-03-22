@@ -1,12 +1,8 @@
 package com.example.traysikol.Passenger;
 
-import static java.security.AccessController.getContext;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
-import androidx.core.graphics.PathSegment;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
@@ -15,7 +11,6 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -29,22 +24,20 @@ import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
 import android.view.Display;
-import android.view.Gravity;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -54,13 +47,16 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.traysikol.Adapter.PlacesAdapter.PlaceAdapter;
+import com.example.traysikol.ChooseAccount;
+import com.example.traysikol.Enums.CommuteStatus;
+import com.example.traysikol.Extensions;
 import com.example.traysikol.GlobalClass;
 import com.example.traysikol.Models.OSRDirectionModels.ORSFeature;
 import com.example.traysikol.Models.OSRDirectionModels.ORSGeometry;
-import com.example.traysikol.Models.OSRDirectionModels.ORSMetadata;
 import com.example.traysikol.Models.OSRDirectionModels.ORSResponse;
 import com.example.traysikol.Models.OSRPlacesModels.FeatureCollection;
 import com.example.traysikol.Models.OSRPlacesModels.Features;
+import com.example.traysikol.Models.PassengerRoute;
 import com.example.traysikol.R;
 import com.example.traysikol.RotatingDrawable;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -76,10 +72,17 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.gson.Gson;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
@@ -100,6 +103,11 @@ public class PassengerHomeScreen extends AppCompatActivity implements OnMapReady
     ImageView home, commute, driversNear, myProfile;
     String myAddress, myDestinationAddress, fare, distance, time = "";
     private View customLayout;
+    int lastIcon = 1;
+    NavigationView navigationView;
+    DrawerLayout drawerLayout;
+    PassengerRoute passengerRoute = new PassengerRoute();
+    DatabaseReference reference;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -114,6 +122,9 @@ public class PassengerHomeScreen extends AppCompatActivity implements OnMapReady
         commute = findViewById(R.id.commute);
         driversNear = findViewById(R.id.driversNear);
         myProfile = findViewById(R.id.myProfile);
+        navigationView = findViewById(R.id.nav_view);
+        drawerLayout = findViewById(R.id.drawer_layout);
+        reference = FirebaseDatabase.getInstance().getReference();
 
         ListOfFeatures = new ArrayList<>();
 
@@ -125,9 +136,14 @@ public class PassengerHomeScreen extends AppCompatActivity implements OnMapReady
         home.setOnClickListener(view -> ChangeIcons(1));
         commute.setOnClickListener(view -> ChangeIcons(2));
         driversNear.setOnClickListener(view -> ChangeIcons(3));
-        myProfile.setOnClickListener(view -> ChangeIcons(4));
+        myProfile.setOnClickListener(view ->
+        {
+            ChangeIcons(4);
+            Intent ii = new Intent(PassengerHomeScreen.this, PassengerProfile.class);
+            startActivity(ii);
+            finish();
+        });
         toolbar.setOnClickListener(v -> {
-            DrawerLayout drawerLayout = findViewById(R.id.drawer_layout);
             drawerLayout.openDrawer(GravityCompat.START);
         });
         autoCompleteTextView.setOnTouchListener((view, motionEvent) -> {
@@ -179,11 +195,45 @@ public class PassengerHomeScreen extends AppCompatActivity implements OnMapReady
                 }
             }
         });
-
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                int itemId = item.getItemId();
+                if (itemId == R.id.drivers) {
+                    Toast.makeText(PassengerHomeScreen.this, "asdasd", Toast.LENGTH_SHORT).show();
+                } else if (itemId == R.id.history) {
+                    // Handle History menu item click
+                } else if (itemId == R.id.notification) {
+                    // Handle Notifications menu item click
+                } else if (itemId == R.id.profile) {
+                    // Handle Profile menu item click
+                } else if (itemId == R.id.aboutUs) {
+                    // Handle About Us menu item click
+                } else if (itemId == R.id.logout) {
+                    FirebaseAuth.getInstance().signOut();
+                    Intent ii = new Intent(PassengerHomeScreen.this, ChooseAccount.class);
+                    startActivity(ii);
+                    finish();
+                }
+                return true;
+            }
+        });
         ChangeIcons(1);
     }
 
     private void ChangeIcons(int position) {
+        lastIcon = position;
+        if (position == 2) {
+            if(TextUtils.isEmpty(myAddress) ||
+                    TextUtils.isEmpty(myDestinationAddress) ||
+                    TextUtils.isEmpty("20") ||
+                    TextUtils.isEmpty(distance) ||
+                    TextUtils.isEmpty(time))
+            {
+                Toast.makeText(this, "Please select a destination", Toast.LENGTH_SHORT).show();
+                return;
+            }
+        }
         home.setImageResource(R.drawable.home_icon);
         commute.setImageResource(R.drawable.commute_icon);
         driversNear.setImageResource(R.drawable.drivers_icon);
@@ -212,6 +262,8 @@ public class PassengerHomeScreen extends AppCompatActivity implements OnMapReady
     }
 
     private void SetDestination(LatLng latLng) {
+        GlobalClass.CommuteModel.setPassengerDestinationLatitude(latLng.latitude);
+        GlobalClass.CommuteModel.setPassengerDestinationLongitude(latLng.longitude);
         Bitmap b = BitmapFactory.decodeResource(getResources(), R.drawable.taxi_destination);
         Bitmap smallMarker = Bitmap.createScaledBitmap(b, 60, 60, false);
         BitmapDescriptor smallMarkerIcon = BitmapDescriptorFactory.fromBitmap(smallMarker);
@@ -228,8 +280,10 @@ public class PassengerHomeScreen extends AppCompatActivity implements OnMapReady
         googleMaps.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 15));
         googleMaps.addMarker(new MarkerOptions()
                 .position(myLocation)
-                .title("Your here")
+                .title("Your are here")
                 .icon(smallMarkerIcon));
+        GlobalClass.CommuteModel.setPassengerLatitude(myLocation.latitude);
+        GlobalClass.CommuteModel.setPassengerLongitude(myLocation.longitude);
     }
 
     private void CheckLocationIsOn() {
@@ -370,6 +424,8 @@ public class PassengerHomeScreen extends AppCompatActivity implements OnMapReady
                             ORSGeometry geometry = feature.geometry;
 
                             if (geometry != null && "LineString".equals(geometry.type)) {
+                                passengerRoute.setPassengerRoute(Extensions.convertToList(geometry.coordinates));
+                                GlobalClass.CommuteModel.setPassengerRoute(passengerRoute);
                                 double[][] coordinates = geometry.coordinates;
 
                                 PolylineOptions polylineOptions = new PolylineOptions();
@@ -389,6 +445,8 @@ public class PassengerHomeScreen extends AppCompatActivity implements OnMapReady
                                 myDestinationAddress = addresses.get(0).getAddressLine(0);
                                 distance = GlobalClass.convertDistance(GlobalClass.GetDistance(orsResponse));
                                 time = GlobalClass.GetTime(orsResponse);
+                                GlobalClass.CommuteModel.setDistance(distance);
+                                GlobalClass.CommuteModel.setFare("20");
 
                             }
                             dialog.dismiss();
@@ -414,6 +472,7 @@ public class PassengerHomeScreen extends AppCompatActivity implements OnMapReady
     public void onPointerCaptureChanged(boolean hasCapture) {
         super.onPointerCaptureChanged(hasCapture);
     }
+
     public static DisplayMetrics getDeviceMetrics(Context context) {
         DisplayMetrics metrics = new DisplayMetrics();
         WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
@@ -421,10 +480,11 @@ public class PassengerHomeScreen extends AppCompatActivity implements OnMapReady
         display.getMetrics(metrics);
         return metrics;
     }
+
     //Address-> Address address = GlobalClass.currentLocation.get(0); -> String addressLine = address.getAddressLine(0);
     private void ShowDialogConfirm(String address1, String address2, String fare, String distance, String time) {
         try {
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            AlertDialog.Builder builder = new AlertDialog.Builder(PassengerHomeScreen.this);
             View customLayout = getLayoutInflater().inflate(R.layout.layout_confirm_dialog, null);
             builder.setView(customLayout);
             AlertDialog dialog = builder.create();
@@ -460,11 +520,10 @@ public class PassengerHomeScreen extends AppCompatActivity implements OnMapReady
                 ChangeIcons(1);
             });
             rideNow.setOnClickListener(view -> {
-                Intent ii = new Intent(PassengerHomeScreen.this, PassengerDoneRequest.class);
-                startActivity(ii);
-                finish();
+                RideNow();
             });
             ridelater.setOnClickListener(view -> {
+                dialog.dismiss();
                 PassengerCountDown countDown = new PassengerCountDown(myAddress, myDestinationAddress, fare, distance, time);
                 countDown.show(getSupportFragmentManager(), "PassengerHomeScreen");
             });
@@ -477,6 +536,7 @@ public class PassengerHomeScreen extends AppCompatActivity implements OnMapReady
                         @Override
                         public void onAnimationStart(Animation animation) {
                         }
+
                         @Override
                         public void onAnimationEnd(Animation animation) {
                             confirmBtn.setVisibility(View.GONE);
@@ -496,5 +556,36 @@ public class PassengerHomeScreen extends AppCompatActivity implements OnMapReady
         } catch (Exception ee) {
             System.out.println("66213213" + ee.getMessage());
         }
+    }
+    private void RideNow()
+    {
+        String key = reference.push().getKey();
+
+        GlobalClass.CommuteModel.setDriverUid("");
+        GlobalClass.CommuteModel.setCommuteStatus(CommuteStatus.InProgress);
+        GlobalClass.CommuteModel.setOccupied(false);
+        GlobalClass.CommuteModel.setKey(key);
+        GlobalClass.CommuteModel.setPassengerUid(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        GlobalClass.CommuteModel.setCommuteDate(Calendar.getInstance().getTime());
+
+        reference.child("Commutes").child(key).setValue(GlobalClass.CommuteModel).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                ProgressDialog progressDialog = new ProgressDialog(PassengerHomeScreen.this);
+                progressDialog.setCancelable(false);
+                progressDialog.setTitle("Sending to drivers");
+                progressDialog.setMessage("Loading...");
+                progressDialog.show();
+                if(task.isSuccessful())
+                {
+                    Intent ii = new Intent(PassengerHomeScreen.this, PassengerDoneRequest.class);
+                    startActivity(ii);
+                    finish();
+                } else {
+                    progressDialog.dismiss();
+                    Toast.makeText(PassengerHomeScreen.this, task.getException().toString(), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 }

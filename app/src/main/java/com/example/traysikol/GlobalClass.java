@@ -5,11 +5,13 @@ import android.location.Address;
 import android.location.Location;
 
 import com.example.traysikol.Enums.AccountType;
+import com.example.traysikol.Models.CommuteModel;
 import com.example.traysikol.Models.OSRDirectionModels.ORSFeature;
 import com.example.traysikol.Models.OSRDirectionModels.ORSGeometry;
 import com.example.traysikol.Models.OSRDirectionModels.ORSProperties;
 import com.example.traysikol.Models.OSRDirectionModels.ORSResponse;
 import com.example.traysikol.Models.OSRDirectionModels.ORSSegment;
+import com.example.traysikol.Models.UserAccountModel;
 
 import java.text.DecimalFormat;
 import java.util.List;
@@ -18,6 +20,8 @@ public class GlobalClass {
 
     public static List<Address> currentLocation = null;
     public static AccountType AccountType;
+    public static UserAccountModel UserAccount = new UserAccountModel();
+    public static CommuteModel CommuteModel = new CommuteModel();
     private static DecimalFormat df = new DecimalFormat("#.##");
 
     public static String convertDistance(double distance) {

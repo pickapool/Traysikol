@@ -1,5 +1,6 @@
 package com.example.traysikol.Passenger;
 
+import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -18,33 +19,47 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
+import com.example.traysikol.Enums.CommuteStatus;
+import com.example.traysikol.GlobalClass;
 import com.example.traysikol.R;
 import com.example.traysikol.Services.CountDownService;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.gson.Gson;
 
 import java.util.Calendar;
 
 public class PassengerCountDown extends DialogFragment {
 
     TextView hourTxt, minuteTxt, secondTxt;
-    TextView add1, add2, fr, dis,time;
+    TextView add1, add2, fr, dis, time;
     ImageView play, close;
     final Calendar calendar = Calendar.getInstance();
     boolean IsPlaying = false;
     String address1, address2, fare, distance, times;
-    public PassengerCountDown(){}
-    public PassengerCountDown(String address1, String address2, String fare, String dis, String t)
-    {
+    DatabaseReference reference;
+    CountDownTimer countDownTimer;
+
+    public PassengerCountDown() {
+    }
+
+    public PassengerCountDown(String address1, String address2, String fare, String dis, String t) {
         this.address1 = address1;
         this.address2 = address2;
         this.fare = fare;
         this.distance = dis;
         this.times = t;
     }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setCancelable(false);
         setStyle(DialogFragment.STYLE_NO_FRAME, R.style.FullScreenDialogTheme);
+
     }
 
     @Nullable
@@ -56,6 +71,8 @@ public class PassengerCountDown extends DialogFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        reference = FirebaseDatabase.getInstance().getReference();
 
         hourTxt = view.findViewById(R.id.hour);
         minuteTxt = view.findViewById(R.id.minutes);
@@ -82,7 +99,7 @@ public class PassengerCountDown extends DialogFragment {
         String data = sharedPreferences.getString("IsPlaying", "true");
         Intent serviceIntent = new Intent(getContext(), CountDownService.class);
         getContext().stopService(serviceIntent);
-        if(data.toLowerCase().contains("true")) {
+        if (data.toLowerCase().contains("true")) {
             IsPlaying = true;
             String hour = sharedPreferences.getString("hour", "0");
             String minute = sharedPreferences.getString("minute", "0");
@@ -94,10 +111,11 @@ public class PassengerCountDown extends DialogFragment {
         play.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(!IsPlaying) {
+                if (!IsPlaying) {
                     startCountdownTimer(1000, hourTxt.getText().toString(),
                             minuteTxt.getText().toString(),
                             secondTxt.getText().toString());
+
                 }
             }
         });
@@ -130,15 +148,16 @@ public class PassengerCountDown extends DialogFragment {
     }
 
     private void startCountdownTimer(long milliseconds, String hr, String min, String sec) {
+
         int hours = Integer.parseInt(hr);
         int minutes = Integer.parseInt(min);
         int seconds = Integer.parseInt(sec);
 
         long totalDurationInMillis = (hours * 3600 + minutes * 60 + seconds) * 1000;
 
-        new CountDownTimer(totalDurationInMillis, 1000) {
+        countDownTimer = new CountDownTimer(totalDurationInMillis, 1000) {
+            @Override
             public void onTick(long millisUntilFinished) {
-                // Calculate remaining time in hours, minutes, and seconds
                 int remainingHours = (int) (millisUntilFinished / 3600000);
                 int remainingMinutes = (int) ((millisUntilFinished % 3600000) / 60000);
                 int remainingSeconds = (int) ((millisUntilFinished % 60000) / 1000);
@@ -149,22 +168,40 @@ public class PassengerCountDown extends DialogFragment {
                 secondTxt.setText(String.format("%02d", remainingSeconds));
             }
 
+            @Override
             public void onFinish() {
-                // Do something when the countdown is finished
                 hourTxt.setText("00");
                 minuteTxt.setText("00");
                 secondTxt.setText("00");
+                Gson gson = new Gson();
+                String json = gson.toJson(GlobalClass.CommuteModel);
+
                 SharedPreferences sharedPreferences = getContext().getSharedPreferences("Countdown", Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putString("IsPlaying", "false");
+                editor.putString("CommuteModel", json);
                 editor.apply();
+                RideNow();
             }
         }.start();
+
+        Gson gson = new Gson();
+        String json = gson.toJson(GlobalClass.CommuteModel);
+
         SharedPreferences sharedPreferences = getContext().getSharedPreferences("Countdown", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString("IsPlaying", "true");
+        editor.putString("CommuteModel", json);
         editor.apply();
     }
+
+    private void RideNow() {
+        dismiss();
+        Intent ii = new Intent(getActivity(), PassengerDoneRequest.class);
+        startActivity(ii);
+        getActivity().finish();
+    }
+
     private void saveToPreferences(String hr, String min, String sec) {
         SharedPreferences sharedPreferences = getContext().getSharedPreferences("Countdown", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -177,6 +214,7 @@ public class PassengerCountDown extends DialogFragment {
 
     @Override
     public void onPause() {
+        countDownTimer.cancel();
         saveToPreferences(hourTxt.getText().toString(),
                 minuteTxt.getText().toString(), secondTxt.getText().toString());
         Intent serviceIntent = new Intent(getContext(), CountDownService.class);
