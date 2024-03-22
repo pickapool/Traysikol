@@ -117,7 +117,6 @@ public class PassengerCountDown extends DialogFragment implements DialogHelper.C
                     startCountdownTimer(1000, hourTxt.getText().toString(),
                             minuteTxt.getText().toString(),
                             secondTxt.getText().toString());
-                    DialogHelper.showConfirmationDialog(getActivity(), PassengerCountDown.this);
                 }
             }
         });
@@ -125,7 +124,10 @@ public class PassengerCountDown extends DialogFragment implements DialogHelper.C
         close.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dismiss();
+                if(IsPlaying)
+                {
+                    DialogHelper.showConfirmationDialog(getActivity(), PassengerCountDown.this);
+                }
             }
         });
     }
@@ -246,5 +248,6 @@ public class PassengerCountDown extends DialogFragment implements DialogHelper.C
         } else {
             // No button clicked
         }
+        dismiss();
     }
 }
