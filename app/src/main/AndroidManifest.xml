@@ -30,6 +30,9 @@
         android:theme="@style/Theme.Traysikol"
         tools:targetApi="31">
         <activity
+            android:name=".Drivers.DriversHome"
+            android:exported="false" />
+        <activity
             android:name=".Passenger.PassengerSaveDestination"
             android:exported="false" />
 

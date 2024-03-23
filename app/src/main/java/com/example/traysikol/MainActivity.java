@@ -13,6 +13,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 
+import com.example.traysikol.Drivers.DriversHome;
 import com.example.traysikol.Enums.AccountType;
 import com.example.traysikol.Models.SaveDestinationModel;
 import com.example.traysikol.Models.UserAccountModel;
@@ -94,10 +95,13 @@ public class MainActivity extends AppCompatActivity {
                     if (snapshot.exists()) {
                         UserAccountModel userAccount = snapshot.getValue(UserAccountModel.class);
                         GlobalClass.UserAccount = userAccount;
+                        Intent ii;
                         if (userAccount.getAccountType() == AccountType.Commuter) {
-                            Intent ii = new Intent(MainActivity.this, PassengerHomeScreen.class);
-                            startActivity(ii);
+                            ii = new Intent(MainActivity.this, PassengerHomeScreen.class);
+                        } else {
+                            ii = new Intent(MainActivity.this, DriversHome.class);
                         }
+                        startActivity(ii);
                         finish();
                     }
                 }

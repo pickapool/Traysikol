@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.traysikol.Drivers.DriversHome;
 import com.example.traysikol.Enums.AccountType;
 import com.example.traysikol.Models.UserAccountModel;
 import com.example.traysikol.Passenger.PassengerHomeScreen;
@@ -75,7 +76,7 @@ public class Login extends AppCompatActivity {
                 }
                 ProgressDialog dialog = new ProgressDialog(Login.this);
                 dialog.setCancelable(false);
-                dialog.setTitle("Singing in");
+                dialog.setTitle("Signing in");
                 dialog.setMessage("Loading...");
                 dialog.show();
                 reference.child("Accounts").orderByChild("username").equalTo(username.getText().toString())
@@ -94,15 +95,16 @@ public class Login extends AppCompatActivity {
                                             @Override
                                             public void onComplete(@NonNull Task<AuthResult> task) {
                                                 if (task.isSuccessful()) {
+                                                    GlobalClass.UserAccount = acc;
+                                                    Intent ii;
                                                     if (acc.accountType == AccountType.Commuter) {
                                                         //Passenger home
-                                                        Intent ii = new Intent(Login.this, PassengerHomeScreen.class);
-                                                        startActivity(ii);
+                                                        ii = new Intent(Login.this, PassengerHomeScreen.class);
                                                     } else {
                                                         //Driver home
-                                                        Intent ii = new Intent(Login.this, PassengerHomeScreen.class);
-                                                        startActivity(ii);
+                                                        ii = new Intent(Login.this, DriversHome.class);
                                                     }
+                                                    startActivity(ii);
                                                 } else {
                                                     dialog.dismiss();
                                                     Toast.makeText(Login.this, task.getException().toString(), Toast.LENGTH_SHORT).show();

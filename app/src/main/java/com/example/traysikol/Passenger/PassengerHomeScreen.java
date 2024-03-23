@@ -49,6 +49,7 @@ import com.android.volley.toolbox.Volley;
 import com.example.traysikol.Adapter.PlacesAdapter.PlaceAdapter;
 import com.example.traysikol.ChooseAccount;
 import com.example.traysikol.Enums.CommuteStatus;
+import com.example.traysikol.Enums.OnlineStatus;
 import com.example.traysikol.Extensions;
 import com.example.traysikol.GlobalClass;
 import com.example.traysikol.Models.OSRDirectionModels.ORSFeature;
@@ -56,6 +57,7 @@ import com.example.traysikol.Models.OSRDirectionModels.ORSGeometry;
 import com.example.traysikol.Models.OSRDirectionModels.ORSResponse;
 import com.example.traysikol.Models.OSRPlacesModels.FeatureCollection;
 import com.example.traysikol.Models.OSRPlacesModels.Features;
+import com.example.traysikol.Models.OnlineDriverModel;
 import com.example.traysikol.Models.PassengerRoute;
 import com.example.traysikol.R;
 import com.example.traysikol.RotatingDrawable;
@@ -76,8 +78,11 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 
 import java.io.IOException;
@@ -108,6 +113,7 @@ public class PassengerHomeScreen extends AppCompatActivity implements OnMapReady
     DrawerLayout drawerLayout;
     PassengerRoute passengerRoute = new PassengerRoute();
     DatabaseReference reference;
+    List<Marker> driversMarker = new ArrayList<>();
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -135,7 +141,32 @@ public class PassengerHomeScreen extends AppCompatActivity implements OnMapReady
 
         home.setOnClickListener(view -> ChangeIcons(1));
         commute.setOnClickListener(view -> ChangeIcons(2));
-        driversNear.setOnClickListener(view -> ChangeIcons(3));
+        driversNear.setOnClickListener(view -> {
+            reference.child("OnlineDrivers").addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    googleMaps.clear();
+                    SetLocation(false);
+                    for(DataSnapshot snapshot1 : snapshot.getChildren())
+                    {
+                        OnlineDriverModel oDriver = snapshot1.getValue(OnlineDriverModel.class);
+                        if(oDriver.getOnlineStatus() == OnlineStatus.Online) {
+                            Bitmap b = BitmapFactory.decodeResource(getResources(), R.drawable.traysikol_icon);
+                            Bitmap smallMarker = Bitmap.createScaledBitmap(b, 50, 50, false);
+                            BitmapDescriptor smallMarkerIcon = BitmapDescriptorFactory.fromBitmap(smallMarker);
+                            LatLng lng = new LatLng(oDriver.getLatitude(), oDriver.getLongitude());
+                            Marker newMarker = googleMaps.addMarker(new MarkerOptions().position(lng).title(oDriver.getDriverName()).icon(smallMarkerIcon));
+                        }
+                    }
+                    //reference.removeEventListener(this);
+                }
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+            ChangeIcons(3);
+        });
         myProfile.setOnClickListener(view ->
         {
             ChangeIcons(4);
@@ -272,13 +303,15 @@ public class PassengerHomeScreen extends AppCompatActivity implements OnMapReady
         lastMarker = newMarker;
     }
 
-    private void SetLocation() {
+    private void SetLocation(boolean move) {
         myLocation = new LatLng(GlobalClass.currentLocation.get(0).getLatitude(), GlobalClass.currentLocation.get(0).getLongitude());
         // Update the marker icon
         Bitmap b = BitmapFactory.decodeResource(getResources(), R.drawable.mylocation);
         Bitmap smallMarker = Bitmap.createScaledBitmap(b, 60, 60, false);
         BitmapDescriptor smallMarkerIcon = BitmapDescriptorFactory.fromBitmap(smallMarker);
-        googleMaps.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 15));
+        if(move) {
+            googleMaps.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 15));
+        }
         googleMaps.addMarker(new MarkerOptions()
                 .position(myLocation)
                 .title("Location")
@@ -310,7 +343,7 @@ public class PassengerHomeScreen extends AppCompatActivity implements OnMapReady
                                 myAddress = GlobalClass.currentLocation.get(0).getAddressLine(0);
                             }
                             GlobalClass.IsUseLocation = false;
-                            SetLocation();
+                            SetLocation(true);
                         } catch (IOException e) {
                             //progressBar.dismiss();
                             Toast.makeText(PassengerHomeScreen.this, e.getMessage(), Toast.LENGTH_LONG).show();
@@ -400,7 +433,7 @@ public class PassengerHomeScreen extends AppCompatActivity implements OnMapReady
         googleMaps.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
-
+                ChangeIcons(1);
                 ProgressDialog dialog = new ProgressDialog(PassengerHomeScreen.this);
                 dialog.setTitle("Getting route");
                 dialog.setMessage("Loading...");
@@ -423,7 +456,7 @@ public class PassengerHomeScreen extends AppCompatActivity implements OnMapReady
                             googleMaps.clear();
 
                             SetDestination(myDestination);
-                            SetLocation();
+                            SetLocation(true);
 
                             Gson gson = new Gson();
                             ORSResponse orsResponse = gson.fromJson(response, ORSResponse.class);
