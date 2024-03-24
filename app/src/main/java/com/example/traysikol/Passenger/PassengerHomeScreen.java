@@ -48,10 +48,12 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.traysikol.Adapter.PlacesAdapter.PlaceAdapter;
 import com.example.traysikol.ChooseAccount;
+import com.example.traysikol.Drivers.DriversHome;
 import com.example.traysikol.Enums.CommuteStatus;
 import com.example.traysikol.Enums.OnlineStatus;
 import com.example.traysikol.Extensions;
 import com.example.traysikol.GlobalClass;
+import com.example.traysikol.Models.CommuteModel;
 import com.example.traysikol.Models.OSRDirectionModels.ORSFeature;
 import com.example.traysikol.Models.OSRDirectionModels.ORSGeometry;
 import com.example.traysikol.Models.OSRDirectionModels.ORSResponse;
@@ -61,6 +63,8 @@ import com.example.traysikol.Models.OnlineDriverModel;
 import com.example.traysikol.Models.PassengerRoute;
 import com.example.traysikol.R;
 import com.example.traysikol.RotatingDrawable;
+import com.example.traysikol.Services.DriverAcceptService;
+import com.example.traysikol.Services.RequestADriverService;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -91,6 +95,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
+import java.util.stream.Collectors;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -117,6 +122,7 @@ public class PassengerHomeScreen extends AppCompatActivity implements OnMapReady
     PassengerRoute passengerRoute = new PassengerRoute();
     DatabaseReference reference;
     List<Marker> driversMarker = new ArrayList<>();
+    List<CommuteModel> CommuteModels = new ArrayList<>();
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -137,6 +143,10 @@ public class PassengerHomeScreen extends AppCompatActivity implements OnMapReady
 
         ListOfFeatures = new ArrayList<>();
 
+        Intent serviceIntent = new Intent(PassengerHomeScreen.this, DriverAcceptService.class);
+        stopService(serviceIntent);
+        startService(serviceIntent);
+
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.googleMap);
         mapFragment.getMapAsync(this);
@@ -153,7 +163,20 @@ public class PassengerHomeScreen extends AppCompatActivity implements OnMapReady
             Picasso.get().load(GlobalClass.UserAccount.getProfilePicture()).into(pp);
         }
         home.setOnClickListener(view -> ChangeIcons(1));
-        commute.setOnClickListener(view -> ChangeIcons(2));
+        commute.setOnClickListener(view ->
+        {
+            int count = 0;
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                count = CommuteModels.stream().filter(e ->
+                        e.commuteStatus == CommuteStatus.InProgress
+                ).collect(Collectors.toList()).size();
+                if (count > 0) {
+                    Toast.makeText(PassengerHomeScreen.this, "You are currently occupied!", Toast.LENGTH_SHORT).show();
+                } else {
+                    ChangeIcons(2);
+                }
+            }
+        });
         driversNear.setOnClickListener(view -> {
             reference.child("OnlineDrivers").addValueEventListener(new ValueEventListener() {
                 @Override
@@ -258,6 +281,7 @@ public class PassengerHomeScreen extends AppCompatActivity implements OnMapReady
                     // Handle About Us menu item click
                 } else if (itemId == R.id.logout) {
                     FirebaseAuth.getInstance().signOut();
+                    stopService(serviceIntent);
                     Intent ii = new Intent(PassengerHomeScreen.this, ChooseAccount.class);
                     startActivity(ii);
                     finish();
@@ -266,6 +290,7 @@ public class PassengerHomeScreen extends AppCompatActivity implements OnMapReady
             }
         });
         ChangeIcons(1);
+        GetMyCommutes();
     }
 
     private void ChangeIcons(int position) {
@@ -644,6 +669,23 @@ public class PassengerHomeScreen extends AppCompatActivity implements OnMapReady
                     progressDialog.dismiss();
                     Toast.makeText(PassengerHomeScreen.this, task.getException().toString(), Toast.LENGTH_SHORT).show();
                 }
+            }
+        });
+    }
+    private void GetMyCommutes() {
+        reference.child("Commutes").orderByChild("passengerUid").equalTo(FirebaseAuth.getInstance().getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                CommuteModels = new ArrayList<>();
+                for (DataSnapshot snapshot1 : snapshot.getChildren()) {
+                    CommuteModel model = snapshot1.getValue(CommuteModel.class);
+                    CommuteModels.add(model);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
             }
         });
     }

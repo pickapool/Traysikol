@@ -1,51 +1,50 @@
 package com.example.traysikol.Drivers;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
 import android.app.AlertDialog;
-import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.location.Address;
-import android.location.Geocoder;
 import android.location.Location;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.traysikol.Enums.AccountType;
+import com.example.traysikol.Enums.CommuteStatus;
 import com.example.traysikol.Enums.OnlineStatus;
 import com.example.traysikol.GlobalClass;
+import com.example.traysikol.MainActivity;
 import com.example.traysikol.Models.CommuteModel;
 import com.example.traysikol.Models.OnlineDriverModel;
 import com.example.traysikol.Models.UserAccountModel;
-import com.example.traysikol.Passenger.PassengerHomeScreen;
 import com.example.traysikol.R;
+import com.example.traysikol.Services.RequestADriverService;
 import com.example.traysikol.UniqueRandomGenerator;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -61,11 +60,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
-import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
-import java.util.Random;
+import java.util.stream.Collectors;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -73,8 +71,9 @@ public class DriversHome extends AppCompatActivity implements OnMapReadyCallback
     DatabaseReference reference;
     FusedLocationProviderClient fusedLocationProviderClient;
     GoogleMap googleMaps;
-    GoogleMap googleMaps1;
+    ImageView home;
     LatLng myLocation = null;
+    List<CommuteModel> CommuteModels;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,6 +86,21 @@ public class DriversHome extends AppCompatActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.googleMapDrivers);
         mapFragment.getMapAsync(this);
+
+        Intent serviceIntent = new Intent(DriversHome.this, RequestADriverService.class);
+        stopService(serviceIntent);
+        startService(serviceIntent);
+        home = findViewById(R.id.home);
+        home.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FirebaseAuth.getInstance().signOut();
+                stopService(serviceIntent);
+                Intent ii = new Intent(DriversHome.this, MainActivity.class);
+                startActivity(ii);
+                finish();
+            }
+        });
 
         //remove driver then set again
         reference.child("OnlineDrivers")
@@ -133,6 +147,7 @@ public class DriversHome extends AppCompatActivity implements OnMapReadyCallback
 
                     }
                 });
+        GetMyCommutes();
 
     }
 
@@ -277,27 +292,38 @@ public class DriversHome extends AppCompatActivity implements OnMapReadyCallback
         Button accept = customLayout.findViewById(R.id.accept);
         Button close = customLayout.findViewById(R.id.decline);
 
-        fare.setText("₱ " +model.getFare());
+        fare.setText("₱ " + model.getFare());
         distance.setText(model.getDistance());
         address1.setText(model.getAddress1());
         address2.setText(model.getAddress2());
         time.setText(String.valueOf(model.getTime()));
 
         accept.setOnClickListener(view -> {
-            HashMap<String, Object> hashMap = new HashMap<>();
-            hashMap.put("driverUid", FirebaseAuth.getInstance().getCurrentUser().getUid());
-            hashMap.put("occupied", true);
-            reference.child("Commutes").child(model.getKey()).updateChildren(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
-                @Override
-                public void onComplete(@NonNull Task<Void> task) {
-                    if (task.isSuccessful()) {
-                        dialog.dismiss();
-                        Toast.makeText(DriversHome.this, "Passenger will be notify in there request.", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(DriversHome.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                    }
+            int count = 0;
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                count = CommuteModels.stream().filter(e ->
+                        e.commuteStatus == CommuteStatus.InProgress
+                ).collect(Collectors.toList()).size();
+                if (count > 0) {
+                    Toast.makeText(DriversHome.this, "You are currently occupied!", Toast.LENGTH_SHORT).show();
+                } else {
+                    HashMap<String, Object> hashMap = new HashMap<>();
+                    hashMap.put("driverUid", FirebaseAuth.getInstance().getCurrentUser().getUid());
+                    hashMap.put("isOccupied", true);
+                    hashMap.put("occupied", true);
+                    reference.child("Commutes").child(model.getKey()).updateChildren(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                dialog.dismiss();
+                                Toast.makeText(DriversHome.this, "Passenger will be notify in there request.", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(DriversHome.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
                 }
-            });
+            }
         });
 
         close.setOnClickListener(view -> dialog.dismiss());
@@ -322,7 +348,7 @@ public class DriversHome extends AppCompatActivity implements OnMapReadyCallback
                 LatLng passLocation = new LatLng(model.getPassengerLatitude(), model.getPassengerLongitude());
                 LatLng passDestination = new LatLng(model.getPassengerDestinationLatitude(), model.getPassengerDestinationLongitude());
 
-                googleMapDialog[0].moveCamera(CameraUpdateFactory.newLatLngZoom(passLocation,11));
+                googleMapDialog[0].moveCamera(CameraUpdateFactory.newLatLngZoom(passLocation, 11));
                 googleMapDialog[0].addMarker(new MarkerOptions()
                         .position(passLocation)
                         .title(model.getAddress1())
@@ -379,8 +405,26 @@ public class DriversHome extends AppCompatActivity implements OnMapReadyCallback
         });
 
 
-
         dialog.show();
         dialog.getWindow().setAttributes(lWindowParams);
     }
+
+    private void GetMyCommutes() {
+        reference.child("Commutes").orderByChild("driverUid").equalTo(FirebaseAuth.getInstance().getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                CommuteModels = new ArrayList<>();
+                for (DataSnapshot snapshot1 : snapshot.getChildren()) {
+                    CommuteModel model = snapshot1.getValue(CommuteModel.class);
+                    CommuteModels.add(model);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
 }
