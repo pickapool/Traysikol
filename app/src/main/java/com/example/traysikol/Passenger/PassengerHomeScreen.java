@@ -84,12 +84,15 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
+import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class PassengerHomeScreen extends AppCompatActivity implements OnMapReadyCallback {
 
@@ -138,7 +141,17 @@ public class PassengerHomeScreen extends AppCompatActivity implements OnMapReady
                 .findFragmentById(R.id.googleMap);
         mapFragment.getMapAsync(this);
         CheckLocationIsOn();
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        View headerView = navigationView.getHeaderView(0);
+        CircleImageView pp = headerView.findViewById(R.id.profilePicture);
+        TextView fullname = headerView.findViewById(R.id.fullName);
+        TextView address = headerView.findViewById(R.id.address);
 
+        fullname.setText(GlobalClass.UserAccount.getFullName());
+        address.setText(TextUtils.isEmpty(GlobalClass.UserAccount.getAddress()) ? "Address not found" : GlobalClass.UserAccount.getAddress());
+        if(!TextUtils.isEmpty(GlobalClass.UserAccount.getProfilePicture())) {
+            Picasso.get().load(GlobalClass.UserAccount.getProfilePicture()).into(pp);
+        }
         home.setOnClickListener(view -> ChangeIcons(1));
         commute.setOnClickListener(view -> ChangeIcons(2));
         driversNear.setOnClickListener(view -> {

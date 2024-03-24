@@ -2,13 +2,17 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_margin="10dp"
+    android:layout_marginRight="10dp"
     android:background="@color/transparent">
-
+<RelativeLayout
+    android:layout_width="wrap_content"
+    android:id="@+id/bot"
+    android:layout_height="wrap_content">
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/profilePicture"
         android:layout_centerInParent="true"
         android:layout_width="50dp"
+        android:layout_marginBottom="5dp"
         android:layout_height="50dp" />
     <View
         android:id="@+id/onlineIndicator"
@@ -19,5 +23,17 @@
         android:layout_alignRight="@id/profilePicture"
         android:layout_alignTop="@id/profilePicture"
         android:background="@drawable/online_shape" />
+</RelativeLayout>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:gravity="center"
+        android:layout_below="@id/bot"
+        android:text="Loading..."
+        android:id="@+id/firstname"
+        android:layout_centerHorizontal="true"
+        />
+
 
 </RelativeLayout>

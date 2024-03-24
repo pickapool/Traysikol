@@ -1,6 +1,5 @@
 package com.example.traysikol.Adapter;
 
-import android.Manifest;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
@@ -20,6 +19,7 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.traysikol.Enums.OnlineStatus;
+import android.Manifest;
 import com.example.traysikol.Models.OnlineDriverModel;
 import com.example.traysikol.Models.UserAccountModel;
 import com.example.traysikol.R;
@@ -31,12 +31,14 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
+import org.w3c.dom.Text;
+
 import java.util.List;
 import java.util.Random;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class AdapterDrivers extends RecyclerView.Adapter<AdapterDrivers.ViewHolder>{
+public class AdapterDriversNearBy extends RecyclerView.Adapter<AdapterDriversNearBy.ViewHolder>{
     private static final int OFFLINE = 1;
     private static final int ONLINE = 2;
     DatabaseReference reference;
@@ -46,7 +48,7 @@ public class AdapterDrivers extends RecyclerView.Adapter<AdapterDrivers.ViewHold
 
     UniqueRandomGenerator generator = new UniqueRandomGenerator();
 
-    public AdapterDrivers(List<OnlineDriverModel> onlineDriverModelList, Activity activity) {
+    public AdapterDriversNearBy(List<OnlineDriverModel> onlineDriverModelList, Activity activity) {
         this.onlineDriverModelList = onlineDriverModelList;
         this.activity = activity;
         reference = FirebaseDatabase.getInstance().getReference();
@@ -55,12 +57,12 @@ public class AdapterDrivers extends RecyclerView.Adapter<AdapterDrivers.ViewHold
 
     @NonNull
     @Override
-    public AdapterDrivers.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public AdapterDriversNearBy.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view;
         if (viewType == ONLINE) {
-            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.template_profile_driver_online, parent, false);
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.template_profile_driver_above_online, parent, false);
         } else {
-            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.template_profile_driver_offline, parent, false);
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.template_profile_driver_above_offline, parent, false);
         }
         return new ViewHolder(view);
     }
@@ -72,15 +74,15 @@ public class AdapterDrivers extends RecyclerView.Adapter<AdapterDrivers.ViewHold
     }
 
     @Override
-    public void onBindViewHolder(@NonNull AdapterDrivers.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull AdapterDriversNearBy.ViewHolder holder, int position) {
             OnlineDriverModel model = onlineDriverModelList.get(position);
-            holder.driverName.setText(model.getDriverName());
         final int[] number = {1};
             reference.child("Accounts").child(model.getDriverUid()).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     UserAccountModel user = snapshot.getValue(UserAccountModel.class);
                     model.setUserAccountModel(user);
+                    holder.name.setText(user.getFirstname().length() > 7 ? user.getFirstname().substring(0, 7).trim() +"..": user.getFirstname());
                     if(!TextUtils.isEmpty(user.getProfilePicture())) {
                         Picasso.get().load(user.getProfilePicture()).into(holder.profilePicture);
                     } else {
@@ -103,7 +105,12 @@ public class AdapterDrivers extends RecyclerView.Adapter<AdapterDrivers.ViewHold
 
                 }
             });
-        holder.itemView.setOnClickListener(view -> ShowInformation(model.getUserAccountModel(), number[0]));
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    ShowInformation(model.getUserAccountModel(), number[0]);
+                }
+            });
     }
     private void makePhoneCall(String phoneNumber) {
         if (ContextCompat.checkSelfPermission(activity,
@@ -153,7 +160,6 @@ public class AdapterDrivers extends RecyclerView.Adapter<AdapterDrivers.ViewHold
         } else {
             Picasso.get().load(R.drawable.person4).into(pp);
         }
-
         call.setOnClickListener(view -> makePhoneCall(user.getPhoneNumber()));
         message.setOnClickListener(view -> sendSms(user.getPhoneNumber()));
         fullName.setText(user.getFullName());
@@ -170,12 +176,12 @@ public class AdapterDrivers extends RecyclerView.Adapter<AdapterDrivers.ViewHold
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         CircleImageView profilePicture;
-        TextView driverName;
+        TextView name;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             profilePicture = itemView.findViewById(R.id.profilePicture);
-            driverName = itemView.findViewById(R.id.driverName);
+            name = itemView.findViewById(R.id.firstname);
         }
     }
     public class UniqueRandomGenerator {
