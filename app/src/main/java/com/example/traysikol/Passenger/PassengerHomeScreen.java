@@ -623,6 +623,9 @@ public class PassengerHomeScreen extends AppCompatActivity implements OnMapReady
         GlobalClass.CommuteModel.setKey(key);
         GlobalClass.CommuteModel.setPassengerUid(FirebaseAuth.getInstance().getCurrentUser().getUid());
         GlobalClass.CommuteModel.setCommuteDate(Calendar.getInstance().getTime());
+        GlobalClass.CommuteModel.setTime(time);
+        GlobalClass.CommuteModel.setAddress1(myAddress);
+        GlobalClass.CommuteModel.setAddress2(myDestinationAddress);
 
         reference.child("Commutes").child(key).setValue(GlobalClass.CommuteModel).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override

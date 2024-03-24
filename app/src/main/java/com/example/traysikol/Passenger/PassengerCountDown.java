@@ -54,6 +54,9 @@ public class PassengerCountDown extends DialogFragment implements DialogHelper.C
         this.fare = fare;
         this.distance = dis;
         this.times = t;
+        GlobalClass.CommuteModel.setTime(t);
+        GlobalClass.CommuteModel.setAddress1(address1);
+        GlobalClass.CommuteModel.setAddress2(address2);
     }
 
     @Override

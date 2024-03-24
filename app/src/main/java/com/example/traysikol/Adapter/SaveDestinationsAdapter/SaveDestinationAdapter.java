@@ -126,22 +126,6 @@ public class SaveDestinationAdapter extends RecyclerView.Adapter<SaveDestination
 
     }
 
-   /* @Override
-    public void onConfirmation(boolean confirmed, int position, SaveDestinationModel model) {
-        SaveDestinationModel saveD = listDestination.get(position);
-        if(confirmed)
-        {
-            GlobalClass.IsUseLocation = true;
-            GlobalClass.currentLocation.get(0).setLatitude(saveD.getLatitude());
-            GlobalClass.currentLocation.get(0).setLatitude(saveD.getLongitude());
-            //Close and get destination
-            Intent ii = new Intent(activity, PassengerHomeScreen.class);
-            activity.startActivity(ii);
-            activity.finish();
-        }
-    }*/
-
-
     public class ViewHolder extends RecyclerView.ViewHolder{
         TextView address;
         Button remove, use;

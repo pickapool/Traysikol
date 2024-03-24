@@ -23,6 +23,7 @@ import android.Manifest;
 import com.example.traysikol.Models.OnlineDriverModel;
 import com.example.traysikol.Models.UserAccountModel;
 import com.example.traysikol.R;
+import com.example.traysikol.UniqueRandomGenerator;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -182,25 +183,6 @@ public class AdapterDriversNearBy extends RecyclerView.Adapter<AdapterDriversNea
             super(itemView);
             profilePicture = itemView.findViewById(R.id.profilePicture);
             name = itemView.findViewById(R.id.firstname);
-        }
-    }
-    public class UniqueRandomGenerator {
-        private int previousNumber;
-        private Random random;
-
-        public UniqueRandomGenerator() {
-            random = new Random();
-            previousNumber = -1; // Initialize to an invalid number
-        }
-
-        public int generateUniqueRandom() {
-            int currentNumber;
-            do {
-                currentNumber = random.nextInt(4) + 1; // Generates random number between 1 and 4
-            } while (currentNumber == previousNumber); // Loop until a different number is generated
-
-            previousNumber = currentNumber; // Update the previous number
-            return currentNumber;
         }
     }
 }

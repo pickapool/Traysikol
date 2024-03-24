@@ -19,10 +19,13 @@ public class CommuteModel {
     public Date commuteDate;
     public String distance;
     public String fare;
+    public String time;
+    public String address1;
+    public String address2;
 
     public CommuteModel (){}
 
-    public CommuteModel(String key, String passengerUid, String driverUid, double passengerLatitude, double passengerLongitude, double passengerDestinationLatitude, double passengerDestinationLongitude, PassengerRoute passengerRoute, boolean isOccupied, CommuteStatus commuteStatus, Date commuteDate, String distance, String fare) {
+    public CommuteModel(String key, String passengerUid, String driverUid, double passengerLatitude, double passengerLongitude, double passengerDestinationLatitude, double passengerDestinationLongitude, PassengerRoute passengerRoute, boolean isOccupied, CommuteStatus commuteStatus, Date commuteDate, String distance, String fare, String time, String address1, String address2) {
         this.key = key;
         this.passengerUid = passengerUid;
         this.driverUid = driverUid;
@@ -36,6 +39,33 @@ public class CommuteModel {
         this.commuteDate = commuteDate;
         this.distance = distance;
         this.fare = fare;
+        this.time = time;
+        this.address1 = address1;
+        this.address2 = address2;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
+    }
+
+    public String getAddress1() {
+        return address1;
+    }
+
+    public void setAddress1(String address1) {
+        this.address1 = address1;
+    }
+
+    public String getAddress2() {
+        return address2;
+    }
+
+    public void setAddress2(String address2) {
+        this.address2 = address2;
     }
 
     public String getKey() {
