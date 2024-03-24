@@ -273,7 +273,9 @@ public class PassengerHomeScreen extends AppCompatActivity implements OnMapReady
                    startActivity(ii);
                    finish();
                 } else if (itemId == R.id.history) {
-                    // Handle History menu item click
+                    Intent ii = new Intent(PassengerHomeScreen.this, PassengerHistory.class);
+                    startActivity(ii);
+                    finish();
                 } else if (itemId == R.id.myRide) {
                     int count = 0;
                     if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {

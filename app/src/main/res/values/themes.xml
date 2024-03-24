@@ -32,4 +32,10 @@
     </style>
     <style name="Theme.Traysikol.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
     <style name="Theme.Traysikol.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    <style name="MediumRatingBar">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:scaleX">1.2</item> <!-- Adjust the scaleX and scaleY values as needed -->
+        <item name="android:scaleY">1.2</item>
+    </style>
 </resources>
