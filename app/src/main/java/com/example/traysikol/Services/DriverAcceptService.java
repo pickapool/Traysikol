@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.traysikol.Drivers.DriversHome;
+import com.example.traysikol.Enums.CommuteStatus;
 import com.example.traysikol.Extensions;
 import com.example.traysikol.Models.CommuteModel;
 import com.example.traysikol.Passenger.PassengerHomeScreen;
@@ -36,12 +37,17 @@ public class DriverAcceptService extends Service {
             @Override
             public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
                 CommuteModel commuteModel = snapshot.getValue(CommuteModel.class);
-                //Toast.makeText(DriverAcceptService.this, String.valueOf(commuteModel.getPassengerUid()), Toast.LENGTH_SHORT).show();
                 if(commuteModel.getPassengerUid().equals(FirebaseAuth.getInstance().getCurrentUser().getUid()))
                 {
-                    if(commuteModel.isOccupied())
+                    if(commuteModel.isOccupied() == false)
+                        return;
+                    if(commuteModel.isOccupied() && commuteModel.getCommuteStatus() == CommuteStatus.InProgress)
                     {
                         Extensions.CreateNotification(getApplicationContext(), PassengerHomeScreen.class, "Driver is on its way.");
+                    } else if(commuteModel.isOccupied() && commuteModel.getCommuteStatus() == CommuteStatus.Cancelled) {
+                        Extensions.CreateNotification(getApplicationContext(), PassengerHomeScreen.class, "Trip has been cancelled");
+                    } else {
+                        Extensions.CreateNotification(getApplicationContext(), PassengerHomeScreen.class, "Trip successfully done.");
                     }
                 }
             }

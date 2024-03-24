@@ -2,6 +2,7 @@ package com.example.traysikol.Models;
 
 import com.example.traysikol.Enums.CommuteStatus;
 import com.example.traysikol.Models.OSRDirectionModels.ORSGeometry;
+import com.google.firebase.database.Exclude;
 
 import java.util.Date;
 
@@ -22,6 +23,10 @@ public class CommuteModel {
     public String time;
     public String address1;
     public String address2;
+    @Exclude
+    public UserAccountModel DriverAccount;
+    @Exclude
+    public UserAccountModel PassengerAccount;
 
     public CommuteModel (){}
 

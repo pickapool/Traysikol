@@ -24,6 +24,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.traysikol.BuildConfig;
+import com.example.traysikol.Drivers.DriversHome;
+import com.example.traysikol.Enums.AccountType;
 import com.example.traysikol.Extensions;
 import com.example.traysikol.GlobalClass;
 import com.example.traysikol.R;
@@ -68,7 +70,6 @@ public class PassengerProfileDetails extends AppCompatActivity {
 
         email.setText(GlobalClass.UserAccount.getEmail());
 
-
         if(!TextUtils.isEmpty(GlobalClass.UserAccount.getProfilePicture()))
             Picasso.get().load(GlobalClass.UserAccount.getProfilePicture()).into(pp);
         name.setText(GlobalClass.UserAccount.getFullName());
@@ -98,13 +99,15 @@ public class PassengerProfileDetails extends AppCompatActivity {
             }
         });
 
-        back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent ii = new Intent(PassengerProfileDetails.this, PassengerProfile.class);
-                startActivity(ii);
-                finish();
+        back.setOnClickListener(view -> {
+            Intent ii;
+            if(GlobalClass.UserAccount.getAccountType() == AccountType.Commuter) {
+                ii = new Intent(PassengerProfileDetails.this, PassengerProfile.class);
+            } else {
+                ii = new Intent(PassengerProfileDetails.this, DriversHome.class);
             }
+            startActivity(ii);
+            finish();
         });
     }
 

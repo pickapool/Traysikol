@@ -8,7 +8,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.traysikol.Drivers.DriversHome;
+import com.example.traysikol.Enums.CommuteStatus;
 import com.example.traysikol.Extensions;
+import com.example.traysikol.Models.CommuteModel;
+import com.example.traysikol.Passenger.PassengerHomeScreen;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -34,7 +38,15 @@ public class RequestADriverService extends Service {
 
             @Override
             public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-
+                CommuteModel commuteModel = snapshot.getValue(CommuteModel.class);
+                if(commuteModel.getDriverUid().equals(FirebaseAuth.getInstance().getCurrentUser().getUid()))
+                {
+                    if(commuteModel.getCommuteStatus() == CommuteStatus.Cancelled) {
+                        Extensions.CreateNotification(getApplicationContext(), PassengerHomeScreen.class, "Trip has been cancelled");
+                    } else if(commuteModel.getCommuteStatus() == CommuteStatus.Done){
+                        Extensions.CreateNotification(getApplicationContext(), PassengerHomeScreen.class, "Trip successfully done.");
+                    }
+                }
             }
 
             @Override
@@ -52,6 +64,7 @@ public class RequestADriverService extends Service {
 
             }
         });
+
         return START_STICKY;
     }
     @Nullable

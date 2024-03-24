@@ -48,6 +48,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.traysikol.Adapter.PlacesAdapter.PlaceAdapter;
 import com.example.traysikol.ChooseAccount;
+import com.example.traysikol.CurrentRequest;
 import com.example.traysikol.Drivers.DriversHome;
 import com.example.traysikol.Enums.CommuteStatus;
 import com.example.traysikol.Enums.OnlineStatus;
@@ -61,6 +62,7 @@ import com.example.traysikol.Models.OSRPlacesModels.FeatureCollection;
 import com.example.traysikol.Models.OSRPlacesModels.Features;
 import com.example.traysikol.Models.OnlineDriverModel;
 import com.example.traysikol.Models.PassengerRoute;
+import com.example.traysikol.Models.UserAccountModel;
 import com.example.traysikol.R;
 import com.example.traysikol.RotatingDrawable;
 import com.example.traysikol.Services.DriverAcceptService;
@@ -273,8 +275,20 @@ public class PassengerHomeScreen extends AppCompatActivity implements OnMapReady
                 } else if (itemId == R.id.history) {
                     // Handle History menu item click
                 } else if (itemId == R.id.myRide) {
-                    // Handle reuqest menu item click
-                    //Check if existed and
+                    int count = 0;
+                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                        List<CommuteModel>  list = CommuteModels.stream().filter(e ->
+                                e.commuteStatus == CommuteStatus.InProgress && e.isOccupied()
+                        ).collect(Collectors.toList());
+                        count = list.size();
+                        if (count > 0) {
+                            CommuteModel currentRequest =  list.get(0);
+                            CurrentRequest current = new CurrentRequest(currentRequest);
+                            current.show(getSupportFragmentManager(), "PassengerHomeScreen");
+                        } else {
+                            Toast.makeText(PassengerHomeScreen.this, "There are no current trips.", Toast.LENGTH_SHORT).show();
+                        }
+                    }
                 } else if (itemId == R.id.profile) {
                     // Handle Profile menu item click
                 } else if (itemId == R.id.aboutUs) {
@@ -679,7 +693,20 @@ public class PassengerHomeScreen extends AppCompatActivity implements OnMapReady
                 CommuteModels = new ArrayList<>();
                 for (DataSnapshot snapshot1 : snapshot.getChildren()) {
                     CommuteModel model = snapshot1.getValue(CommuteModel.class);
-                    CommuteModels.add(model);
+                    reference.child("Accounts").child(model.getDriverUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            UserAccountModel driver = snapshot.getValue(UserAccountModel.class);
+                            model.DriverAccount = driver;
+                            model.PassengerAccount = GlobalClass.UserAccount;
+                            CommuteModels.add(model);
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
                 }
             }
 

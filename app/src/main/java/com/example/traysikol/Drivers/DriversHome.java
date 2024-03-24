@@ -25,6 +25,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.traysikol.CurrentRequest;
 import com.example.traysikol.Enums.AccountType;
 import com.example.traysikol.Enums.CommuteStatus;
 import com.example.traysikol.Enums.OnlineStatus;
@@ -33,6 +34,9 @@ import com.example.traysikol.MainActivity;
 import com.example.traysikol.Models.CommuteModel;
 import com.example.traysikol.Models.OnlineDriverModel;
 import com.example.traysikol.Models.UserAccountModel;
+import com.example.traysikol.Passenger.PassengerHomeScreen;
+import com.example.traysikol.Passenger.PassengerProfile;
+import com.example.traysikol.Passenger.PassengerProfileDetails;
 import com.example.traysikol.R;
 import com.example.traysikol.Services.RequestADriverService;
 import com.example.traysikol.UniqueRandomGenerator;
@@ -71,7 +75,7 @@ public class DriversHome extends AppCompatActivity implements OnMapReadyCallback
     DatabaseReference reference;
     FusedLocationProviderClient fusedLocationProviderClient;
     GoogleMap googleMaps;
-    ImageView home;
+    ImageView home, myRequest, myProfile;
     LatLng myLocation = null;
     List<CommuteModel> CommuteModels;
 
@@ -82,6 +86,36 @@ public class DriversHome extends AppCompatActivity implements OnMapReadyCallback
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         reference = FirebaseDatabase.getInstance().getReference();
+        myRequest = findViewById(R.id.currentRequest);
+        myProfile = findViewById(R.id.myProfile);
+
+        myProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent ii =new Intent(DriversHome.this, PassengerProfileDetails.class);
+                startActivity(ii);
+                finish();
+            }
+        });
+        myRequest.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int count = 0;
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                    List<CommuteModel>  list = CommuteModels.stream().filter(e ->
+                            e.commuteStatus == CommuteStatus.InProgress && e.isOccupied()
+                    ).collect(Collectors.toList());
+                    count = list.size();
+                    if (count > 0) {
+                        CommuteModel currentRequest =  list.get(0);
+                        CurrentRequest current = new CurrentRequest(currentRequest);
+                        current.show(getSupportFragmentManager(), "DriversHome");
+                    } else {
+                        Toast.makeText(DriversHome.this, "There are no current trips.", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+        });
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.googleMapDrivers);
@@ -393,8 +427,6 @@ public class DriversHome extends AppCompatActivity implements OnMapReadyCallback
                         Picasso.get().load(R.drawable.person4).into(pp);
                     }
                 }
-
-
             }
 
             @Override
@@ -416,7 +448,20 @@ public class DriversHome extends AppCompatActivity implements OnMapReadyCallback
                 CommuteModels = new ArrayList<>();
                 for (DataSnapshot snapshot1 : snapshot.getChildren()) {
                     CommuteModel model = snapshot1.getValue(CommuteModel.class);
-                    CommuteModels.add(model);
+                    reference.child("Accounts").child(model.getPassengerUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            UserAccountModel passenger = snapshot.getValue(UserAccountModel.class);
+                            model.PassengerAccount = passenger;
+                            model.DriverAccount = GlobalClass.UserAccount;
+                            CommuteModels.add(model);
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
                 }
             }
 

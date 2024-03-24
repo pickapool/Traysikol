@@ -16,6 +16,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.text.TextUtils;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -31,6 +32,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
@@ -39,6 +41,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class Extensions {
     public static final String NOTIFICATION_CHANNEL_ID = "10001" ;
@@ -165,5 +169,23 @@ public class Extensions {
         }
         assert mNotificationManager != null;
         mNotificationManager.notify(( int ) System. currentTimeMillis () , mBuilder.build()) ;
+    }
+    public static void SetProfilePicture(String profilePic, CircleImageView pp)
+    {
+        if (!TextUtils.isEmpty(profilePic)) {
+            Picasso.get().load(profilePic).into(pp);
+        } else {
+            UniqueRandomGenerator uniqueRandomGenerator = new UniqueRandomGenerator();
+            int number = uniqueRandomGenerator.generateUniqueRandom();
+            if (number == 1) {
+                Picasso.get().load(R.drawable.person1).into(pp);
+            } else if (number == 2) {
+                Picasso.get().load(R.drawable.person2).into(pp);
+            } else if (number == 3) {
+                Picasso.get().load(R.drawable.person3).into(pp);
+            } else {
+                Picasso.get().load(R.drawable.person4).into(pp);
+            }
+        }
     }
 }

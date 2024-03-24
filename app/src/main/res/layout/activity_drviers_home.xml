@@ -44,7 +44,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/request_icon_bottom"
-            android:id="@+id/driversNear"
+            android:id="@+id/currentRequest"
             android:clickable="true"
             android:layout_weight="1"
             />
