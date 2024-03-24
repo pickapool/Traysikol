@@ -12,6 +12,7 @@ import com.example.traysikol.Models.OSRDirectionModels.ORSProperties;
 import com.example.traysikol.Models.OSRDirectionModels.ORSResponse;
 import com.example.traysikol.Models.OSRDirectionModels.ORSSegment;
 import com.example.traysikol.Models.UserAccountModel;
+import com.google.android.gms.maps.model.LatLng;
 
 import java.text.DecimalFormat;
 import java.util.List;

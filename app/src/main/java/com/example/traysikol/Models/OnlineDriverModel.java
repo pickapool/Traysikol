@@ -1,6 +1,7 @@
 package com.example.traysikol.Models;
 
 import com.example.traysikol.Enums.OnlineStatus;
+import com.google.firebase.database.Exclude;
 
 public class OnlineDriverModel {
     public String driverUid;
@@ -8,6 +9,8 @@ public class OnlineDriverModel {
     public double longitude;
     public OnlineStatus onlineStatus;
     public String driverName;
+    @Exclude
+    UserAccountModel userAccountModel;
 
     public OnlineDriverModel(){}
 
@@ -57,5 +60,13 @@ public class OnlineDriverModel {
 
     public void setOnlineStatus(OnlineStatus onlineStatus) {
         this.onlineStatus = onlineStatus;
+    }
+    @Exclude
+    public UserAccountModel getUserAccountModel() {
+        return userAccountModel;
+    }
+    @Exclude
+    public void setUserAccountModel(UserAccountModel userAccountModel) {
+        this.userAccountModel = userAccountModel;
     }
 }

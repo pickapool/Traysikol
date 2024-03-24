@@ -61,6 +61,7 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/firstname"
+                    android:singleLine="true"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
             </com.google.android.material.textfield.TextInputLayout>
@@ -80,6 +81,7 @@
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/lastname"
                     android:layout_width="match_parent"
+                    android:singleLine="true"
                     android:layout_height="wrap_content" />
             </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
@@ -106,6 +108,7 @@
                     android:id="@+id/email"
                     android:inputType="textEmailAddress"
                     android:layout_width="match_parent"
+                    android:singleLine="true"
                     android:layout_height="wrap_content" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -124,6 +127,7 @@
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/phoneNumber"
                     android:inputType="number"
+                    android:singleLine="true"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
             </com.google.android.material.textfield.TextInputLayout>
@@ -144,6 +148,7 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/username"
                 android:layout_width="match_parent"
+                android:singleLine="true"
                 android:layout_height="wrap_content" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -163,6 +168,7 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/password"
                 android:layout_width="match_parent"
+                android:singleLine="true"
                 android:layout_height="wrap_content"
                 android:inputType="textPassword" />
         </com.google.android.material.textfield.TextInputLayout>
@@ -183,6 +189,7 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/confirmPassword"
                 android:layout_width="match_parent"
+                android:singleLine="true"
                 android:layout_height="wrap_content"
                 android:inputType="textPassword" />
         </com.google.android.material.textfield.TextInputLayout>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_margin="10dp"
+    android:paddingRight="20dp"
+    android:background="@color/transparent">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/profilePicture"
+        android:layout_centerVertical="true"
+        android:layout_width="50dp"
+        android:layout_height="50dp" />
+
+    <View
+        android:id="@+id/onlineIndicator"
+        android:layout_width="8dp"
+        android:layout_height="8dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="3dp"
+        android:layout_alignRight="@id/profilePicture"
+        android:layout_alignTop="@id/profilePicture"
+        android:background="@drawable/online_shape" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="18dp"
+        android:textColor="#000000"
+        android:layout_marginLeft="10dp"
+        android:text="Loading..."
+        android:id="@+id/driverName"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@id/profilePicture"
+        />
+    <ImageView
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:id="@+id/message"
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@id/call"
+        android:layout_marginRight="20dp"
+        android:src="@drawable/message_icon"/>
+    <ImageView
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:id="@+id/call"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:src="@drawable/call_icon"/>
+</RelativeLayout>

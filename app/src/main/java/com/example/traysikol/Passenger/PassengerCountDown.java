@@ -127,6 +127,8 @@ public class PassengerCountDown extends DialogFragment implements DialogHelper.C
                 if(IsPlaying)
                 {
                     DialogHelper.showConfirmationDialog(getActivity(), PassengerCountDown.this);
+                } else {
+                    dismiss();
                 }
             }
         });
@@ -217,12 +219,15 @@ public class PassengerCountDown extends DialogFragment implements DialogHelper.C
     }
 
     @Override
-    public void onPause() {
-        countDownTimer.cancel();
-        saveToPreferences(hourTxt.getText().toString(),
-                minuteTxt.getText().toString(), secondTxt.getText().toString());
-        Intent serviceIntent = new Intent(getContext(), CountDownService.class);
-        getContext().startService(serviceIntent);
+    public void onPause()
+    {
+        if(countDownTimer != null) {
+            countDownTimer.cancel();
+            saveToPreferences(hourTxt.getText().toString(),
+                    minuteTxt.getText().toString(), secondTxt.getText().toString());
+            Intent serviceIntent = new Intent(getContext(), CountDownService.class);
+            getContext().startService(serviceIntent);
+        }
         super.onPause();
     }
 

@@ -53,8 +53,8 @@ public class PassengerDoneRequest extends AppCompatActivity implements DialogHel
             String key = reference.push().getKey();
             destinationModel.setKey(key);
             destinationModel.setPassengerUid(FirebaseAuth.getInstance().getCurrentUser().getUid());
-            destinationModel.setLatitude(GlobalClass.CommuteModel.getPassengerLatitude());
-            destinationModel.setLongitude(GlobalClass.CommuteModel.getPassengerDestinationLongitude());
+            destinationModel.setLatitude(GlobalClass.currentLocation.get(0).getLatitude());
+            destinationModel.setLongitude(GlobalClass.currentLocation.get(0).getLongitude());
             destinationModel.setAddress(GlobalClass.currentLocation.get(0).getAddressLine(0));
             reference.child("SaveDestinations").child(key).setValue(destinationModel)
                     .addOnCompleteListener(task -> {

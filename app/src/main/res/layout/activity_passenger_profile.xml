@@ -25,12 +25,14 @@
         <de.hdodenhof.circleimageview.CircleImageView
             android:layout_width="100dp"
             android:layout_height="100dp"
+            android:id="@+id/profilePicture"
             android:src="@drawable/app_logo" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Your name here"
+            android:id="@+id/fullName"
             android:textAlignment="center"
             android:textColor="#FFFFFF"
             android:textSize="18dp" />

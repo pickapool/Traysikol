@@ -231,7 +231,9 @@ public class PassengerHomeScreen extends AppCompatActivity implements OnMapReady
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 int itemId = item.getItemId();
                 if (itemId == R.id.drivers) {
-                    Toast.makeText(PassengerHomeScreen.this, "asdasd", Toast.LENGTH_SHORT).show();
+                   Intent ii = new Intent(PassengerHomeScreen.this , PassengerDriverList.class);
+                   startActivity(ii);
+                   finish();
                 } else if (itemId == R.id.history) {
                     // Handle History menu item click
                 } else if (itemId == R.id.myRide) {
