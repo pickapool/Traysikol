@@ -19,7 +19,9 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.traysikol.Enums.OnlineStatus;
+
 import android.Manifest;
+
 import com.example.traysikol.Models.OnlineDriverModel;
 import com.example.traysikol.Models.UserAccountModel;
 import com.example.traysikol.R;
@@ -39,7 +41,7 @@ import java.util.Random;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class AdapterDriversNearBy extends RecyclerView.Adapter<AdapterDriversNearBy.ViewHolder>{
+public class AdapterDriversNearBy extends RecyclerView.Adapter<AdapterDriversNearBy.ViewHolder> {
     private static final int OFFLINE = 1;
     private static final int ONLINE = 2;
     DatabaseReference reference;
@@ -71,48 +73,37 @@ public class AdapterDriversNearBy extends RecyclerView.Adapter<AdapterDriversNea
     @Override
     public int getItemViewType(int position) {
         OnlineDriverModel dr = onlineDriverModelList.get(position);
-        return  dr.getOnlineStatus() == OnlineStatus.Online ? ONLINE : OFFLINE;
+        return dr.getOnlineStatus() == OnlineStatus.Online ? ONLINE : OFFLINE;
     }
 
     @Override
     public void onBindViewHolder(@NonNull AdapterDriversNearBy.ViewHolder holder, int position) {
-            OnlineDriverModel model = onlineDriverModelList.get(position);
-        final int[] number = {1};
-            reference.child("Accounts").child(model.getDriverUid()).addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    UserAccountModel user = snapshot.getValue(UserAccountModel.class);
-                    model.setUserAccountModel(user);
-                    holder.name.setText(user.getFirstname().length() > 7 ? user.getFirstname().substring(0, 7).trim() +"..": user.getFirstname());
-                    if(!TextUtils.isEmpty(user.getProfilePicture())) {
-                        Picasso.get().load(user.getProfilePicture()).into(holder.profilePicture);
-                    } else {
-                        number[0] = generator.generateUniqueRandom();
-                        if(number[0] == 1)
-                        {
-                            Picasso.get().load(R.drawable.person1).into(holder.profilePicture);
-                        } else if (number[0] == 2) {
-                            Picasso.get().load(R.drawable.person2).into(holder.profilePicture);
-                        } else if(number[0] == 3) {
-                            Picasso.get().load(R.drawable.person3).into(holder.profilePicture);
-                        } else {
-                            Picasso.get().load(R.drawable.person4).into(holder.profilePicture);
-                        }
-                    }
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-
-                }
-            });
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    ShowInformation(model.getUserAccountModel(), number[0]);
-                }
-            });
+        OnlineDriverModel model = onlineDriverModelList.get(position);
+        holder.name.setText(model.getUserAccountModel().getFirstname().length() > 7 ? model.getUserAccountModel().getFirstname().substring(0, 7).trim() +"..": model.getUserAccountModel().getFirstname());
+        int number;
+        if (!TextUtils.isEmpty(model.getUserAccountModel().getProfilePicture())) {
+            number = 0;
+            Picasso.get().load(model.getUserAccountModel().getProfilePicture()).into(holder.profilePicture);
+        } else {
+            number = generator.generateUniqueRandom();
+            if (number == 1) {
+                Picasso.get().load(R.drawable.person1).into(holder.profilePicture);
+            } else if (number == 2) {
+                Picasso.get().load(R.drawable.person2).into(holder.profilePicture);
+            } else if (number == 3) {
+                Picasso.get().load(R.drawable.person3).into(holder.profilePicture);
+            } else {
+                Picasso.get().load(R.drawable.person4).into(holder.profilePicture);
+            }
+        }
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ShowInformation(model.getUserAccountModel(), number);
+            }
+        });
     }
+
     private void makePhoneCall(String phoneNumber) {
         if (ContextCompat.checkSelfPermission(activity,
                 Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
@@ -123,7 +114,8 @@ public class AdapterDriversNearBy extends RecyclerView.Adapter<AdapterDriversNea
             activity.startActivity(new Intent(Intent.ACTION_CALL, Uri.parse(dial)));
         }
     }
-    private void  sendSms(String phoneNumber){
+
+    private void sendSms(String phoneNumber) {
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("sms:" + phoneNumber));
         intent.putExtra("sms_body", "");
 
@@ -133,8 +125,8 @@ public class AdapterDriversNearBy extends RecyclerView.Adapter<AdapterDriversNea
             Toast.makeText(activity, "SMS app not found", Toast.LENGTH_SHORT).show();
         }
     }
-    private void ShowInformation(UserAccountModel user, int number)
-    {
+
+    private void ShowInformation(UserAccountModel user, int number) {
         bottomSheetTeachersDialog.cancel();
         View layout = LayoutInflater.from(activity).inflate(R.layout.bottom_nav_call_driver, null);
         bottomSheetTeachersDialog.setContentView(layout);
@@ -151,12 +143,13 @@ public class AdapterDriversNearBy extends RecyclerView.Adapter<AdapterDriversNea
         ImageView call = layout.findViewById(R.id.call);
         CircleImageView pp = layout.findViewById(R.id.profilePicture);
 
-        if(number == 1)
-        {
+        if (number == 0) {
+            Picasso.get().load(user.getProfilePicture()).into(pp);
+        } else if (number == 1) {
             Picasso.get().load(R.drawable.person1).into(pp);
         } else if (number == 2) {
             Picasso.get().load(R.drawable.person2).into(pp);
-        } else if(number == 3) {
+        } else if (number == 3) {
             Picasso.get().load(R.drawable.person3).into(pp);
         } else {
             Picasso.get().load(R.drawable.person4).into(pp);
