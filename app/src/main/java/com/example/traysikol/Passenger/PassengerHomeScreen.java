@@ -170,7 +170,7 @@ public class PassengerHomeScreen extends AppCompatActivity implements OnMapReady
             int count = 0;
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
                 count = CommuteModels.stream().filter(e ->
-                        e.commuteStatus == CommuteStatus.InProgress
+                        e.commuteStatus == CommuteStatus.InProgress && e.isOccupied()
                 ).collect(Collectors.toList()).size();
                 if (count > 0) {
                     Toast.makeText(PassengerHomeScreen.this, "You are currently occupied!", Toast.LENGTH_SHORT).show();

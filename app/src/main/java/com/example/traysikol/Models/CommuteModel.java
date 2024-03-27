@@ -23,6 +23,7 @@ public class CommuteModel {
     public String time;
     public String address1;
     public String address2;
+    public float rating;
     @Exclude
     public UserAccountModel DriverAccount;
     @Exclude
@@ -30,7 +31,7 @@ public class CommuteModel {
 
     public CommuteModel (){}
 
-    public CommuteModel(String key, String passengerUid, String driverUid, double passengerLatitude, double passengerLongitude, double passengerDestinationLatitude, double passengerDestinationLongitude, PassengerRoute passengerRoute, boolean isOccupied, CommuteStatus commuteStatus, Date commuteDate, String distance, String fare, String time, String address1, String address2) {
+    public CommuteModel(String key, String passengerUid, String driverUid, double passengerLatitude, double passengerLongitude, double passengerDestinationLatitude, double passengerDestinationLongitude, PassengerRoute passengerRoute, boolean isOccupied, CommuteStatus commuteStatus, Date commuteDate, String distance, String fare, String time, String address1, String address2, float rating, UserAccountModel driverAccount, UserAccountModel passengerAccount) {
         this.key = key;
         this.passengerUid = passengerUid;
         this.driverUid = driverUid;
@@ -47,6 +48,9 @@ public class CommuteModel {
         this.time = time;
         this.address1 = address1;
         this.address2 = address2;
+        this.rating = rating;
+        DriverAccount = driverAccount;
+        PassengerAccount = passengerAccount;
     }
 
     public String getTime() {
@@ -175,5 +179,29 @@ public class CommuteModel {
 
     public void setFare(String fare) {
         this.fare = fare;
+    }
+
+    public float getRating() {
+        return rating;
+    }
+
+    public void setRating(float rating) {
+        this.rating = rating;
+    }
+
+    public UserAccountModel getDriverAccount() {
+        return DriverAccount;
+    }
+
+    public void setDriverAccount(UserAccountModel driverAccount) {
+        DriverAccount = driverAccount;
+    }
+
+    public UserAccountModel getPassengerAccount() {
+        return PassengerAccount;
+    }
+
+    public void setPassengerAccount(UserAccountModel passengerAccount) {
+        PassengerAccount = passengerAccount;
     }
 }

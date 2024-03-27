@@ -22,8 +22,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class PassengerHistory extends AppCompatActivity {
     List<CommuteModel> commuteModelList;
@@ -69,8 +72,14 @@ public class PassengerHistory extends AppCompatActivity {
                                 commuteModelList.add(commuteModel);
                             }
                         }
-
-                        adapterHistory = new AdapterHistory(commuteModelList, PassengerHistory.this);
+                        SimpleDateFormat date = new SimpleDateFormat("MMMMddyyyy");
+                        List<CommuteModel> currents = null;
+                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                            currents = commuteModelList.stream().filter( e ->
+                                    date.format(e.getCommuteDate()).equals(date.format(new Date()))
+                                    ).collect(Collectors.toList());
+                        }
+                        adapterHistory = new AdapterHistory(currents, PassengerHistory.this);
                         todayContainer.setLayoutManager(linearLayoutManager);
                         todayContainer.setAdapter(adapterHistory);
                         adapterHistory.notifyDataSetChanged();

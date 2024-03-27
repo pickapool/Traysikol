@@ -143,7 +143,7 @@ public class DriversHome extends AppCompatActivity implements OnMapReadyCallback
         home.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                FirebaseAuth.getInstance().signOut();
+                SignOut();
                 stopService(serviceIntent);
                 Intent ii = new Intent(DriversHome.this, MainActivity.class);
                 startActivity(ii);
@@ -198,6 +198,16 @@ public class DriversHome extends AppCompatActivity implements OnMapReadyCallback
                 });
         GetMyCommutes();
 
+    }
+    private void SignOut()
+    {
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("latitude", 0);
+        hashMap.put("longitude", 0);
+        hashMap.put("onlineStatus", OnlineStatus.Offline);
+        reference.child("OnlineDrivers").child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                .updateChildren(hashMap);
+        FirebaseAuth.getInstance().signOut();
     }
 
     private void CheckLocationIsOn() {
@@ -353,7 +363,7 @@ public class DriversHome extends AppCompatActivity implements OnMapReadyCallback
             int count = 0;
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
                 count = CommuteModels.stream().filter(e ->
-                        e.commuteStatus == CommuteStatus.InProgress
+                        e.commuteStatus == CommuteStatus.InProgress && e.isOccupied()
                 ).collect(Collectors.toList()).size();
                 if (count > 0) {
                     Toast.makeText(DriversHome.this, "You are currently occupied!", Toast.LENGTH_SHORT).show();

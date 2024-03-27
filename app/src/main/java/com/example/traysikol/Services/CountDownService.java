@@ -96,6 +96,7 @@ public class CountDownService extends Service {
             model.setKey(key);
             model.setPassengerUid(FirebaseAuth.getInstance().getCurrentUser().getUid());
             model.setCommuteDate(Calendar.getInstance().getTime());
+            model.setRating(0);
             reference.child("Commutes").child(key).setValue(model).addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
