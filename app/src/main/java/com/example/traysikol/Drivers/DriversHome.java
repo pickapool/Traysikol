@@ -25,6 +25,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.traysikol.Adapter.GoogleMarkerAdapter;
 import com.example.traysikol.CurrentRequest;
 import com.example.traysikol.Enums.AccountType;
 import com.example.traysikol.Enums.CommuteStatus;
@@ -78,6 +79,8 @@ public class DriversHome extends AppCompatActivity implements OnMapReadyCallback
     ImageView home, myRequest, myProfile;
     LatLng myLocation = null;
     List<CommuteModel> CommuteModels;
+    ImageView commute;
+    CommuteModel CurrentCommute = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,7 +91,19 @@ public class DriversHome extends AppCompatActivity implements OnMapReadyCallback
         reference = FirebaseDatabase.getInstance().getReference();
         myRequest = findViewById(R.id.currentRequest);
         myProfile = findViewById(R.id.myProfile);
+        commute = findViewById(R.id.commute);
 
+        commute.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(CurrentCommute == null)
+                {
+                    Toast.makeText(DriversHome.this, "No selected trip!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                ShowCommuteInfo(CurrentCommute);
+            }
+        });
         myProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -254,7 +269,8 @@ public class DriversHome extends AppCompatActivity implements OnMapReadyCallback
             public boolean onMarkerClick(@NonNull Marker marker) {
                 CommuteModel model = (CommuteModel) marker.getTag();
                 if (model != null) {
-                    ShowCommuteInfo(model);
+                    CurrentCommute = model;
+                    marker.showInfoWindow();
                 }
                 return true;
             }
@@ -290,6 +306,7 @@ public class DriversHome extends AppCompatActivity implements OnMapReadyCallback
                         Marker marker = googleMaps.addMarker(new MarkerOptions()
                                 .position(passengerLatlng)
                                 .icon(smallMarkerIcon));
+                        googleMaps.setInfoWindowAdapter(new GoogleMarkerAdapter(DriversHome.this));
                         marker.setTag(model);
                     }
                 }
@@ -371,6 +388,9 @@ public class DriversHome extends AppCompatActivity implements OnMapReadyCallback
             @Override
             public void onMapReady(GoogleMap googleMap) {
                 googleMapDialog[0] = googleMap;
+                googleMapDialog[0].setInfoWindowAdapter(
+                        new GoogleMarkerAdapter(DriversHome.this)
+                );
                 Bitmap b = BitmapFactory.decodeResource(getResources(), R.drawable.mylocation);
                 Bitmap smallMarker = Bitmap.createScaledBitmap(b, 60, 60, false);
                 BitmapDescriptor smallMarkerIcon = BitmapDescriptorFactory.fromBitmap(smallMarker);
