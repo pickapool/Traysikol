@@ -450,6 +450,14 @@ public class DriversHome extends AppCompatActivity implements OnMapReadyCallback
                         public void onComplete(@NonNull Task<Void> task) {
                             if (task.isSuccessful()) {
                                 dialog.dismiss();
+                                List<CommuteModel>  list = CommuteModels.stream().filter(e ->
+                                        e.commuteStatus == CommuteStatus.InProgress && e.isOccupied()
+                                ).collect(Collectors.toList());
+                                if (list.size() > 0) {
+                                    CommuteModel currentRequest = list.get(0);
+                                    CurrentRequest current = new CurrentRequest(currentRequest);
+                                    current.show(getSupportFragmentManager(), "DriversHome");
+                                }
                                 Toast.makeText(DriversHome.this, "Passenger will be notify in there request.", Toast.LENGTH_SHORT).show();
                             } else {
                                 Toast.makeText(DriversHome.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
