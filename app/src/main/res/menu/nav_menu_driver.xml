@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/history"
+        android:title="History"
+        android:icon="@drawable/new_history_icon"
+        android:checkable="true"
+        app:showAsAction="ifRoom"/>
+    <item
+        android:id="@+id/myRide"
+        android:title="Current Trip"
+        android:icon="@drawable/request_icon"
+        android:checkable="true"
+        app:showAsAction="ifRoom"/>
+    <item
+        android:id="@+id/labels_item"
+        android:title="Settings">
+        <menu>
+            <item
+                android:id="@+id/profile"
+                android:title="Contact Us"
+                android:checkable="true"
+                android:icon="@drawable/new_contact_us_icon"
+                app:showAsAction="ifRoom"/>
+            <item
+                android:id="@+id/aboutUs"
+                android:title="About Us"
+                android:checkable="true"
+                android:icon="@drawable/new_people_icon"
+                app:showAsAction="ifRoom"/>
+            <item
+                android:id="@+id/logout"
+                android:title="Logout"
+                android:checkable="true"
+                android:icon="@drawable/new_logout_icon"
+                app:showAsAction="ifRoom"/>
+        </menu>
+    </item>
+
+</menu>

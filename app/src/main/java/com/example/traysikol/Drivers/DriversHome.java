@@ -4,6 +4,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.Manifest;
 import android.app.AlertDialog;
@@ -18,6 +20,7 @@ import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -57,6 +60,7 @@ import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -81,6 +85,9 @@ public class DriversHome extends AppCompatActivity implements OnMapReadyCallback
     List<CommuteModel> CommuteModels;
     ImageView commute;
     CommuteModel CurrentCommute = null;
+    ImageView toolbar;
+    NavigationView navigationView;
+    DrawerLayout drawerLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,7 +99,68 @@ public class DriversHome extends AppCompatActivity implements OnMapReadyCallback
         myRequest = findViewById(R.id.currentRequest);
         myProfile = findViewById(R.id.myProfile);
         commute = findViewById(R.id.commute);
+        toolbar = findViewById(R.id.toolbar);
+        navigationView = findViewById(R.id.nav_view);
+        drawerLayout = findViewById(R.id.drawer_layout);
 
+        View headerView = navigationView.getHeaderView(0);
+        CircleImageView pp = headerView.findViewById(R.id.profilePicture);
+        TextView fullname = headerView.findViewById(R.id.fullName);
+        TextView address = headerView.findViewById(R.id.address);
+
+        fullname.setText(GlobalClass.UserAccount.getFullName());
+        address.setText(TextUtils.isEmpty(GlobalClass.UserAccount.getAddress()) ? "Address not found" : GlobalClass.UserAccount.getAddress());
+        if(!TextUtils.isEmpty(GlobalClass.UserAccount.getProfilePicture())) {
+            Picasso.get().load(GlobalClass.UserAccount.getProfilePicture()).into(pp);
+        }
+
+        Intent serviceIntent = new Intent(DriversHome.this, RequestADriverService.class);
+        toolbar.setOnClickListener(v -> {
+            drawerLayout.openDrawer(GravityCompat.START);
+        });
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                int itemId = item.getItemId();
+                if (itemId == R.id.drivers) {
+
+                } else if(itemId == R.id.history)
+                {
+                    Intent ii = new Intent(DriversHome.this, DriversHistory.class);
+                    startActivity(ii);
+                    finish();
+                }
+                else if(itemId == R.id.logout)
+                {
+                    stopService(serviceIntent);
+                    SignOut();
+                } else if (itemId == R.id.myRide)
+                {
+                    int count = 0;
+                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                        List<CommuteModel>  list = CommuteModels.stream().filter(e ->
+                                e.commuteStatus == CommuteStatus.InProgress && e.isOccupied()
+                        ).collect(Collectors.toList());
+                        count = list.size();
+                        if (count > 0) {
+                            CommuteModel currentRequest =  list.get(0);
+                            CurrentRequest current = new CurrentRequest(currentRequest);
+                            current.show(getSupportFragmentManager(), "DriversHome");
+                        } else {
+                            Toast.makeText(DriversHome.this, "There are no current trips.", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }
+                else {
+                    /*SignOut();
+                    stopService(serviceIntent);
+                    Intent ii = new Intent(DriversHome.this, MainActivity.class);
+                    startActivity(ii);
+                    finish();*/
+                }
+                return  true;
+            }
+        });
         commute.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -135,19 +203,17 @@ public class DriversHome extends AppCompatActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.googleMapDrivers);
         mapFragment.getMapAsync(this);
+        try {
+            stopService(serviceIntent);
+            startService(serviceIntent);
+        } catch (Exception ee) {
 
-        Intent serviceIntent = new Intent(DriversHome.this, RequestADriverService.class);
-        stopService(serviceIntent);
-        startService(serviceIntent);
+        }
         home = findViewById(R.id.home);
         home.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SignOut();
-                stopService(serviceIntent);
-                Intent ii = new Intent(DriversHome.this, MainActivity.class);
-                startActivity(ii);
-                finish();
+                SetLocation(true);
             }
         });
 
@@ -208,6 +274,9 @@ public class DriversHome extends AppCompatActivity implements OnMapReadyCallback
         reference.child("OnlineDrivers").child(FirebaseAuth.getInstance().getCurrentUser().getUid())
                 .updateChildren(hashMap);
         FirebaseAuth.getInstance().signOut();
+        Intent ii = new Intent(DriversHome.this, MainActivity.class);
+        startActivity(ii);
+        finish();
     }
 
     private void CheckLocationIsOn() {
@@ -289,15 +358,19 @@ public class DriversHome extends AppCompatActivity implements OnMapReadyCallback
 
     private void SetLocation(boolean moveCamera) {
         // Update the marker icon
-        Bitmap b = BitmapFactory.decodeResource(getResources(), R.drawable.traysikol_icon);
-        Bitmap smallMarker = Bitmap.createScaledBitmap(b, 60, 60, false);
-        BitmapDescriptor smallMarkerIcon = BitmapDescriptorFactory.fromBitmap(smallMarker);
-        if (moveCamera)
-            googleMaps.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 15));
-        googleMaps.addMarker(new MarkerOptions()
-                .position(myLocation)
-                .title("You are here")
-                .icon(smallMarkerIcon));
+        if(myLocation != null) {
+            Bitmap b = BitmapFactory.decodeResource(getResources(), R.drawable.traysikol_icon);
+            Bitmap smallMarker = Bitmap.createScaledBitmap(b, 60, 60, false);
+            BitmapDescriptor smallMarkerIcon = BitmapDescriptorFactory.fromBitmap(smallMarker);
+            if (moveCamera)
+                googleMaps.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 15));
+            googleMaps.addMarker(new MarkerOptions()
+                    .position(myLocation)
+                    .title("You are here")
+                    .icon(smallMarkerIcon));
+        } else {
+            Toast.makeText(this, "Please toggle your location.", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void GetCommutes() {

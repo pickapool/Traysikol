@@ -109,7 +109,6 @@ public class PassengerHomeScreen extends AppCompatActivity implements OnMapReady
     LatLng myDestination = null;
     Runnable runnable;
     FusedLocationProviderClient fusedLocationProviderClient;
-    ImageView toolbar;
     private AutoCompleteTextView autoCompleteTextView;
     List<Features> ListOfFeatures;
     Handler handler = new Handler();
@@ -119,6 +118,7 @@ public class PassengerHomeScreen extends AppCompatActivity implements OnMapReady
     String myAddress, myDestinationAddress, fare, distance, time = "";
     private View customLayout;
     int lastIcon = 1;
+    ImageView toolbar;
     NavigationView navigationView;
     DrawerLayout drawerLayout;
     PassengerRoute passengerRoute = new PassengerRoute();
@@ -133,12 +133,12 @@ public class PassengerHomeScreen extends AppCompatActivity implements OnMapReady
         setContentView(R.layout.activity_passenger_home_screen);
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
-        toolbar = findViewById(R.id.toolbar);
         autoCompleteTextView = findViewById(R.id.searchPlaces);
         home = findViewById(R.id.home);
         commute = findViewById(R.id.commute);
         driversNear = findViewById(R.id.driversNear);
         myProfile = findViewById(R.id.myProfile);
+        toolbar = findViewById(R.id.toolbar);
         navigationView = findViewById(R.id.nav_view);
         drawerLayout = findViewById(R.id.drawer_layout);
         reference = FirebaseDatabase.getInstance().getReference();
