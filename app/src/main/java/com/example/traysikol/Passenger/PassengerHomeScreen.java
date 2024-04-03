@@ -280,7 +280,7 @@ public class PassengerHomeScreen extends AppCompatActivity implements OnMapReady
                     int count = 0;
                     if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
                         List<CommuteModel>  list = CommuteModels.stream().filter(e ->
-                                e.commuteStatus == CommuteStatus.InProgress && e.isOccupied()
+                                e.commuteStatus == CommuteStatus.InProgress
                         ).collect(Collectors.toList());
                         count = list.size();
                         if (count > 0) {
@@ -310,8 +310,19 @@ public class PassengerHomeScreen extends AppCompatActivity implements OnMapReady
     }
 
     private void ChangeIcons(int position) {
+
         lastIcon = position;
         if (position == 2) {
+            int count = 0;
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                count = CommuteModels.stream().filter(e ->
+                        e.commuteStatus == CommuteStatus.InProgress
+                ).collect(Collectors.toList()).size();
+                if (count > 0) {
+                    Toast.makeText(PassengerHomeScreen.this, "You have current trip in progress!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+            }
             if(TextUtils.isEmpty(myAddress) ||
                     TextUtils.isEmpty(myDestinationAddress) ||
                     TextUtils.isEmpty("20") ||
