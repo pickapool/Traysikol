@@ -71,7 +71,7 @@ public class CurrentRequest extends DialogFragment {
         Extensions.SetProfilePicture(commuteModel.DriverAccount.getProfilePicture(), driverPP);
         Extensions.SetProfilePicture(commuteModel.PassengerAccount.getProfilePicture(), pPP);
 
-        driverName.setText(commuteModel.DriverAccount.getFullName());
+        driverName.setText(commuteModel.DriverAccount.getFullName() == null ? "No Driver" : commuteModel.DriverAccount.getFullName());
         pName.setText(commuteModel.PassengerAccount.getFullName());
         address1.setText(commuteModel.getAddress1());
         address2.setText(commuteModel.getAddress2());
