@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.example.traysikol.Adapter.AdapterDriversHistory;
 import com.example.traysikol.Enums.CommuteStatus;
@@ -31,6 +32,7 @@ public class DriversHistory extends AppCompatActivity {
     DatabaseReference reference;
     List<CommuteModel> commuteModelList;
     ImageView back;
+    TextView noRecord;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +42,7 @@ public class DriversHistory extends AppCompatActivity {
         recyclerView = findViewById(R.id.recycleView);
         reference = FirebaseDatabase.getInstance().getReference();
         back = findViewById(R.id.back);
+        noRecord = findViewById(R.id.noRecords);
 
         back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -60,11 +63,18 @@ public class DriversHistory extends AppCompatActivity {
                         commuteModelList.add(model);
                     }
                 }
-                linearLayoutManager = new LinearLayoutManager(DriversHistory.this);
-                adapterDriversHistory = new AdapterDriversHistory(commuteModelList, DriversHistory.this);
-                recyclerView.setAdapter(adapterDriversHistory);
-                recyclerView.setLayoutManager(linearLayoutManager);
-                adapterDriversHistory.notifyDataSetChanged();
+                if(commuteModelList.size() > 0) {
+                    recyclerView.setVisibility(View.VISIBLE);
+                    noRecord.setVisibility(View.GONE);
+                    linearLayoutManager = new LinearLayoutManager(DriversHistory.this);
+                    adapterDriversHistory = new AdapterDriversHistory(commuteModelList, DriversHistory.this);
+                    recyclerView.setAdapter(adapterDriversHistory);
+                    recyclerView.setLayoutManager(linearLayoutManager);
+                    adapterDriversHistory.notifyDataSetChanged();
+                } else {
+                    recyclerView.setVisibility(View.GONE);
+                    noRecord.setVisibility(View.VISIBLE);
+                }
             }
 
             @Override

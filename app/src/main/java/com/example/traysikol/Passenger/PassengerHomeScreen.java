@@ -84,6 +84,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -125,6 +126,7 @@ public class PassengerHomeScreen extends AppCompatActivity implements OnMapReady
     DatabaseReference reference;
     List<Marker> driversMarker = new ArrayList<>();
     List<CommuteModel> CommuteModels = new ArrayList<>();
+    FirebaseUser user;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -142,6 +144,7 @@ public class PassengerHomeScreen extends AppCompatActivity implements OnMapReady
         navigationView = findViewById(R.id.nav_view);
         drawerLayout = findViewById(R.id.drawer_layout);
         reference = FirebaseDatabase.getInstance().getReference();
+        user  = FirebaseAuth.getInstance().getCurrentUser();
 
         ListOfFeatures = new ArrayList<>();
 
@@ -342,6 +345,8 @@ public class PassengerHomeScreen extends AppCompatActivity implements OnMapReady
                 home.setImageResource(R.drawable.home_icon_selected);
                 break;
             case 2:
+                if(!user.isEmailVerified())
+                    Toast.makeText(this, "Account is not verified, go to profile and get the verification.", Toast.LENGTH_SHORT).show();
                 commute.setImageResource(R.drawable.commute_icon_selected);
                 ShowDialogConfirm(myAddress, myDestinationAddress, "20", distance, time);
                 break;
@@ -602,7 +607,7 @@ public class PassengerHomeScreen extends AppCompatActivity implements OnMapReady
 
             WindowManager.LayoutParams lWindowParams = new WindowManager.LayoutParams();
             lWindowParams.copyFrom(dialog.getWindow().getAttributes());
-            lWindowParams.width = 510;
+            lWindowParams.width = 700;
             lWindowParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
 
 

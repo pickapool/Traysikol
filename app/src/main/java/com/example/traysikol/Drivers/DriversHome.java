@@ -62,6 +62,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -88,6 +89,7 @@ public class DriversHome extends AppCompatActivity implements OnMapReadyCallback
     ImageView toolbar;
     NavigationView navigationView;
     DrawerLayout drawerLayout;
+    FirebaseUser user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,6 +104,7 @@ public class DriversHome extends AppCompatActivity implements OnMapReadyCallback
         toolbar = findViewById(R.id.toolbar);
         navigationView = findViewById(R.id.nav_view);
         drawerLayout = findViewById(R.id.drawer_layout);
+        user = FirebaseAuth.getInstance().getCurrentUser();
 
         View headerView = navigationView.getHeaderView(0);
         CircleImageView pp = headerView.findViewById(R.id.profilePicture);
@@ -164,6 +167,8 @@ public class DriversHome extends AppCompatActivity implements OnMapReadyCallback
         commute.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(!user.isEmailVerified())
+                    Toast.makeText(DriversHome.this, "Account is not verified, go to profile and get the verification.", Toast.LENGTH_SHORT).show();
                 if(CurrentCommute == null)
                 {
                     Toast.makeText(DriversHome.this, "No selected trip!", Toast.LENGTH_SHORT).show();
@@ -413,7 +418,7 @@ public class DriversHome extends AppCompatActivity implements OnMapReadyCallback
 
         WindowManager.LayoutParams lWindowParams = new WindowManager.LayoutParams();
         lWindowParams.copyFrom(dialog.getWindow().getAttributes());
-        lWindowParams.width = 600;
+        lWindowParams.width = 700;
         lWindowParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
 
         TextView fullName = customLayout.findViewById(R.id.fullNames);

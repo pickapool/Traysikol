@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.example.traysikol.Adapter.AdapterHistory;
 import com.example.traysikol.Enums.CommuteStatus;
@@ -38,6 +39,7 @@ public class PassengerHistory extends AppCompatActivity {
     RecyclerView todayContainer;
     RecyclerView previousContainer;
     ImageView back;
+    TextView noRecord1, noRecord2;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,6 +51,8 @@ public class PassengerHistory extends AppCompatActivity {
         linearLayoutManager = new LinearLayoutManager(PassengerHistory.this);
         linearLayoutManager1 = new LinearLayoutManager(PassengerHistory.this);
         back = findViewById(R.id.back);
+        noRecord1 = findViewById(R.id.noRecords1);
+        noRecord2 = findViewById(R.id.noRecords2);
 
         back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,15 +83,25 @@ public class PassengerHistory extends AppCompatActivity {
                                     date.format(e.getCommuteDate()).equals(date.format(new Date()))
                                     ).collect(Collectors.toList());
                         }
-                        adapterHistory = new AdapterHistory(currents, PassengerHistory.this);
-                        todayContainer.setLayoutManager(linearLayoutManager);
-                        todayContainer.setAdapter(adapterHistory);
-                        adapterHistory.notifyDataSetChanged();
+                        if(currents.size() > 0) {
+                            adapterHistory = new AdapterHistory(currents, PassengerHistory.this);
+                            todayContainer.setLayoutManager(linearLayoutManager);
+                            todayContainer.setAdapter(adapterHistory);
+                            adapterHistory.notifyDataSetChanged();
+                        } else {
+                            todayContainer.setVisibility(View.INVISIBLE);
+                            noRecord1.setVisibility(View.GONE);
+                        }
 
-                        adapterHistory1 = new AdapterHistory(commuteModelList, PassengerHistory.this);
-                        previousContainer.setLayoutManager(linearLayoutManager1);
-                        previousContainer.setAdapter(adapterHistory1);
-                        adapterHistory1.notifyDataSetChanged();
+                        if(commuteModelList.size() > 0) {
+                            adapterHistory1 = new AdapterHistory(commuteModelList, PassengerHistory.this);
+                            previousContainer.setLayoutManager(linearLayoutManager1);
+                            previousContainer.setAdapter(adapterHistory1);
+                            adapterHistory1.notifyDataSetChanged();
+                        } else {
+                            previousContainer.setVisibility(View.INVISIBLE);
+                            noRecord2.setVisibility(View.GONE);
+                        }
 
                         //set adapter here;
                     }

@@ -43,6 +43,7 @@
             android:text="Verify your account"
             android:textAlignment="center"
             android:textColor="#7C94EF"
+            android:id="@+id/verify"
             android:textSize="18dp" />
 
         <RelativeLayout

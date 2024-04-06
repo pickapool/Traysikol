@@ -18,4 +18,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/recycleView"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="No Records"
+        android:textSize="20dp"
+        android:visibility="gone"
+        android:textStyle="bold"
+        android:id="@+id/noRecords"
+        android:gravity="center"
+        />
 </LinearLayout>
