@@ -12,6 +12,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.traysikol.Enums.AccountType;
 import com.example.traysikol.GlobalClass;
 import com.example.traysikol.R;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -34,6 +35,9 @@ public class PassengerProfile extends AppCompatActivity {
         fullName = findViewById(R.id.fullName);
         pp = findViewById(R.id.profilePicture);
         verify = findViewById(R.id.verify);
+
+        if(GlobalClass.UserAccount.getAccountType() == AccountType.Driver)
+            saveDestination.setVisibility(View.GONE);
 
         verify.setOnClickListener(view -> {
             FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();

@@ -345,8 +345,10 @@ public class PassengerHomeScreen extends AppCompatActivity implements OnMapReady
                 home.setImageResource(R.drawable.home_icon_selected);
                 break;
             case 2:
-                if(!user.isEmailVerified())
+                if(!user.isEmailVerified()) {
                     Toast.makeText(this, "Account is not verified, go to profile and get the verification.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 commute.setImageResource(R.drawable.commute_icon_selected);
                 ShowDialogConfirm(myAddress, myDestinationAddress, "20", distance, time);
                 break;

@@ -18,32 +18,32 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
+        android:layout_marginTop="100dp"
         android:gravity="center"
         android:orientation="vertical">
 
         <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/profilePicture"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:id="@+id/profilePicture"
             android:src="@drawable/app_logo" />
 
         <TextView
+            android:id="@+id/fullName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Your name here"
-            android:id="@+id/fullName"
             android:textAlignment="center"
             android:textColor="#FFFFFF"
             android:textSize="18dp" />
 
         <TextView
+            android:id="@+id/verify"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Verify your account"
             android:textAlignment="center"
             android:textColor="#7C94EF"
-            android:id="@+id/verify"
             android:textSize="18dp" />
 
         <RelativeLayout

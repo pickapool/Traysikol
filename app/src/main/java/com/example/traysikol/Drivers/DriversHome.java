@@ -167,8 +167,10 @@ public class DriversHome extends AppCompatActivity implements OnMapReadyCallback
         commute.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(!user.isEmailVerified())
+                if(!user.isEmailVerified()) {
                     Toast.makeText(DriversHome.this, "Account is not verified, go to profile and get the verification.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 if(CurrentCommute == null)
                 {
                     Toast.makeText(DriversHome.this, "No selected trip!", Toast.LENGTH_SHORT).show();
@@ -180,7 +182,7 @@ public class DriversHome extends AppCompatActivity implements OnMapReadyCallback
         myProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent ii =new Intent(DriversHome.this, PassengerProfileDetails.class);
+                Intent ii =new Intent(DriversHome.this, PassengerProfile.class);
                 startActivity(ii);
                 finish();
             }
