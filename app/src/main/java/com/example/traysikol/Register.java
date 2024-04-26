@@ -71,8 +71,10 @@ public class Register extends DialogFragment {
 
         login.setOnClickListener(view12 -> dismissWithAnimation());
         closeBtn.setOnClickListener(view1 -> dismissWithAnimation());
-        terms.setOnClickListener(view13 -> ShowTerms("Hello"));
-        privacy.setOnClickListener(view13 -> ShowTerms("Hello"));
+        terms.setOnClickListener(view13 -> ShowTerms("This page is used to inform visitors regarding my policies with the collection, use, and disclosure of Personal Information if anyone decided to use my Service. " +
+                "If you choose to use my Service, then you agree to the collection and use of information in relation to this policy. The Personal Information that I collect is used for providing and improving the Service. I will not use or share your information with anyone except as described in this Privacy Policy."));
+        privacy.setOnClickListener(view13 -> ShowTerms("This page is used to inform visitors regarding my policies with the collection, use, and disclosure of Personal Information if anyone decided to use my Service. " +
+                "If you choose to use my Service, then you agree to the collection and use of information in relation to this policy. The Personal Information that I collect is used for providing and improving the Service. I will not use or share your information with anyone except as described in this Privacy Policy."));
         // Initialize views and set up dialog behavior
         // Apply animation when dialog is shown
         getDialog().getWindow().getDecorView().setPadding(0, 100, 0, 0);
