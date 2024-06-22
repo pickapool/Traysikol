@@ -10,7 +10,7 @@ import android.widget.LinearLayout;
 import com.example.traysikol.Enums.AccountType;
 
 public class ChooseAccount extends AppCompatActivity {
-    LinearLayout d, c, e, f,g ;
+    LinearLayout d, c, myUdpate;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
