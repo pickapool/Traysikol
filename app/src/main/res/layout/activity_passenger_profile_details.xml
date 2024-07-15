@@ -28,7 +28,7 @@
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
         android:id="@+id/profilePicture"
-        android:src="@drawable/app_logo"
+        android:src="@drawable/logo_v2"
         android:layout_gravity="center"
         />
     <TextView

@@ -12,7 +12,7 @@
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_centerVertical="true"
-        android:src="@drawable/app_logo"
+        android:src="@drawable/logo_v2"
         app:srcCompat="@mipmap/ic_launcher_round"
         android:id="@+id/profilePicture" />
 <LinearLayout
