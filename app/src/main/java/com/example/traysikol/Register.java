@@ -28,6 +28,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class Register extends DialogFragment {
     FirebaseAuth firebaseAuth;
     DatabaseReference reference;
@@ -44,7 +47,19 @@ public class Register extends DialogFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.layout_register_user, container, false);
     }
+    public static boolean isValidPassword(String password) {
+        if (password == null || password.isEmpty()) {
+            return false;
+        }
 
+        // Minimum 8 characters, at least 1 special character, and at least 1 uppercase letter
+        String regex = "^(?=.*[a-zA-Z])(?=.*[@#$%^&+=!])(?=.*[0-9]).{8,}$";
+
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(password);
+
+        return matcher.matches();
+    }
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -99,6 +114,10 @@ public class Register extends DialogFragment {
             }
             if (!password.getText().toString().equals(confirmPassword.getText().toString())) {
                 Toast.makeText(getContext(), "Passwords do not match", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if(!isValidPassword(password.getText().toString())){
+                Toast.makeText(getContext(), "Password must be 8 characters, at least 1 special character, and at least 1 uppercase letter", Toast.LENGTH_SHORT).show();
                 return;
             }
             ProgressDialog dialog = new ProgressDialog(getContext());
