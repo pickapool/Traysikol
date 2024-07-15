@@ -561,7 +561,8 @@ public class PassengerHomeScreen extends AppCompatActivity implements OnMapReady
                                 distance = GlobalClass.convertDistance(GlobalClass.GetDistance(orsResponse));
                                 time = GlobalClass.GetTime(orsResponse);
                                 GlobalClass.CommuteModel.setDistance(distance);
-                                GlobalClass.CommuteModel.setFare("20");
+                                double currentFare = ((GlobalClass.GetDistance(orsResponse) / 1000 ) * 10 ) + 10;
+                                GlobalClass.CommuteModel.setFare(String.valueOf(currentFare));
 
                             }
                             dialog.dismiss();
