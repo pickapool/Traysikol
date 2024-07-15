@@ -94,6 +94,8 @@ import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -350,7 +352,7 @@ public class PassengerHomeScreen extends AppCompatActivity implements OnMapReady
                     return;
                 }
                 commute.setImageResource(R.drawable.commute_icon_selected);
-                ShowDialogConfirm(myAddress, myDestinationAddress, "20", distance, time);
+                ShowDialogConfirm(myAddress, myDestinationAddress, GlobalClass.CommuteModel.getFare(), distance, time);
                 break;
             case 3:
                 driversNear.setImageResource(R.drawable.drivers_icon_selected);
@@ -562,7 +564,9 @@ public class PassengerHomeScreen extends AppCompatActivity implements OnMapReady
                                 time = GlobalClass.GetTime(orsResponse);
                                 GlobalClass.CommuteModel.setDistance(distance);
                                 double currentFare = ((GlobalClass.GetDistance(orsResponse) / 1000 ) * 10 ) + 10;
-                                GlobalClass.CommuteModel.setFare(String.valueOf(currentFare));
+                                DecimalFormat df = new DecimalFormat("#.##");
+                                df.setRoundingMode(RoundingMode.HALF_UP);
+                                GlobalClass.CommuteModel.setFare(df.format(currentFare));
 
                             }
                             dialog.dismiss();
