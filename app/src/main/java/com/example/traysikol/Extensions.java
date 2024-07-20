@@ -153,7 +153,7 @@ public class Extensions {
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(activity , default_notification_channel_id ) ;
         mBuilder.setContentTitle( "Traysikol" ) ;
         mBuilder.setContentText( message ) ;
-        mBuilder.setSmallIcon(R.drawable.app_logo);
+        mBuilder.setSmallIcon(R.drawable.logo_v2);
         mBuilder.setContentIntent(resultPendingIntent);
         mBuilder.setAutoCancel( true ) ;
 

@@ -12,6 +12,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.traysikol.Drivers.DriversHome;
 import com.example.traysikol.Enums.AccountType;
 import com.example.traysikol.GlobalClass;
 import com.example.traysikol.R;
@@ -63,8 +64,15 @@ public class PassengerProfile extends AppCompatActivity {
             finish();
         });
         back.setOnClickListener(view -> {
-            Intent ii = new Intent(PassengerProfile.this, PassengerHomeScreen.class);
+            Intent ii;
+            if(GlobalClass.UserAccount.getAccountType() == AccountType.Driver)
+            {
+                ii = new Intent(PassengerProfile.this, DriversHome.class);
+            } else {
+                ii = new Intent(PassengerProfile.this, PassengerHomeScreen.class);
+            }
             startActivity(ii);
+
             finish();
         });
         profDetail.setOnClickListener(view -> {

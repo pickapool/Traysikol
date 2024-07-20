@@ -8,7 +8,7 @@
         android:layout_width="120dp"
         android:id="@+id/driverPicture"
         android:layout_height="120dp"
-        android:src="@drawable/app_logo"
+        android:src="@drawable/logo_v2"
         />
     <LinearLayout
         android:layout_width="match_parent"
