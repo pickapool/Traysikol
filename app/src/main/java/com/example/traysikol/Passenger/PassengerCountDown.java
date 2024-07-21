@@ -10,6 +10,7 @@ import android.os.CountDownTimer;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -22,6 +23,7 @@ import androidx.fragment.app.DialogFragment;
 import com.example.traysikol.DialogHelper;
 import com.example.traysikol.Enums.CommuteStatus;
 import com.example.traysikol.GlobalClass;
+import com.example.traysikol.Models.CommuteModel;
 import com.example.traysikol.Models.SaveDestinationModel;
 import com.example.traysikol.R;
 import com.example.traysikol.Services.CountDownService;
@@ -40,10 +42,11 @@ public class PassengerCountDown extends DialogFragment implements DialogHelper.C
     TextView add1, add2, fr, dis, time;
     ImageView play, close;
     final Calendar calendar = Calendar.getInstance();
-    boolean IsPlaying = false;
+    boolean IsPlaying = false, IsCancel = false;
     String address1, address2, fare, distance, times;
     DatabaseReference reference;
     CountDownTimer countDownTimer;
+    Button cancel;
 
     public PassengerCountDown() {
     }
@@ -89,6 +92,7 @@ public class PassengerCountDown extends DialogFragment implements DialogHelper.C
         fr = view.findViewById(R.id.fare);
         dis = view.findViewById(R.id.distance);
         time = view.findViewById(R.id.duration);
+        cancel = view.findViewById(R.id.cancelCountdown);
 
         add1.setText(address1);
         add2.setText(address2);
@@ -117,6 +121,7 @@ public class PassengerCountDown extends DialogFragment implements DialogHelper.C
             @Override
             public void onClick(View view) {
                 if (!IsPlaying) {
+                    IsPlaying = true;
                     startCountdownTimer(1000, hourTxt.getText().toString(),
                             minuteTxt.getText().toString(),
                             secondTxt.getText().toString());
@@ -135,9 +140,31 @@ public class PassengerCountDown extends DialogFragment implements DialogHelper.C
                 }
             }
         });
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                countDownTimer = null;
+                IsCancel = true;
+                Intent serviceIntent = new Intent(getContext(), CountDownService.class);
+                getContext().stopService(serviceIntent);SharedPreferences sharedPreferences = getContext().getSharedPreferences("Countdown", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putString("hour", "0");
+                editor.putString("minute", "0");
+                editor.putString("second", "0");
+                editor.putString("IsPlaying", "false");
+                editor.putString("CommuteModel", null);
+                editor.apply();
+                dismiss();
+            }
+        });
     }
 
     private void SelectTime() {
+        if(IsPlaying)
+        {
+            Toast.makeText(getContext(), "Can't change the timer, please cancel.", Toast.LENGTH_SHORT).show();
+            return;
+        }
         TimePickerDialog timePickerDialog = new TimePickerDialog(getContext(), TimePickerDialog.THEME_HOLO_LIGHT, new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {

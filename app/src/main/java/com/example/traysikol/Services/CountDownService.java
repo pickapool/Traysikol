@@ -76,8 +76,10 @@ public class CountDownService extends Service {
 
                 Gson gson = new Gson();
                 String json = sharedPreferences.getString("CommuteModel", "");
-                CommuteModel obj = gson.fromJson(json, CommuteModel.class);
-                RideNow(obj);
+                if(json != null) {
+                    CommuteModel obj = gson.fromJson(json, CommuteModel.class);
+                    RideNow(obj);
+                }
                 //Toast.makeText(CountDownService.this, json, Toast.LENGTH_SHORT).show();
                 // Toast.makeText(CountDownService.this, "finish", Toast.LENGTH_SHORT).show();
                 stopSelf();

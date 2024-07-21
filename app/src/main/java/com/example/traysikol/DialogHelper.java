@@ -11,6 +11,7 @@ public class DialogHelper {
 
     public static void showConfirmationDialog(Activity activity, final ConfirmationListener listener) {
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+        builder.setCancelable(false);
         builder.setTitle("Confirmation");
         builder.setMessage("Do you want to save this destination?");
         builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
