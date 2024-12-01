@@ -36,8 +36,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.picasso.Picasso;
-import com.theartofdev.edmodo.cropper.CropImage;
-import com.theartofdev.edmodo.cropper.CropImageView;
+//import com.theartofdev.edmodo.cropper.CropImage;
+//import com.theartofdev.edmodo.cropper.CropImageView;
+import com.yalantis.ucrop.UCrop;
 
 import java.io.File;
 import java.util.Calendar;
@@ -114,11 +115,11 @@ public class PassengerProfileDetails extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+        if (resultCode == RESULT_OK && requestCode == UCrop.REQUEST_CROP) {
             if (resultCode == RESULT_OK) {
                 try {
-                    CropImage.ActivityResult result = CropImage.getActivityResult(data);
-                    Uri resultUri = result.getUri();
+                    Uri resultUri = UCrop.getOutput(data);
+
                     //String filePath = resultUri.getPath();
                     //String filename = new File(filePath).getName();
                     Extensions.UploadProfilePicture(PassengerProfileDetails.this, resultUri);
@@ -130,20 +131,22 @@ public class PassengerProfileDetails extends AppCompatActivity {
             }
         } else if(requestCode == 1223 && resultCode == RESULT_OK) {
             try {
-                File file = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES),"capture.jpg");
-                Uri uri = FileProvider.getUriForFile(Objects.requireNonNull(getApplicationContext()),
-                        BuildConfig.APPLICATION_ID + ".provider", file);
-                if(uri != null)
-                {
-                    CropImage.activity(uri)
-                            .setGuidelines(CropImageView.Guidelines.ON)
-                            .start(PassengerProfileDetails.this);
-                }
+                Uri selectedImageUri = data.getData();
+                Picasso.get().load(selectedImageUri).into(pp);
+                Extensions.UploadProfilePicture(PassengerProfileDetails.this, selectedImageUri);
             } catch (Exception ee)
             {
                 System.out.println("33kkk"+ee.getMessage());
             }
-
+        } else if(requestCode == 1225 && resultCode == RESULT_OK) {
+            File file = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES),"capture.jpg");
+            Uri uri = FileProvider.getUriForFile(Objects.requireNonNull(getApplicationContext()),
+                    BuildConfig.APPLICATION_ID + ".provider", file);
+            if(uri != null)
+            {
+                Picasso.get().load(uri).into(pp);
+                Extensions.UploadProfilePicture(PassengerProfileDetails.this, uri);
+            }
         }
     }
     private AlertDialog EditDialog(boolean IsName, String textViewTitle, String value, String props)
