@@ -25,6 +25,8 @@ public class GlobalClass {
     public static CommuteModel CommuteModel = new CommuteModel();
     public static boolean IsUseLocation = false;
     private static DecimalFormat df = new DecimalFormat("#.##");
+    public static double DistanceValue = 0.0;
+    public static double CurrentFare = 0.0;
 
     public static String convertDistance(double distance) {
         if (distance >= 1000) {
