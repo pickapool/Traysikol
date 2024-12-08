@@ -4,11 +4,15 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
+import androidx.exifinterface.media.ExifInterface;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -36,10 +40,13 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.picasso.Picasso;
-import com.theartofdev.edmodo.cropper.CropImage;
-import com.theartofdev.edmodo.cropper.CropImageView;
+//import com.theartofdev.edmodo.cropper.CropImage;
+//import com.theartofdev.edmodo.cropper.CropImageView;
+import com.yalantis.ucrop.UCrop;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Objects;
@@ -114,11 +121,11 @@ public class PassengerProfileDetails extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+        if (resultCode == RESULT_OK && requestCode == UCrop.REQUEST_CROP) {
             if (resultCode == RESULT_OK) {
                 try {
-                    CropImage.ActivityResult result = CropImage.getActivityResult(data);
-                    Uri resultUri = result.getUri();
+                    Uri resultUri = UCrop.getOutput(data);
+
                     //String filePath = resultUri.getPath();
                     //String filename = new File(filePath).getName();
                     Extensions.UploadProfilePicture(PassengerProfileDetails.this, resultUri);
@@ -128,22 +135,48 @@ public class PassengerProfileDetails extends AppCompatActivity {
                     Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }
-        } else if(requestCode == 1223 && resultCode == RESULT_OK) {
+        } else if (requestCode == 1223 && resultCode == RESULT_OK) {
             try {
-                File file = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES),"capture.jpg");
-                Uri uri = FileProvider.getUriForFile(Objects.requireNonNull(getApplicationContext()),
-                        BuildConfig.APPLICATION_ID + ".provider", file);
-                if(uri != null)
-                {
-                    CropImage.activity(uri)
-                            .setGuidelines(CropImageView.Guidelines.ON)
-                            .start(PassengerProfileDetails.this);
-                }
-            } catch (Exception ee)
-            {
-                System.out.println("33kkk"+ee.getMessage());
+                Uri selectedImageUri = data.getData();
+                Picasso.get().load(selectedImageUri).into(pp);
+                Extensions.UploadProfilePicture(PassengerProfileDetails.this, selectedImageUri);
+            } catch (Exception ee) {
+                System.out.println("33kkk" + ee.getMessage());
             }
+        } else if (requestCode == 1225 && resultCode == RESULT_OK) {
+            File file = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), "capture.jpg");
+            Uri uri = FileProvider.getUriForFile(Objects.requireNonNull(getApplicationContext()),
+                    BuildConfig.APPLICATION_ID + ".provider", file);
 
+            try {
+                ExifInterface exif = new ExifInterface(file.getAbsolutePath());
+                int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED);
+
+                Matrix matrix = new Matrix();
+                if (orientation == ExifInterface.ORIENTATION_ROTATE_90) {
+                    matrix.postRotate(90);
+                } else if (orientation == ExifInterface.ORIENTATION_ROTATE_180) {
+                    matrix.postRotate(180);
+                } else if (orientation == ExifInterface.ORIENTATION_ROTATE_270) {
+                    matrix.postRotate(270);
+                }
+
+                // Apply rotation to the bitmap
+                Bitmap originalBitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
+                Bitmap rotatedBitmap = Bitmap.createBitmap(originalBitmap, 0, 0, originalBitmap.getWidth(), originalBitmap.getHeight(), matrix, true);
+
+                // Save the rotated bitmap to a temporary file (or replace the original if needed)
+                FileOutputStream out = new FileOutputStream(file);
+                rotatedBitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
+                out.flush();
+                out.close();
+
+                // Now load the rotated image into ImageView using Picasso
+                Picasso.get().load(file).into(pp);
+                Extensions.UploadProfilePicture(PassengerProfileDetails.this, Uri.fromFile(file));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
     private AlertDialog EditDialog(boolean IsName, String textViewTitle, String value, String props)

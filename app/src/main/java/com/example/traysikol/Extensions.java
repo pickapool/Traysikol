@@ -33,8 +33,9 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
-import com.theartofdev.edmodo.cropper.CropImage;
-import com.theartofdev.edmodo.cropper.CropImageView;
+//import com.theartofdev.edmodo.cropper.CropImage;
+//import com.theartofdev.edmodo.cropper.CropImageView;
+import com.yalantis.ucrop.UCrop;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -75,15 +76,21 @@ public class Extensions {
                         Uri imageUri = FileProvider.getUriForFile(Objects.requireNonNull(activity),
                                 BuildConfig.APPLICATION_ID + ".provider", photo);
                         takePicture.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
-                        startActivityForResult(activity, takePicture, 1223, null);
+                        startActivityForResult(activity, takePicture, 1225, null);
                     } catch (Exception ee)
                     {
                         System.out.println("321355sx" + ee.getMessage());
                     }
                 } else if (which == 1) {
-                    CropImage.activity()
-                            .setGuidelines(CropImageView.Guidelines.ON)
-                            .start(activity);
+                    Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    intent.setType("image/*");
+                    activity.startActivityForResult(intent, 1223);
+//                    CropImage.activity()
+//                            .setGuidelines(CropImageView.Guidelines.ON)
+//                            .start(activity);
+//                    UCrop.of("", "")
+//                            .withAspectRatio(16, 9)
+//                            .start(activity);
                 }
             }
         });

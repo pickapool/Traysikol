@@ -36,6 +36,8 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -560,10 +562,21 @@ public class PassengerHomeScreen extends AppCompatActivity implements OnMapReady
                                 Geocoder geocoder = new Geocoder(PassengerHomeScreen.this, Locale.getDefault());
                                 List<Address> addresses = geocoder.getFromLocation(orsResponse.metadata.query.coordinates[1][1], orsResponse.metadata.query.coordinates[1][0], 1);
                                 myDestinationAddress = addresses.get(0).getAddressLine(0);
+                                GlobalClass.DistanceValue = GlobalClass.GetDistance(orsResponse);
                                 distance = GlobalClass.convertDistance(GlobalClass.GetDistance(orsResponse));
                                 time = GlobalClass.GetTime(orsResponse);
                                 GlobalClass.CommuteModel.setDistance(distance);
-                                double currentFare = ((GlobalClass.GetDistance(orsResponse) / 1000 ) * 10 ) + 10;
+                                double currentFare = 0.0;
+                                if(GlobalClass.DistanceValue <= 4000) {
+                                    currentFare = 15;
+                                } else if(GlobalClass.DistanceValue > 4000 && GlobalClass.DistanceValue <= 5000) {
+                                    currentFare = 20;
+                                } else if(GlobalClass.DistanceValue > 5000 && GlobalClass.DistanceValue <= 7000) {
+                                    currentFare = 25;
+                                } else if(GlobalClass.DistanceValue > 7000 && GlobalClass.DistanceValue <= 9000) {
+                                    currentFare = 30;
+                                }
+                                GlobalClass.CurrentFare = currentFare;
                                 DecimalFormat df = new DecimalFormat("#.##");
                                 df.setRoundingMode(RoundingMode.HALF_UP);
                                 GlobalClass.CommuteModel.setFare(df.format(currentFare));
@@ -628,10 +641,32 @@ public class PassengerHomeScreen extends AppCompatActivity implements OnMapReady
             LinearLayout btns = customLayout.findViewById(R.id.buttonsRide);
             Button rideNow = customLayout.findViewById(R.id.rideNow);
             Button ridelater = customLayout.findViewById(R.id.rideLater);
+            CheckBox check = customLayout.findViewById(R.id.isStudent);
+
+            DecimalFormat df = new DecimalFormat("#.##");
+            df.setRoundingMode(RoundingMode.HALF_UP);
+            double newFare = GlobalClass.CurrentFare;
+            check.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                    double newFare = GlobalClass.CurrentFare;
+                    //Toast.makeText(PassengerHomeScreen.this, String.valueOf(newFare), Toast.LENGTH_SHORT).show();
+                    if(b) {
+                        if(newFare == 15)
+                            newFare = newFare - 2;
+                        else
+                            newFare = newFare - 5;
+                    } else {
+                        newFare = GlobalClass.CurrentFare;
+                    }
+                    fares.setText("₱ " + (df.format(newFare)));
+                }
+            });
+
 
             add1.setText(address1);
             add2.setText(address2);
-            fares.setText("₱ " + fare);
+            fares.setText("₱ " + (df.format(newFare)));
             dis.setText(distance);
             tim.setText("Estimated duration: " + time);
 
@@ -644,7 +679,7 @@ public class PassengerHomeScreen extends AppCompatActivity implements OnMapReady
             });
             ridelater.setOnClickListener(view -> {
                 dialog.dismiss();
-                PassengerCountDown countDown = new PassengerCountDown(myAddress, myDestinationAddress, fare, distance, time);
+                PassengerCountDown countDown = new PassengerCountDown(myAddress, myDestinationAddress, (df.format(newFare)), distance, time);
                 countDown.show(getSupportFragmentManager(), "PassengerHomeScreen");
             });
             confirmBtn.setOnClickListener(new View.OnClickListener() {

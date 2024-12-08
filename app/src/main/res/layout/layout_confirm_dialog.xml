@@ -140,7 +140,14 @@
                     android:textSize="25dp" />
             </LinearLayout>
         </LinearLayout>
-
+        <CheckBox
+            android:id="@+id/isStudent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:layout_gravity="center"
+            android:text="Student"
+            />
         <Button
             android:id="@+id/confirmCommute"
             android:layout_width="wrap_content"
