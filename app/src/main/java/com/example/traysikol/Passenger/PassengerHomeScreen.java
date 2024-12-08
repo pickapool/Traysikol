@@ -664,6 +664,7 @@ public class PassengerHomeScreen extends AppCompatActivity implements OnMapReady
                         newFare = GlobalClass.CurrentFare;
                     }
                     fares.setText("₱ " + (df.format(newFare)));
+                    GlobalClass.CommuteModel.setFare(String.valueOf(newFare));
                 }
             });
 
