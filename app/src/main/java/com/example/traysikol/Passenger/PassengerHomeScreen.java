@@ -575,6 +575,10 @@ public class PassengerHomeScreen extends AppCompatActivity implements OnMapReady
                                     currentFare = 25;
                                 } else if(GlobalClass.DistanceValue > 7000 && GlobalClass.DistanceValue <= 9000) {
                                     currentFare = 30;
+                                } else {
+                                    double perKM = 2.5;
+                                    double toKm = GlobalClass.DistanceValue / 1000;
+                                    currentFare = 30 + (toKm * perKM);
                                 }
                                 GlobalClass.CurrentFare = currentFare;
                                 DecimalFormat df = new DecimalFormat("#.##");
