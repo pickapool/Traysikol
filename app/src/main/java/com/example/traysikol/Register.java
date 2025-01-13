@@ -141,6 +141,7 @@ public class Register extends DialogFragment {
                         userAccountModel.setProfilePicture("");
                         userAccountModel.setDateofBirth("");
                         userAccountModel.setAddress("");
+                        userAccountModel.setIsApproved(false);
                         reference.child("Accounts").child(FirebaseAuth.getInstance().getCurrentUser().getUid())
                                 .setValue(userAccountModel).addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
