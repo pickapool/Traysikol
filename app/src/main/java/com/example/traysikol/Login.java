@@ -3,12 +3,16 @@ package com.example.traysikol;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputType;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -30,7 +34,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 public class Login extends AppCompatActivity {
-    TextView signUp;
+    TextView signUp, forgotPassword;
     Button login;
     ImageView back;
     BottomSheetDialogFragment dialogFragment;
@@ -47,7 +51,46 @@ public class Login extends AppCompatActivity {
         back = findViewById(R.id.back);
         username = findViewById(R.id.username);
         password = findViewById(R.id.password);
+        forgotPassword = findViewById(R.id.forgotPassword);
 
+        forgotPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(Login.this);
+                builder.setTitle("Forgot Password");
+
+                final EditText input = new EditText(Login.this);
+                input.setHint("Type your email");
+                input.setInputType(InputType.TYPE_CLASS_TEXT);
+                builder.setView(input);
+
+                builder.setPositiveButton("Send", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                String userInput = input.getText().toString();
+                                if(TextUtils.isEmpty(userInput)) {
+                                    Toast.makeText(Login.this, "Please enter an email!" + userInput, Toast.LENGTH_SHORT).show();
+                                    return;
+                                }
+                                FirebaseAuth.getInstance().sendPasswordResetEmail(userInput)
+                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                if (task.isSuccessful()) {
+                                                    Toast.makeText(Login.this, "Please check your email for password reset.", Toast.LENGTH_SHORT).show();
+                                                }
+                                            }
+                                        });
+
+                            }
+                        })
+                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                // Handle cancel button click
+                            }
+                        });
+                builder.show();
+            }
+        });
         firebaseAuth = FirebaseAuth.getInstance();
         reference = FirebaseDatabase.getInstance().getReference();
 
