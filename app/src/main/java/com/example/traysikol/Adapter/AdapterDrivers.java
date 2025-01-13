@@ -105,7 +105,7 @@ public class AdapterDrivers extends RecyclerView.Adapter<AdapterDrivers.ViewHold
                 }
             }
         }
-        holder.itemView.setOnClickListener(view -> ShowInformation(model.getUserAccountModel(), number));
+        holder.itemView.setOnClickListener(view -> ShowInformation(model, number));
 
     }
 
@@ -131,7 +131,7 @@ public class AdapterDrivers extends RecyclerView.Adapter<AdapterDrivers.ViewHold
         }
     }
 
-    private void ShowInformation(UserAccountModel user, int number) {
+    private void ShowInformation(OnlineDriverModel user, int number) {
         bottomSheetTeachersDialog.cancel();
         View layout = LayoutInflater.from(activity).inflate(R.layout.bottom_nav_call_driver, null);
         bottomSheetTeachersDialog.setContentView(layout);
@@ -148,7 +148,8 @@ public class AdapterDrivers extends RecyclerView.Adapter<AdapterDrivers.ViewHold
         ImageView call = layout.findViewById(R.id.call);
         CircleImageView pp = layout.findViewById(R.id.profilePicture);
         if (number == 0) {
-            Picasso.get().load(user.getProfilePicture()).into(pp);
+            if(!TextUtils.isEmpty(user.getUserAccountModel().getProfilePicture()))
+                Picasso.get().load(user.getUserAccountModel().getProfilePicture()).into(pp);
         } else if (number == 1) {
             Picasso.get().load(R.drawable.person1).into(pp);
         } else if (number == 2) {
@@ -158,13 +159,18 @@ public class AdapterDrivers extends RecyclerView.Adapter<AdapterDrivers.ViewHold
         } else {
             Picasso.get().load(R.drawable.person4).into(pp);
         }
+        
+        if(user.getUserAccountModel() == null) {
+            fullName.setText(user.getDriverName());
 
-        call.setOnClickListener(view -> makePhoneCall(user.getPhoneNumber()));
-        message.setOnClickListener(view -> sendSms(user.getPhoneNumber()));
-        fullName.setText(user.getFullName());
-        address.setText(TextUtils.isEmpty(user.getAddress()) ? "Address not found" : user.getAddress());
-        phoneNumber.setText(TextUtils.isEmpty(user.getPhoneNumber()) ? "Phone number not found" : user.getPhoneNumber());
-        email.setText(user.getEmail());
+        } else {
+            call.setOnClickListener(view -> makePhoneCall(user.getUserAccountModel().getPhoneNumber()));
+            message.setOnClickListener(view -> sendSms(user.getUserAccountModel().getPhoneNumber()));
+            fullName.setText(user.getDriverName());
+            address.setText(TextUtils.isEmpty(user.getUserAccountModel().getAddress()) ? "Address not found" : user.getUserAccountModel().getAddress());
+            phoneNumber.setText(TextUtils.isEmpty(user.getUserAccountModel().getPhoneNumber()) ? "Phone number not found" : user.getUserAccountModel().getPhoneNumber());
+            email.setText(user.getUserAccountModel().getEmail());
+        }
 
     }
 

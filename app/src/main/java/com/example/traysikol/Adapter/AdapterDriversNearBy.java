@@ -158,7 +158,8 @@ public class AdapterDriversNearBy extends RecyclerView.Adapter<AdapterDriversNea
         CircleImageView pp = layout.findViewById(R.id.profilePicture);
 
         if (number == 0) {
-            Picasso.get().load(user.getProfilePicture()).into(pp);
+            if(!TextUtils.isEmpty(user.getProfilePicture()))
+                Picasso.get().load(user.getProfilePicture()).into(pp);
         } else if (number == 1) {
             Picasso.get().load(R.drawable.person1).into(pp);
         } else if (number == 2) {
