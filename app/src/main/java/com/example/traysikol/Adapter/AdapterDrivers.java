@@ -55,7 +55,7 @@ public class AdapterDrivers extends RecyclerView.Adapter<AdapterDrivers.ViewHold
 
     @NonNull
     @Override
-    public AdapterDrivers.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view;
         if (viewType == ONLINE) {
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.template_profile_driver_online, parent, false);
@@ -72,14 +72,12 @@ public class AdapterDrivers extends RecyclerView.Adapter<AdapterDrivers.ViewHold
     }
 
     @Override
-    public void onBindViewHolder(@NonNull AdapterDrivers.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         OnlineDriverModel model = onlineDriverModelList.get(position);
         holder.driverName.setText(model.getDriverName());
         int number;
-        if (!TextUtils.isEmpty(model.getUserAccountModel().getProfilePicture())) {
-            number = 0;
-            Picasso.get().load(model.getUserAccountModel().getProfilePicture()).into(holder.profilePicture);
-        } else {
+
+        if(model.getUserAccountModel() == null) {
             number = generator.generateUniqueRandom();
             if (number == 1) {
                 Picasso.get().load(R.drawable.person1).into(holder.profilePicture);
@@ -90,8 +88,25 @@ public class AdapterDrivers extends RecyclerView.Adapter<AdapterDrivers.ViewHold
             } else {
                 Picasso.get().load(R.drawable.person4).into(holder.profilePicture);
             }
+        } else {
+            if (!TextUtils.isEmpty(model.getUserAccountModel().getProfilePicture())) {
+                number = 0;
+                Picasso.get().load(model.getUserAccountModel().getProfilePicture()).into(holder.profilePicture);
+            } else {
+                number = 0;
+                if (number == 1) {
+                    Picasso.get().load(R.drawable.person1).into(holder.profilePicture);
+                } else if (number == 2) {
+                    Picasso.get().load(R.drawable.person2).into(holder.profilePicture);
+                } else if (number == 3) {
+                    Picasso.get().load(R.drawable.person3).into(holder.profilePicture);
+                } else {
+                    Picasso.get().load(R.drawable.person4).into(holder.profilePicture);
+                }
+            }
         }
         holder.itemView.setOnClickListener(view -> ShowInformation(model.getUserAccountModel(), number));
+
     }
 
     private void makePhoneCall(String phoneNumber) {
