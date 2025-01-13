@@ -17,7 +17,7 @@ public class UserAccountModel {
     public AccountType accountType;
     public String dateofBirth;
     public String address;
-    public boolean isApproved;
+    public boolean IsApproved;
 
     public UserAccountModel(){}
 
@@ -34,7 +34,7 @@ public class UserAccountModel {
         this.dateofBirth = dateofBirth;
         this.address = address;
     }
-    public UserAccountModel(boolean isApprove, String uid, String firstname, String lastname, String email, String phoneNumber, String username, String password, String profilePicture, AccountType accountType, String dateofBirth, String address) {
+    public UserAccountModel(boolean IsApproved, String uid, String firstname, String lastname, String email, String phoneNumber, String username, String password, String profilePicture, AccountType accountType, String dateofBirth, String address) {
         this.uid = uid;
         this.firstname = firstname;
         this.lastname = lastname;
@@ -46,14 +46,14 @@ public class UserAccountModel {
         this.accountType = accountType;
         this.dateofBirth = dateofBirth;
         this.address = address;
-        this.isApproved = isApprove;
+        this.IsApproved = IsApproved;
     }
     public boolean getIsApproved() {
-        return isApproved;
+        return IsApproved;
     }
 
     public void setIsApproved(boolean approved) {
-        this.isApproved = approved;
+        this.IsApproved = approved;
     }
 
     public String getUid() {
