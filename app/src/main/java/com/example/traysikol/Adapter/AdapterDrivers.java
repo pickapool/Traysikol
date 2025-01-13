@@ -55,7 +55,7 @@ public class AdapterDrivers extends RecyclerView.Adapter<AdapterDrivers.ViewHold
 
     @NonNull
     @Override
-    public AdapterDrivers.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view;
         if (viewType == ONLINE) {
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.template_profile_driver_online, parent, false);
@@ -72,14 +72,12 @@ public class AdapterDrivers extends RecyclerView.Adapter<AdapterDrivers.ViewHold
     }
 
     @Override
-    public void onBindViewHolder(@NonNull AdapterDrivers.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         OnlineDriverModel model = onlineDriverModelList.get(position);
         holder.driverName.setText(model.getDriverName());
         int number;
-        if (!TextUtils.isEmpty(model.getUserAccountModel().getProfilePicture())) {
-            number = 0;
-            Picasso.get().load(model.getUserAccountModel().getProfilePicture()).into(holder.profilePicture);
-        } else {
+
+        if(model.getUserAccountModel() == null) {
             number = generator.generateUniqueRandom();
             if (number == 1) {
                 Picasso.get().load(R.drawable.person1).into(holder.profilePicture);
@@ -90,8 +88,25 @@ public class AdapterDrivers extends RecyclerView.Adapter<AdapterDrivers.ViewHold
             } else {
                 Picasso.get().load(R.drawable.person4).into(holder.profilePicture);
             }
+        } else {
+            if (!TextUtils.isEmpty(model.getUserAccountModel().getProfilePicture())) {
+                number = 0;
+                Picasso.get().load(model.getUserAccountModel().getProfilePicture()).into(holder.profilePicture);
+            } else {
+                number = 0;
+                if (number == 1) {
+                    Picasso.get().load(R.drawable.person1).into(holder.profilePicture);
+                } else if (number == 2) {
+                    Picasso.get().load(R.drawable.person2).into(holder.profilePicture);
+                } else if (number == 3) {
+                    Picasso.get().load(R.drawable.person3).into(holder.profilePicture);
+                } else {
+                    Picasso.get().load(R.drawable.person4).into(holder.profilePicture);
+                }
+            }
         }
-        holder.itemView.setOnClickListener(view -> ShowInformation(model.getUserAccountModel(), number));
+        holder.itemView.setOnClickListener(view -> ShowInformation(model, number));
+
     }
 
     private void makePhoneCall(String phoneNumber) {
@@ -116,7 +131,7 @@ public class AdapterDrivers extends RecyclerView.Adapter<AdapterDrivers.ViewHold
         }
     }
 
-    private void ShowInformation(UserAccountModel user, int number) {
+    private void ShowInformation(OnlineDriverModel user, int number) {
         bottomSheetTeachersDialog.cancel();
         View layout = LayoutInflater.from(activity).inflate(R.layout.bottom_nav_call_driver, null);
         bottomSheetTeachersDialog.setContentView(layout);
@@ -133,7 +148,8 @@ public class AdapterDrivers extends RecyclerView.Adapter<AdapterDrivers.ViewHold
         ImageView call = layout.findViewById(R.id.call);
         CircleImageView pp = layout.findViewById(R.id.profilePicture);
         if (number == 0) {
-            Picasso.get().load(user.getProfilePicture()).into(pp);
+            if(!TextUtils.isEmpty(user.getUserAccountModel().getProfilePicture()))
+                Picasso.get().load(user.getUserAccountModel().getProfilePicture()).into(pp);
         } else if (number == 1) {
             Picasso.get().load(R.drawable.person1).into(pp);
         } else if (number == 2) {
@@ -143,13 +159,18 @@ public class AdapterDrivers extends RecyclerView.Adapter<AdapterDrivers.ViewHold
         } else {
             Picasso.get().load(R.drawable.person4).into(pp);
         }
+        
+        if(user.getUserAccountModel() == null) {
+            fullName.setText(user.getDriverName());
 
-        call.setOnClickListener(view -> makePhoneCall(user.getPhoneNumber()));
-        message.setOnClickListener(view -> sendSms(user.getPhoneNumber()));
-        fullName.setText(user.getFullName());
-        address.setText(TextUtils.isEmpty(user.getAddress()) ? "Address not found" : user.getAddress());
-        phoneNumber.setText(TextUtils.isEmpty(user.getPhoneNumber()) ? "Phone number not found" : user.getPhoneNumber());
-        email.setText(user.getEmail());
+        } else {
+            call.setOnClickListener(view -> makePhoneCall(user.getUserAccountModel().getPhoneNumber()));
+            message.setOnClickListener(view -> sendSms(user.getUserAccountModel().getPhoneNumber()));
+            fullName.setText(user.getDriverName());
+            address.setText(TextUtils.isEmpty(user.getUserAccountModel().getAddress()) ? "Address not found" : user.getUserAccountModel().getAddress());
+            phoneNumber.setText(TextUtils.isEmpty(user.getUserAccountModel().getPhoneNumber()) ? "Phone number not found" : user.getUserAccountModel().getPhoneNumber());
+            email.setText(user.getUserAccountModel().getEmail());
+        }
 
     }
 
