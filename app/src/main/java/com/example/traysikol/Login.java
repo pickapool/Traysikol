@@ -147,7 +147,7 @@ public class Login extends AppCompatActivity {
                                                 if (task.isSuccessful()) {
                                                     GlobalClass.UserAccount = acc;
                                                     Intent ii;
-                                                    if (acc.accountType == AccountType.Commuter) {
+                                                    if (acc.getAccountType() == AccountType.Commuter) {
                                                         //Passenger home
                                                         ii = new Intent(Login.this, PassengerHomeScreen.class);
                                                     } else {
