@@ -6,18 +6,18 @@ import com.example.traysikol.Enums.AccountType;
 import com.google.firebase.database.Exclude;
 
 public class UserAccountModel {
-    public String uid;
-    public String firstname;
-    public String lastname;
-    public String email;
-    public String phoneNumber;
-    public String username;
-    public String password;
-    public String profilePicture;
-    public AccountType accountType;
-    public String dateofBirth;
-    public String address;
-    public boolean IsApproved;
+    private String uid;
+    private String firstname;
+    private String lastname;
+    private String email;
+    private String phoneNumber;
+    private String username;
+    private String password;
+    private String profilePicture;
+    private AccountType accountType;
+    private String dateofBirth;
+    private String address;
+    private boolean IsApproved;
 
     public UserAccountModel(){}
 

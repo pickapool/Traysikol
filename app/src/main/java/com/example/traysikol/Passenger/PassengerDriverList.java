@@ -145,8 +145,8 @@ public class PassengerDriverList extends AppCompatActivity {
 
                                             // Handle 'PhoneNumber' and 'phonenumber' case sensitivity
                                             model1.setPhoneNumber(jsonObject.has("PhoneNumber") ? jsonObject.get("PhoneNumber").getAsString() : "");
-                                            if (jsonObject.has("phonenumber") && !jsonObject.has("PhoneNumber")) {
-                                                model1.setPhoneNumber(jsonObject.get("phonenumber").getAsString());
+                                            if (jsonObject.has("phoneNumber") && !jsonObject.has("PhoneNumber")) {
+                                                model1.setPhoneNumber(jsonObject.get("phoneNumber").getAsString());
                                             }
 
                                             // Handle 'Username' and 'username' case sensitivity
