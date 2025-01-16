@@ -3,6 +3,8 @@ package com.example.traysikol.Passenger;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -26,6 +28,7 @@ public class PassengerProfile extends AppCompatActivity {
     ImageView back, pp;
     RelativeLayout privacy, profDetail, saveDestination;
     TextView fullName, verify;
+    RelativeLayout privacy_btn;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,6 +39,33 @@ public class PassengerProfile extends AppCompatActivity {
         fullName = findViewById(R.id.fullName);
         pp = findViewById(R.id.profilePicture);
         verify = findViewById(R.id.verify);
+        privacy_btn = findViewById(R.id.privacy_btn);
+
+        privacy_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showDialog("Privacy Policy\n" +
+                        "Your trust is important to us, and we are committed to safeguarding your personal information. Our Privacy Policy outlines how we collect, use, and protect your data:  \n" +
+                        "\n" +
+                        " 1. Information We Collect\n" +
+                        "- Personal Information: Name, contact details, and address for account creation.  \n" +
+                        "- Ride Details: Pickup/drop-off locations and trip history for service improvement.  \n" +
+                        "\n" +
+                        "2. How We Use Your Information\n" +
+                        "- To provide and improve our booking services.  \n" +
+                        "- To communicate important updates or promotional offers.  \n" +
+                        "- To ensure safety and accountability during trips.  \n" +
+                        "\n" +
+                        "3. Data Security \n" +
+                        "We implement industry-standard measures to protect your information from unauthorized access, alteration, or disclosure.  \n" +
+                        "\n" +
+                        "4. Third-Party Sharing\n" +
+                        "We do not share your personal data with third parties.\n" +
+                        "\n" +
+                        "\n" +
+                        "By using TricyRide, you agree to the terms outlined in this Privacy Policy. For detailed terms.");
+            }
+        });
 
         if(GlobalClass.UserAccount.getAccountType() == AccountType.Driver)
             saveDestination.setVisibility(View.GONE);
@@ -80,5 +110,30 @@ public class PassengerProfile extends AppCompatActivity {
             startActivity(ii);
             finish();
         });
+    }
+    private void showDialog(String message) {
+        // Create an AlertDialog Builder
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        // Set the dialog title
+        builder.setTitle("Privacy");
+
+        // Set the dialog message (this is the text displayed in the dialog)
+        builder.setMessage(message);
+
+        // Set a positive button (OK button) and its click listener
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // Handle the click event for the OK button
+                dialog.dismiss();
+            }
+        });
+
+        // Create the AlertDialog
+        AlertDialog dialog = builder.create();
+
+        // Show the dialog
+        dialog.show();
     }
 }
