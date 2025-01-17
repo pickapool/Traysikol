@@ -11,6 +11,7 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -298,9 +299,27 @@ public class PassengerHomeScreen extends AppCompatActivity implements OnMapReady
                             Toast.makeText(PassengerHomeScreen.this, "There are no current trips.", Toast.LENGTH_SHORT).show();
                         }
                     }
-                } else if (itemId == R.id.profile) {
+                } else if (itemId == R.id.contactUs) {
+                    showDialog("Got questions, feedback, or concerns? We’re here to help! Reach out to us through the following channels:  \n" +
+                            "- Email TRICYRIDE@gmail.com  \n" +
+                            "- Phone: (+63) 965-955-2562  \n" +
+                            "\n" +
+                            "\n" +
+                            "You can also follow us on social media for updates and announcements:  \n" +
+                            "- *Facebook:* [TricyRide Official\n" +
+                            "- Instagram: [@TricyRidePH](#)  \n", "Contact Us");
                     // Handle Profile menu item click
                 } else if (itemId == R.id.aboutUs) {
+                    showDialog("Welcome to TricyRide, your trusted partner in enhancing transportation convenience for communities.\n" +
+                            "\n" +
+                            "At TricyRide, we aim to:  \n" +
+                            "- Increase Transportation Availability:*Connecting passengers with nearby drivers for hassle-free trips.  \n" +
+                            "- Reduce Waiting Times: Save time by booking your ride instantly through our app.  \n" +
+                            "- Streamline Bookings: Enjoy a user-friendly platform for efficient ride reservations.  \n" +
+                            "- Promote Safety and Reliability:Work with verified tricycle drivers for peace of mind.  \n" +
+                            "- Foster Local Empowerment:Support our hardworking local tricycle drivers by providing a reliable income source.  \n" +
+                            "\n" +
+                            "We are committed to transforming your travel into a seamless, enjoyable experience while supporting the local economy.  \n", "About Us");
                     // Handle About Us menu item click
                 } else if (itemId == R.id.logout) {
                     FirebaseAuth.getInstance().signOut();
@@ -314,6 +333,31 @@ public class PassengerHomeScreen extends AppCompatActivity implements OnMapReady
         });
         ChangeIcons(1);
         GetMyCommutes();
+    }
+    private void showDialog(String message, String title) {
+        // Create an AlertDialog Builder
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        // Set the dialog title
+        builder.setTitle(title);
+
+        // Set the dialog message (this is the text displayed in the dialog)
+        builder.setMessage(message);
+
+        // Set a positive button (OK button) and its click listener
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // Handle the click event for the OK button
+                dialog.dismiss();
+            }
+        });
+
+        // Create the AlertDialog
+        AlertDialog dialog = builder.create();
+
+        // Show the dialog
+        dialog.show();
     }
 
     private void ChangeIcons(int position) {

@@ -2,17 +2,26 @@ package com.example.traysikol;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 
+import android.Manifest;
+import android.content.ActivityNotFoundException;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.traysikol.Enums.AccountType;
 import com.example.traysikol.Enums.CommuteStatus;
 import com.example.traysikol.Models.CommuteModel;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -79,6 +88,28 @@ public class CurrentRequest extends DialogFragment {
         distance.setText(commuteModel.getDistance());
         time.setText(commuteModel.getTime());
 
+        RelativeLayout rel1 = view.findViewById(R.id.rel1);
+        RelativeLayout rel2 = view.findViewById(R.id.rel2);
+
+        if(GlobalClass.UserAccount.getAccountType() == AccountType.Commuter)
+        {
+            rel2.setVisibility(View.INVISIBLE);
+        } else {
+            rel1.setVisibility(View.INVISIBLE);
+        }
+
+        ImageView callDriver = view.findViewById(R.id.driverCall);
+        ImageView messageDriver = view.findViewById(R.id.driverMessage);
+
+        ImageView callPassenger = view.findViewById(R.id.passengerCall);
+        ImageView messagePassenger = view.findViewById(R.id.passengerMessage);
+
+        callDriver.setOnClickListener(view14 -> makePhoneCall(commuteModel.DriverAccount.getPhoneNumber()));
+        messageDriver.setOnClickListener(view14 -> sendSms(commuteModel.DriverAccount.getPhoneNumber()));
+
+        callPassenger.setOnClickListener(view14 -> makePhoneCall(commuteModel.PassengerAccount.getPhoneNumber()));
+        messagePassenger.setOnClickListener(view14 -> sendSms(commuteModel.PassengerAccount.getPhoneNumber()));
+
         back.setOnClickListener(view1 -> dismiss());
         cancel.setOnClickListener(view12 -> ConfirmDialog.showDialog(getContext(), "Confirmation", "Are you sure you want to cancel this trip?", new ConfirmDialog.ConfirmDialogListener() {
             @Override
@@ -114,5 +145,26 @@ public class CurrentRequest extends DialogFragment {
             }
         }));
 
+    }
+    private void makePhoneCall(String phoneNumber) {
+        if (ContextCompat.checkSelfPermission(getActivity(),
+                android.Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(getActivity(),
+                    new String[]{Manifest.permission.CALL_PHONE}, 1993);
+        } else {
+            String dial = "tel:" + phoneNumber;
+            getActivity().startActivity(new Intent(Intent.ACTION_CALL, Uri.parse(dial)));
+        }
+    }
+
+    private void sendSms(String phoneNumber) {
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("sms:" + phoneNumber));
+        intent.putExtra("sms_body", "");
+
+        try {
+            getActivity().startActivity(intent);
+        } catch (ActivityNotFoundException e) {
+            Toast.makeText(getActivity(), "SMS app not found", Toast.LENGTH_SHORT).show();
+        }
     }
 }

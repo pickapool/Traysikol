@@ -25,7 +25,7 @@
         android:title="Settings">
         <menu>
             <item
-                android:id="@+id/profile"
+                android:id="@+id/contactUs"
                 android:title="Contact Us"
                 android:checkable="true"
                 android:icon="@drawable/new_contact_us_icon"
