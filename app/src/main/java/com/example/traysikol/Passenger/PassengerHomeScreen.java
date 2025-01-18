@@ -418,7 +418,7 @@ public class PassengerHomeScreen extends AppCompatActivity implements OnMapReady
     private void SetDestination(LatLng latLng) {
         GlobalClass.CommuteModel.setPassengerDestinationLatitude(latLng.latitude);
         GlobalClass.CommuteModel.setPassengerDestinationLongitude(latLng.longitude);
-        Bitmap b = BitmapFactory.decodeResource(getResources(), R.drawable.taxi_destination);
+        Bitmap b = BitmapFactory.decodeResource(getResources(), R.drawable.destination);
         Bitmap smallMarker = Bitmap.createScaledBitmap(b, 60, 60, false);
         BitmapDescriptor smallMarkerIcon = BitmapDescriptorFactory.fromBitmap(smallMarker);
         Marker newMarker = googleMaps.addMarker(new MarkerOptions().position(latLng).title("Destination").icon(smallMarkerIcon));
@@ -428,7 +428,7 @@ public class PassengerHomeScreen extends AppCompatActivity implements OnMapReady
     private void SetLocation(boolean move) {
         myLocation = new LatLng(GlobalClass.currentLocation.get(0).getLatitude(), GlobalClass.currentLocation.get(0).getLongitude());
         // Update the marker icon
-        Bitmap b = BitmapFactory.decodeResource(getResources(), R.drawable.mylocation);
+        Bitmap b = BitmapFactory.decodeResource(getResources(), R.drawable.marker1);
         Bitmap smallMarker = Bitmap.createScaledBitmap(b, 60, 60, false);
         BitmapDescriptor smallMarkerIcon = BitmapDescriptorFactory.fromBitmap(smallMarker);
         if(move) {
