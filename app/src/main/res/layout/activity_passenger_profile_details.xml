@@ -8,9 +8,9 @@
     android:orientation="vertical"
     tools:context=".Passenger.PassengerProfileDetails">
     <ImageView
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:src="@drawable/arrow_left_dark"
+        android:layout_width="34dp"
+        android:layout_height="49dp"
+        android:src="@drawable/back_arrow_black"
         android:id="@+id/back"
         />
     <TextView

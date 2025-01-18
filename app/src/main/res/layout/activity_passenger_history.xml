@@ -8,9 +8,9 @@
     android:padding="10dp"
     tools:context=".Passenger.PassengerHistory">
     <ImageView
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:src="@drawable/back"
+        android:layout_width="34dp"
+        android:layout_height="49dp"
+        android:src="@drawable/back_arrow_black"
         android:id="@+id/back"
         android:layout_marginBottom="10dp"
         />

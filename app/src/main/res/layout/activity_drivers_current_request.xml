@@ -14,12 +14,11 @@
         tools:context=".CurrentRequest">
 
         <ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:src="@drawable/back"
             android:id="@+id/back"
+            android:layout_width="34dp"
+            android:layout_height="49dp"
             android:layout_marginBottom="10dp"
-            />
+            android:src="@drawable/back_arrow_black" />
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="120dp"
@@ -63,15 +62,15 @@
                 android:layout_toRightOf="@+id/driverProfilePicture"
                 >
                 <ImageView
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
                     android:layout_alignParentRight="true"
                     android:id="@+id/driverMessage"
                     android:src="@drawable/bottom_nav_message"
                     />
                 <ImageView
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
                     android:layout_marginRight="30dp"
                     android:layout_toLeftOf="@id/driverMessage"
                     android:id="@+id/driverCall"
@@ -123,15 +122,15 @@
                 android:layout_toRightOf="@+id/passengerProfilePicture"
                 >
                 <ImageView
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
                     android:layout_alignParentRight="true"
                     android:id="@+id/passengerMessage"
                     android:src="@drawable/bottom_nav_message"
                     />
                 <ImageView
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
                     android:layout_marginRight="30dp"
                     android:layout_toLeftOf="@id/passengerMessage"
                     android:id="@+id/passengerCall"

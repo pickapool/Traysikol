@@ -11,11 +11,11 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
     <ImageView
-        android:layout_width="24dp"
-        android:layout_height="24dp"
+        android:layout_width="34dp"
+        android:layout_height="49dp"
         android:id="@+id/back"
         android:layout_marginBottom="10dp"
-        android:src="@drawable/back"/>
+        android:src="@drawable/back_arrow_black"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
