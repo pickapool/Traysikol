@@ -79,7 +79,11 @@ public class CurrentRequest extends DialogFragment {
 
         Extensions.SetProfilePicture(commuteModel.DriverAccount.getProfilePicture(), driverPP);
         Extensions.SetProfilePicture(commuteModel.PassengerAccount.getProfilePicture(), pPP);
-
+        if(GlobalClass.UserAccount.getAccountType() == AccountType.Commuter)
+        {
+            endTrip.setVisibility(View.INVISIBLE);
+            cancel.setVisibility(View.INVISIBLE);
+        }
         driverName.setText(commuteModel.DriverAccount.getFullName() == null ? "No Driver" : commuteModel.DriverAccount.getFullName());
         pName.setText(commuteModel.PassengerAccount.getFullName());
         address1.setText(commuteModel.getAddress1());
