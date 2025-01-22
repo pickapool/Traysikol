@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -79,12 +80,12 @@ public class CurrentRequest extends DialogFragment {
 
         Extensions.SetProfilePicture(commuteModel.DriverAccount.getProfilePicture(), driverPP);
         Extensions.SetProfilePicture(commuteModel.PassengerAccount.getProfilePicture(), pPP);
-        if(GlobalClass.UserAccount.getAccountType() == AccountType.Commuter)
+        if(!TextUtils.isEmpty(commuteModel.DriverAccount.getUid()))
         {
             endTrip.setVisibility(View.INVISIBLE);
             cancel.setVisibility(View.INVISIBLE);
         }
-        driverName.setText(commuteModel.DriverAccount.getFullName() == null ? "No Driver" : commuteModel.DriverAccount.getFullName());
+        driverName.setText(commuteModel.DriverAccount.getFirstname() == null ? "No Driver" : commuteModel.DriverAccount.getFullName());
         pName.setText(commuteModel.PassengerAccount.getFullName());
         address1.setText(commuteModel.getAddress1());
         address2.setText(commuteModel.getAddress2());
