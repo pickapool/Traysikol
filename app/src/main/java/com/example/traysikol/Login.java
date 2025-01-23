@@ -130,10 +130,16 @@ public class Login extends AppCompatActivity {
                                     for (DataSnapshot snapshot1 : snapshot.getChildren()) {
                                         UserAccountModel acc = snapshot1.getValue(UserAccountModel.class);
                                         if(acc.getAccountType() == AccountType.Driver) {
-                                            if(!acc.getIsApproved()) {
+                                            if(snapshot1.child("IsApproved").getValue(Boolean.class) == null) {
                                                 Toast.makeText(Login.this, "Your account was still on pending.", Toast.LENGTH_SHORT).show();
                                                 dialog.dismiss();
                                                 return;
+                                            } else {
+                                                if(!snapshot1.child("IsApproved").getValue(Boolean.class)) {
+                                                    Toast.makeText(Login.this, "Your account was still on pending.", Toast.LENGTH_SHORT).show();
+                                                    dialog.dismiss();
+                                                    return;
+                                                }
                                             }
                                         }
                                         if (acc.getAccountType() != GlobalClass.AccountType) {
