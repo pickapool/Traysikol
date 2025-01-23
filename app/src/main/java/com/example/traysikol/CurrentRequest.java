@@ -99,15 +99,13 @@ public class CurrentRequest extends DialogFragment {
         if(GlobalClass.UserAccount.getAccountType() == AccountType.Commuter)
         {
             rel2.setVisibility(View.INVISIBLE);
-            if(TextUtils.isEmpty(commuteModel.DriverAccount.getUid()))
+            if(!TextUtils.isEmpty(commuteModel.DriverAccount.getUid()))
             {
                 endTrip.setVisibility(View.INVISIBLE);
                 cancel.setVisibility(View.INVISIBLE);
             }
         } else {
             rel1.setVisibility(View.INVISIBLE);
-            endTrip.setVisibility(View.INVISIBLE);
-            cancel.setVisibility(View.INVISIBLE);
         }
 
         ImageView callDriver = view.findViewById(R.id.driverCall);
@@ -143,16 +141,16 @@ public class CurrentRequest extends DialogFragment {
         endTrip.setOnClickListener(view13 -> ConfirmDialog.showDialog(getContext(), "Confirmation", "Are you sure you want to end this trip?", new ConfirmDialog.ConfirmDialogListener() {
             @Override
             public void onYesClicked() {
-                if(commuteModel.DriverAccount.getFirstname() == null) {
+               /* if(commuteModel.DriverAccount.getFirstname() == null) {*/
                     HashMap<String, Object> hashMap = new HashMap<>();
                     hashMap.put("commuteStatus", CommuteStatus.Done);
                     reference.child("Commutes").child(commuteModel.getKey()).updateChildren(hashMap).addOnCompleteListener(task -> {
                         dismiss();
-                        Toast.makeText(getActivity(), "Trip has been cancelled.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), "Trip has been ended.", Toast.LENGTH_SHORT).show();
                     });
-                } else {
+               /* } else {
                     showCustomDialog(commuteModel);
-                }
+                }*/
             }
 
             @Override
