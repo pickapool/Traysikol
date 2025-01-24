@@ -143,6 +143,7 @@ public class PassengerHomeScreen extends AppCompatActivity implements OnMapReady
     List<CommuteModel> CommuteModels = new ArrayList<>();
     FirebaseUser user;
     PassengerHomeScreen.UniqueRandomGenerator generator = new PassengerHomeScreen.UniqueRandomGenerator();
+    boolean rated = false;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -354,11 +355,12 @@ public class PassengerHomeScreen extends AppCompatActivity implements OnMapReady
             public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
                 CommuteModel commute = snapshot.getValue(CommuteModel.class);
                 if(commute.getPassengerUid().equals(GlobalClass.UserAccount.getUid())) {
-                    if(commute.getCommuteStatus().equals(CommuteStatus.Done)) {
+                    if(commute.getCommuteStatus().equals(CommuteStatus.Done) && !rated) {
                         showCustomDialog(commute);
                     }
-                    //Toast.makeText(getApplicationContext(), commute.getPassengerUid(), Toast.LENGTH_SHORT).show();
                 }
+                if(rated)
+                    rated = false;
             }
 
             @Override
@@ -447,6 +449,7 @@ public class PassengerHomeScreen extends AppCompatActivity implements OnMapReady
             if(task.isSuccessful()) {
                 Toast.makeText(getApplicationContext(), "Thank you for your rating.", Toast.LENGTH_SHORT).show();
                 dialog.dismiss();
+                rated = true;
             }
         });
     }
