@@ -1,6 +1,9 @@
 package com.example.traysikol.Passenger;
 
+import static java.security.AccessController.getContext;
+
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.view.GravityCompat;
@@ -29,6 +32,7 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
 import android.view.Display;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -41,6 +45,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -49,6 +54,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.traysikol.Adapter.AdapterDrivers;
 import com.example.traysikol.Adapter.PlacesAdapter.PlaceAdapter;
 import com.example.traysikol.ChooseAccount;
 import com.example.traysikol.CurrentRequest;
@@ -88,6 +94,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -99,10 +106,13 @@ import com.squareup.picasso.Picasso;
 import java.io.IOException;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -132,6 +142,7 @@ public class PassengerHomeScreen extends AppCompatActivity implements OnMapReady
     List<Marker> driversMarker = new ArrayList<>();
     List<CommuteModel> CommuteModels = new ArrayList<>();
     FirebaseUser user;
+    PassengerHomeScreen.UniqueRandomGenerator generator = new PassengerHomeScreen.UniqueRandomGenerator();
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -333,6 +344,130 @@ public class PassengerHomeScreen extends AppCompatActivity implements OnMapReady
         });
         ChangeIcons(1);
         GetMyCommutes();
+        reference.child("Commutes").addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                CommuteModel commute = snapshot.getValue(CommuteModel.class);
+                if(commute.getPassengerUid().equals(GlobalClass.UserAccount.getUid())) {
+                    if(commute.getCommuteStatus().equals(CommuteStatus.Done)) {
+                        showCustomDialog(commute);
+                    }
+                    //Toast.makeText(getApplicationContext(), commute.getPassengerUid(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+    private void showCustomDialog(CommuteModel model) {
+        if(!TextUtils.isEmpty(model.getDriverUid())) {
+            reference.child("Accounts").child(model.getDriverUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    UserAccountModel driverModel = snapshot.getValue(UserAccountModel.class);
+                    model.setDriverAccount(driverModel);
+
+                    LayoutInflater inflater = getLayoutInflater();
+                    View customView = inflater.inflate(R.layout.template_history_rate, null);
+
+                    TextView date = customView.findViewById(R.id.time_text);
+                    TextView address1 = customView.findViewById(R.id.address1);
+                    TextView address2 = customView.findViewById(R.id.address2);
+                    TextView driverName = customView.findViewById(R.id.driverName);
+                    RatingBar rate = customView.findViewById(R.id.ratingBar);
+                    CircleImageView c = customView.findViewById(R.id.profilePicture);
+
+                    int number = 0;
+                    number = generator.generateUniqueRandom();
+
+                    if (!TextUtils.isEmpty(model.getDriverAccount().getProfilePicture())) {
+                        Picasso.get().load(model.getDriverAccount().getProfilePicture()).into(c);
+                    } else {
+                        if (number == 1) {
+                            Picasso.get().load(R.drawable.person1).into(c);
+                        } else if (number == 2) {
+                            Picasso.get().load(R.drawable.person2).into(c);
+                        } else if (number == 3) {
+                            Picasso.get().load(R.drawable.person3).into(c);
+                        } else {
+                            Picasso.get().load(R.drawable.person4).into(c);
+                        }
+                    }
+
+                    SimpleDateFormat formats = new SimpleDateFormat("MMMM dd, yyyy hh:mm a");
+                    date.setText(formats.format(model.getCommuteDate()));
+                    address1.setText(model.getAddress1());
+                    address2.setText(model.getAddress2());
+                    driverName.setText(model.getDriverAccount().getFullName());
+
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(PassengerHomeScreen.this);
+                    builder.setView(customView);
+
+                    builder.setTitle("Driver Rating")
+                            .setCancelable(true)
+                            .setPositiveButton("DONE", (dialog, which) -> {
+                                SetRating(model, rate.getRating(), dialog);
+                            });
+                    AlertDialog dialog = builder.create();
+                    dialog.setCancelable(false);
+                    dialog.show();
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+        }
+    }
+    private void SetRating(CommuteModel model, float v, DialogInterface dialog) {
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("rating", v);
+        hashMap.put("commuteStatus", CommuteStatus.Done);
+        reference.child("Commutes").child(model.getKey()).updateChildren(hashMap).addOnCompleteListener(task -> {
+            if(task.isSuccessful()) {
+                Toast.makeText(getApplicationContext(), "Thank you for your rating.", Toast.LENGTH_SHORT).show();
+                dialog.dismiss();
+            }
+        });
+    }
+    public class UniqueRandomGenerator {
+        private int previousNumber;
+        private Random random;
+
+        public UniqueRandomGenerator() {
+            random = new Random();
+            previousNumber = -1; // Initialize to an invalid number
+        }
+
+        public int generateUniqueRandom() {
+            int currentNumber;
+            do {
+                currentNumber = random.nextInt(4) + 1; // Generates random number between 1 and 4
+            } while (currentNumber == previousNumber); // Loop until a different number is generated
+
+            previousNumber = currentNumber; // Update the previous number
+            return currentNumber;
+        }
     }
     private void showDialog(String message, String title) {
         // Create an AlertDialog Builder
