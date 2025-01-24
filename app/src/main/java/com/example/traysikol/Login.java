@@ -129,7 +129,7 @@ public class Login extends AppCompatActivity {
                                 if (snapshot.exists()) {
                                     for (DataSnapshot snapshot1 : snapshot.getChildren()) {
                                         UserAccountModel acc = snapshot1.getValue(UserAccountModel.class);
-                                        if(acc.getAccountType() == AccountType.Driver) {
+                                        //if(acc.getAccountType() == AccountType.Driver) {
                                             if(snapshot1.child("IsApproved").getValue(Boolean.class) == null) {
                                                 Toast.makeText(Login.this, "Your account was still on pending.", Toast.LENGTH_SHORT).show();
                                                 dialog.dismiss();
@@ -141,7 +141,7 @@ public class Login extends AppCompatActivity {
                                                     return;
                                                 }
                                             }
-                                        }
+                                        //}
                                         if (acc.getAccountType() != GlobalClass.AccountType) {
                                             dialog.dismiss();
                                             Toast.makeText(Login.this, "Sorry we can't find your account as a " + acc.getAccountType().toString(), Toast.LENGTH_SHORT).show();
