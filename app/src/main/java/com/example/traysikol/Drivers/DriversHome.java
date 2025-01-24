@@ -432,7 +432,7 @@ public class DriversHome extends AppCompatActivity implements OnMapReadyCallback
         reference.child("Commutes").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                Bitmap b = BitmapFactory.decodeResource(getResources(), R.drawable.mark);
+                Bitmap b = BitmapFactory.decodeResource(getResources(), R.drawable.marker1);
                 Bitmap smallMarker = Bitmap.createScaledBitmap(b, 60, 60, false);
                 googleMaps.clear();
                 SetLocation(false);
@@ -537,11 +537,11 @@ public class DriversHome extends AppCompatActivity implements OnMapReadyCallback
                 googleMapDialog[0].setInfoWindowAdapter(
                         new GoogleMarkerAdapter(DriversHome.this)
                 );
-                Bitmap b = BitmapFactory.decodeResource(getResources(), R.drawable.mark);
+                Bitmap b = BitmapFactory.decodeResource(getResources(), R.drawable.mylocation);
                 Bitmap smallMarker = Bitmap.createScaledBitmap(b, 60, 60, false);
                 BitmapDescriptor smallMarkerIcon = BitmapDescriptorFactory.fromBitmap(smallMarker);
 
-                Bitmap b1 = BitmapFactory.decodeResource(getResources(), R.drawable.destinations);
+                Bitmap b1 = BitmapFactory.decodeResource(getResources(), R.drawable.destination);
                 Bitmap smallMarker1 = Bitmap.createScaledBitmap(b1, 60, 60, false);
                 BitmapDescriptor smallMarkerIcon1 = BitmapDescriptorFactory.fromBitmap(smallMarker1);
 

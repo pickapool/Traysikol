@@ -7,16 +7,20 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.media.Rating;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,6 +33,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -80,7 +85,7 @@ public class CurrentRequest extends DialogFragment {
         Extensions.SetProfilePicture(commuteModel.DriverAccount.getProfilePicture(), driverPP);
         Extensions.SetProfilePicture(commuteModel.PassengerAccount.getProfilePicture(), pPP);
 
-        driverName.setText(commuteModel.DriverAccount.getFullName() == null ? "No Driver" : commuteModel.DriverAccount.getFullName());
+        driverName.setText(commuteModel.DriverAccount.getFirstname() == null ? "No Driver" : commuteModel.DriverAccount.getFullName());
         pName.setText(commuteModel.PassengerAccount.getFullName());
         address1.setText(commuteModel.getAddress1());
         address2.setText(commuteModel.getAddress2());
@@ -94,6 +99,11 @@ public class CurrentRequest extends DialogFragment {
         if(GlobalClass.UserAccount.getAccountType() == AccountType.Commuter)
         {
             rel2.setVisibility(View.INVISIBLE);
+            if(!TextUtils.isEmpty(commuteModel.DriverAccount.getUid()))
+            {
+                endTrip.setVisibility(View.INVISIBLE);
+                cancel.setVisibility(View.INVISIBLE);
+            }
         } else {
             rel1.setVisibility(View.INVISIBLE);
         }
@@ -131,12 +141,16 @@ public class CurrentRequest extends DialogFragment {
         endTrip.setOnClickListener(view13 -> ConfirmDialog.showDialog(getContext(), "Confirmation", "Are you sure you want to end this trip?", new ConfirmDialog.ConfirmDialogListener() {
             @Override
             public void onYesClicked() {
-                HashMap<String, Object> hashMap = new HashMap<>();
-                hashMap.put("commuteStatus", CommuteStatus.Done);
-                reference.child("Commutes").child(commuteModel.getKey()).updateChildren(hashMap).addOnCompleteListener(task -> {
-                    dismiss();
-                    Toast.makeText(getActivity(), "Trip has been cancelled.", Toast.LENGTH_SHORT).show();
-                });
+               /* if(commuteModel.DriverAccount.getFirstname() == null) {*/
+                    HashMap<String, Object> hashMap = new HashMap<>();
+                    hashMap.put("commuteStatus", CommuteStatus.Done);
+                    reference.child("Commutes").child(commuteModel.getKey()).updateChildren(hashMap).addOnCompleteListener(task -> {
+                        dismiss();
+                        Toast.makeText(getActivity(), "Trip has been ended.", Toast.LENGTH_SHORT).show();
+                    });
+               /* } else {
+                    showCustomDialog(commuteModel);
+                }*/
             }
 
             @Override
@@ -144,7 +158,43 @@ public class CurrentRequest extends DialogFragment {
 
             }
         }));
+    }
+    private void showCustomDialog(CommuteModel model) {
+        LayoutInflater inflater = getLayoutInflater();
+        android.view.View customView = inflater.inflate(R.layout.template_history, null);
 
+        TextView date = customView.findViewById(R.id.time_text);
+        TextView address1 = customView.findViewById(R.id.address1);
+        TextView address2 = customView.findViewById(R.id.address2);
+        RatingBar rate = customView.findViewById(R.id.ratingBar);
+
+        SimpleDateFormat formats = new SimpleDateFormat("MMMM dd, yyyy hh:mm a");
+        date.setText(formats.format(model.getCommuteDate()));
+        address1.setText(model.getAddress1());
+        address2.setText(model.getAddress2());
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setView(customView);
+
+        builder.setTitle("Driver Rating")
+                .setCancelable(true)
+                .setPositiveButton("DONE", (dialog, which) -> {
+                    SetRating(model, rate.getRating());
+                });
+        AlertDialog dialog = builder.create();
+        dialog.setCancelable(false);
+        dialog.show();
+    }
+    private void SetRating(CommuteModel model, float v) {
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("rating", v);
+        hashMap.put("commuteStatus", CommuteStatus.Done);
+        reference.child("Commutes").child(model.getKey()).updateChildren(hashMap).addOnCompleteListener(task -> {
+            if(task.isSuccessful()) {
+                Toast.makeText(getActivity(), "Thank you for your rating.", Toast.LENGTH_SHORT).show();
+                dismiss();
+            }
+        });
     }
     private void makePhoneCall(String phoneNumber) {
         if (ContextCompat.checkSelfPermission(getActivity(),

@@ -1,6 +1,8 @@
 package com.example.traysikol;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -16,7 +18,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 
 import com.example.traysikol.Models.UserAccountModel;
@@ -86,10 +87,40 @@ public class Register extends DialogFragment {
 
         login.setOnClickListener(view12 -> dismissWithAnimation());
         closeBtn.setOnClickListener(view1 -> dismissWithAnimation());
-        terms.setOnClickListener(view13 -> ShowTerms("This page is used to inform visitors regarding my policies with the collection, use, and disclosure of Personal Information if anyone decided to use my Service. " +
-                "If you choose to use my Service, then you agree to the collection and use of information in relation to this policy. The Personal Information that I collect is used for providing and improving the Service. I will not use or share your information with anyone except as described in this Privacy Policy."));
-        privacy.setOnClickListener(view13 -> ShowTerms("This page is used to inform visitors regarding my policies with the collection, use, and disclosure of Personal Information if anyone decided to use my Service. " +
-                "If you choose to use my Service, then you agree to the collection and use of information in relation to this policy. The Personal Information that I collect is used for providing and improving the Service. I will not use or share your information with anyone except as described in this Privacy Policy."));
+        terms.setOnClickListener(view13 -> ShowTerms("Here’s a simple and basic Terms of Service for the TricyRide app. You can adjust this template as necessary for your specific needs, keeping in mind legal requirements and the services you offer.\n" +
+                "Terms of Service for TricyRide App\n" +
+                "\n" +
+                "Effective Date: [Insert Date]\n" +
+                "\n" +
+                "Welcome to TricyRide! By accessing or using the TricyRide mobile app (the \"App\"), you agree to comply with and be bound by the following Terms of Service (\"Terms\"). Please read these Terms carefully before using the App. If you do not agree with any of these Terms, please do not use the App.\n" +
+                "1. Acceptance of Terms\n" +
+                "\n" +
+                "By downloading, installing, or using the TricyRide App, you agree to these Terms. We may update these Terms from time to time, and any changes will be effective immediately upon posting. It is your responsibility to review these Terms periodically.\n" +
+                "2. Use of the App\n" +
+                "\n" +
+                "The TricyRide app is intended for personal, non-commercial use. You agree to use the App in compliance with applicable laws, regulations, and these Terms. You may not use the App for any illegal, unauthorized, or prohibited activities.\n" +
+                "3. Account Registration\n" +
+                "\n" +
+                "To access certain features of the App, you may be required to create an account. You agree to provide accurate, up-to-date information during the registration process and to maintain the security of your account. You are responsible for all activities under your account, whether or not authorized by you.", ""));
+        privacy.setOnClickListener(view13 -> ShowTerms("Your trust is important to us, and we are committed to safeguarding your personal information. Our Privacy Policy outlines how we collect, use, and protect your data:  \n" +
+                "\n" +
+                " 1. Information We Collect\n" +
+                "- Personal Information: Name, contact details, and address for account creation.  \n" +
+                "- Ride Details: Pickup/drop-off locations and trip history for service improvement.  \n" +
+                "\n" +
+                "2. How We Use Your Information\n" +
+                "- To provide and improve our booking services.  \n" +
+                "- To communicate important updates or promotional offers.  \n" +
+                "- To ensure safety and accountability during trips.  \n" +
+                "\n" +
+                "3. Data Security \n" +
+                "We implement industry-standard measures to protect your information from unauthorized access, alteration, or disclosure.  \n" +
+                "\n" +
+                "4. Third-Party Sharing\n" +
+                "We do not share your personal data with third parties.\n" +
+                "\n" +
+                " \n" +
+                "By using TricyRide, you agree to the terms outlined in this Privacy Policy. For detailed terms.", "Privacy and Policy"));
         // Initialize views and set up dialog behavior
         // Apply animation when dialog is shown
         getDialog().getWindow().getDecorView().setPadding(0, 100, 0, 0);
@@ -193,15 +224,18 @@ public class Register extends DialogFragment {
         getView().startAnimation(slideOutAnimation);
     }
 
-    private void ShowTerms(String terms) {
-        AlertDialog innerDialog = new AlertDialog.Builder(getContext())
-                .setTitle("Inner Dialog")
-                .setMessage("This is an inner dialog inside the outer dialog.")
-                .setPositiveButton("OK", (innerDialogInterface, i) -> {
-                    // Handle inner dialog button click if needed
-                })
-                .create();
-        innerDialog.show();
+    private void ShowTerms(String terms, String title) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle(title);
+        builder.setMessage(terms);
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
 }
