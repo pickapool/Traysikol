@@ -356,7 +356,8 @@ public class PassengerHomeScreen extends AppCompatActivity implements OnMapReady
                 CommuteModel commute = snapshot.getValue(CommuteModel.class);
                 if(commute.getPassengerUid().equals(GlobalClass.UserAccount.getUid())) {
                     if(commute.getCommuteStatus().equals(CommuteStatus.Done) && !snapshot.child("isRated").getValue(Boolean.class)) {
-                        showCustomDialog(commute);
+                        Intent ii = new Intent(PassengerHomeScreen.this, PassengerHistory.class);
+                        startActivity(ii);
                     }
                 }
             }
