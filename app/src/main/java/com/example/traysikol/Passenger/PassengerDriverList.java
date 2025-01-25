@@ -275,14 +275,14 @@ public class PassengerDriverList extends AppCompatActivity {
 
                                         // Handle 'ProfilePicture' and 'profilepicture' case sensitivity
                                         model1.setProfilePicture(jsonObject.has("ProfilePicture") ? jsonObject.get("ProfilePicture").getAsString() : "");
-                                        if (jsonObject.has("profilepicture") && !jsonObject.has("ProfilePicture")) {
-                                            model1.setProfilePicture(jsonObject.get("profilepicture").getAsString());
+                                        if (jsonObject.has("profilePicture")) {
+                                            model1.setProfilePicture(jsonObject.get("profilePicture").getAsString());
                                         }
 
                                         // Handle 'DateOfBirth' and 'dateofbirth' case sensitivity
                                         model1.setDateofBirth(jsonObject.has("DateOfBirth") ? jsonObject.get("DateOfBirth").getAsString() : "");
-                                        if (jsonObject.has("dateofbirth") && !jsonObject.has("DateOfBirth")) {
-                                            model1.setDateofBirth(jsonObject.get("dateofbirth").getAsString());
+                                        if (jsonObject.has("dateOfBirth") && !jsonObject.has("DateOfBirth")) {
+                                            model1.setDateofBirth(jsonObject.get("dateOfBirth").getAsString());
                                         }
 
                                         // Handle 'Address' and 'address' case sensitivity
