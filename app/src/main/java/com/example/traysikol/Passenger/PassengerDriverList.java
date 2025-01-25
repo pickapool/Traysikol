@@ -220,6 +220,107 @@ public class PassengerDriverList extends AppCompatActivity {
                         public void onErrorResponse(VolleyError error) {
                             System.out.println("error2333 - " + error);
                             model.setDistance(9999999);
+                            reference.child("Accounts").addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    for(DataSnapshot snapshot2: snapshot.getChildren())
+                                    {
+                                        Gson gson = new Gson();
+                                        String jsonLog = gson.toJson(snapshot2.getValue());
+                                        JsonObject jsonObject = gson.fromJson(jsonLog, JsonObject.class);
+
+                                        UserAccountModel model1 = new UserAccountModel();
+                                        model1.setFirstname(jsonObject.has("Firstname") ? jsonObject.get("Firstname").getAsString() : "");
+                                        if(jsonObject.has("Uid")) {
+                                            model1.setUid(jsonObject.has("Uid") ? jsonObject.get("Uid").getAsString() : "");
+                                        } else {
+                                            model1.setUid(jsonObject.has("uid") ? jsonObject.get("uid").getAsString() : "");
+                                        }
+
+                                        // Handle 'Firstname' and 'firstname' case sensitivity
+                                        model1.setFirstname(jsonObject.has("Firstname") ? jsonObject.get("Firstname").getAsString() : "");
+                                        if (jsonObject.has("firstname") && !jsonObject.has("Firstname")) {
+                                            model1.setFirstname(jsonObject.get("firstname").getAsString());
+                                        }
+
+                                        // Handle 'Lastname' and 'lastname' case sensitivity
+                                        model1.setLastname(jsonObject.has("Lastname") ? jsonObject.get("Lastname").getAsString() : "");
+                                        if (jsonObject.has("lastname") && !jsonObject.has("Lastname")) {
+                                            model1.setLastname(jsonObject.get("lastname").getAsString());
+                                        }
+
+                                        // Handle 'Email' and 'email' case sensitivity
+                                        model1.setEmail(jsonObject.has("Email") ? jsonObject.get("Email").getAsString() : "");
+                                        if (jsonObject.has("email") && !jsonObject.has("Email")) {
+                                            model1.setEmail(jsonObject.get("email").getAsString());
+                                        }
+
+                                        // Handle 'PhoneNumber' and 'phonenumber' case sensitivity
+                                        model1.setPhoneNumber(jsonObject.has("PhoneNumber") ? jsonObject.get("PhoneNumber").getAsString() : "");
+                                        if (jsonObject.has("phoneNumber") && !jsonObject.has("PhoneNumber")) {
+                                            model1.setPhoneNumber(jsonObject.get("phoneNumber").getAsString());
+                                        }
+
+                                        // Handle 'Username' and 'username' case sensitivity
+                                        model1.setUsername(jsonObject.has("Username") ? jsonObject.get("Username").getAsString() : "");
+                                        if (jsonObject.has("username") && !jsonObject.has("Username")) {
+                                            model1.setUsername(jsonObject.get("username").getAsString());
+                                        }
+
+                                        // Handle 'Password' and 'password' case sensitivity
+                                        model1.setPassword(jsonObject.has("Password") ? jsonObject.get("Password").getAsString() : "");
+                                        if (jsonObject.has("password") && !jsonObject.has("Password")) {
+                                            model1.setPassword(jsonObject.get("password").getAsString());
+                                        }
+
+                                        // Handle 'ProfilePicture' and 'profilepicture' case sensitivity
+                                        model1.setProfilePicture(jsonObject.has("ProfilePicture") ? jsonObject.get("ProfilePicture").getAsString() : "");
+                                        if (jsonObject.has("profilepicture") && !jsonObject.has("ProfilePicture")) {
+                                            model1.setProfilePicture(jsonObject.get("profilepicture").getAsString());
+                                        }
+
+                                        // Handle 'DateOfBirth' and 'dateofbirth' case sensitivity
+                                        model1.setDateofBirth(jsonObject.has("DateOfBirth") ? jsonObject.get("DateOfBirth").getAsString() : "");
+                                        if (jsonObject.has("dateofbirth") && !jsonObject.has("DateOfBirth")) {
+                                            model1.setDateofBirth(jsonObject.get("dateofbirth").getAsString());
+                                        }
+
+                                        // Handle 'Address' and 'address' case sensitivity
+                                        model1.setAddress(jsonObject.has("Address") ? jsonObject.get("Address").getAsString() : "");
+                                        if (jsonObject.has("address") && !jsonObject.has("Address")) {
+                                            model1.setAddress(jsonObject.get("address").getAsString());
+                                        }
+
+                                        System.out.println(model1.getUid() +"-"+model.getDriverUid());
+
+                                        if(model1 != null) {
+                                            if(model1.getUid() != null) {
+                                                if (model1.getUid().equals(model.getDriverUid())) {
+                                                    model.setUserAccountModel(model1);
+                                                    onlineDriverModelList.add(model);
+
+                                                    nearByList = onlineDriverModelList.stream().filter(e -> e.getDistance() <= 1000).collect(Collectors.toList());
+                                                    adapterNear = new AdapterDriversNearBy(nearByList, PassengerDriverList.this);
+                                                    topDriver.setLayoutManager(linearLayoutManager);
+                                                    topDriver.setAdapter(adapterNear);
+                                                    adapterNear.notifyDataSetChanged();
+
+                                                    longDistance = onlineDriverModelList.stream().filter(e -> e.getDistance() > 1000).collect(Collectors.toList());
+                                                    adapter = new AdapterDrivers(longDistance, PassengerDriverList.this);
+                                                    bottomDriver.setLayoutManager(linearLayoutManager1);
+                                                    bottomDriver.setAdapter(adapter);
+                                                    adapter.notifyDataSetChanged();
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                }
+                            });
                             //Toast.makeText(PassengerDriverList.this, "Some of other locations is exceeded the API distance limit.", Toast.LENGTH_SHORT).show();
                         }
                     });
