@@ -353,12 +353,12 @@ public class PassengerHomeScreen extends AppCompatActivity implements OnMapReady
 
             @Override
             public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                CommuteModel commute = snapshot.getValue(CommuteModel.class);
+                /*CommuteModel commute = snapshot.getValue(CommuteModel.class);
                 if(commute.getPassengerUid().equals(GlobalClass.UserAccount.getUid())) {
                     if(commute.getCommuteStatus().equals(CommuteStatus.Done) && !snapshot.child("isRated").getValue(Boolean.class)) {
                         showCustomDialog(commute);
                     }
-                }
+                }*/
             }
 
             @Override

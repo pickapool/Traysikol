@@ -43,7 +43,7 @@ public class RequestADriverService extends Service {
                 {
                     if(commuteModel.getCommuteStatus() == CommuteStatus.Cancelled) {
                         Extensions.CreateNotification(getApplicationContext(), PassengerHomeScreen.class, "Trip has been cancelled");
-                    } else if(commuteModel.getCommuteStatus() == CommuteStatus.Done && !snapshot.child("isRated").getValue(Boolean.class)){
+                    } else if(commuteModel.getCommuteStatus() == CommuteStatus.Done){
                         Extensions.CreateNotification(getApplicationContext(), PassengerHomeScreen.class, "Trip successfully done.");
                     }
                 }
