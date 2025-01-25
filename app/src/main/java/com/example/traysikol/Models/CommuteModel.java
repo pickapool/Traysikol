@@ -28,6 +28,7 @@ public class CommuteModel {
     public UserAccountModel DriverAccount;
     @Exclude
     public UserAccountModel PassengerAccount;
+    public boolean isRated;
 
     public CommuteModel (){}
 
@@ -51,6 +52,14 @@ public class CommuteModel {
         this.rating = rating;
         DriverAccount = driverAccount;
         PassengerAccount = passengerAccount;
+    }
+
+    public boolean isRated() {
+        return isRated;
+    }
+
+    public void setRated(boolean rated) {
+        isRated = rated;
     }
 
     public String getTime() {
