@@ -355,12 +355,10 @@ public class PassengerHomeScreen extends AppCompatActivity implements OnMapReady
             public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
                 CommuteModel commute = snapshot.getValue(CommuteModel.class);
                 if(commute.getPassengerUid().equals(GlobalClass.UserAccount.getUid())) {
-                    if(commute.getCommuteStatus().equals(CommuteStatus.Done) && !rated) {
+                    if(commute.getCommuteStatus().equals(CommuteStatus.Done) && !commute.isRated()) {
                         showCustomDialog(commute);
                     }
                 }
-                if(rated)
-                    rated = false;
             }
 
             @Override
@@ -445,11 +443,11 @@ public class PassengerHomeScreen extends AppCompatActivity implements OnMapReady
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("rating", v);
         hashMap.put("commuteStatus", CommuteStatus.Done);
+        hashMap.put("isRated", true);
         reference.child("Commutes").child(model.getKey()).updateChildren(hashMap).addOnCompleteListener(task -> {
             if(task.isSuccessful()) {
                 Toast.makeText(getApplicationContext(), "Thank you for your rating.", Toast.LENGTH_SHORT).show();
                 dialog.dismiss();
-                rated = true;
             }
         });
     }
@@ -912,6 +910,7 @@ public class PassengerHomeScreen extends AppCompatActivity implements OnMapReady
         GlobalClass.CommuteModel.setTime(time);
         GlobalClass.CommuteModel.setAddress1(myAddress);
         GlobalClass.CommuteModel.setAddress2(myDestinationAddress);
+        GlobalClass.CommuteModel.setRated(false);
 
         reference.child("Commutes").child(key).setValue(GlobalClass.CommuteModel).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
