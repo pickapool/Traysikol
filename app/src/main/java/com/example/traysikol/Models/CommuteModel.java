@@ -28,7 +28,7 @@ public class CommuteModel {
     public UserAccountModel DriverAccount;
     @Exclude
     public UserAccountModel PassengerAccount;
-    public boolean isRated;
+    private boolean isRated;
 
     public CommuteModel (){}
 
