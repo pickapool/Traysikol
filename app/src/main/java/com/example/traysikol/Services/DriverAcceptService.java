@@ -46,7 +46,7 @@ public class DriverAcceptService extends Service {
                         Extensions.CreateNotification(getApplicationContext(), PassengerHomeScreen.class, "Driver is on its way.");
                     } else if(commuteModel.isOccupied() && commuteModel.getCommuteStatus() == CommuteStatus.Cancelled) {
                         Extensions.CreateNotification(getApplicationContext(), PassengerHomeScreen.class, "Trip has been cancelled");
-                    } else {
+                    } else if(commuteModel.isOccupied() && commuteModel.getCommuteStatus() == CommuteStatus.Done && !snapshot.child("isRated").getValue(Boolean.class)){
                         Extensions.CreateNotification(getApplicationContext(), PassengerHomeScreen.class, "Trip successfully done.");
                     }
                 }
