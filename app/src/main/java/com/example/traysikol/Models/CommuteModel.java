@@ -32,7 +32,12 @@ public class CommuteModel {
 
     public CommuteModel (){}
 
-    public CommuteModel(String key, String passengerUid, String driverUid, double passengerLatitude, double passengerLongitude, double passengerDestinationLatitude, double passengerDestinationLongitude, PassengerRoute passengerRoute, boolean isOccupied, CommuteStatus commuteStatus, Date commuteDate, String distance, String fare, String time, String address1, String address2, float rating, UserAccountModel driverAccount, UserAccountModel passengerAccount) {
+    public CommuteModel(String key, String passengerUid, String driverUid, double passengerLatitude,
+                        double passengerLongitude, double passengerDestinationLatitude, double passengerDestinationLongitude,
+                        PassengerRoute passengerRoute, boolean isOccupied, CommuteStatus commuteStatus, Date commuteDate,
+                        String distance, String fare, String time, String address1, String address2, float rating,
+                        UserAccountModel driverAccount, UserAccountModel passengerAccount,
+                        Boolean isRated) {
         this.key = key;
         this.passengerUid = passengerUid;
         this.driverUid = driverUid;
@@ -50,6 +55,7 @@ public class CommuteModel {
         this.address1 = address1;
         this.address2 = address2;
         this.rating = rating;
+        this.isRated = isRated;
         DriverAccount = driverAccount;
         PassengerAccount = passengerAccount;
     }
