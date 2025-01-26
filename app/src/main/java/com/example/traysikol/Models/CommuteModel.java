@@ -24,11 +24,12 @@ public class CommuteModel {
     public String address1;
     public String address2;
     public float rating;
+    public boolean isRated;
     @Exclude
     public UserAccountModel DriverAccount;
     @Exclude
     public UserAccountModel PassengerAccount;
-    private boolean isRated;
+
 
     public CommuteModel (){}
 
