@@ -234,9 +234,11 @@ public class PassengerProfileDetails extends AppCompatActivity {
                         if(props == "address")
                         {
                             address.setText(others.getText().toString());
+                            GlobalClass.UserAccount.setAddress(others.getText().toString());
                         } else if(props == "phoneNumber")
                         {
                             mNumber.setText(others.getText().toString());
+                            GlobalClass.UserAccount.setPhoneNumber(mNumber.getText().toString());
                         }
                     }
                 }
