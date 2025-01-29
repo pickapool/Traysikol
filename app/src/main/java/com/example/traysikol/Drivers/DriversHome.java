@@ -199,6 +199,7 @@ public class DriversHome extends AppCompatActivity implements OnMapReadyCallback
                     return;
                 }
                 commute.setImageResource(R.drawable.commute_icon_selected);
+                home.setImageResource(R.drawable.home_icon);
                 ShowCommuteInfo(CurrentCommute);
             }
         });
