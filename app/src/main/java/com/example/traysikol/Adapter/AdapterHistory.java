@@ -11,8 +11,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.traysikol.Extensions;
 import com.example.traysikol.Models.CommuteModel;
 import com.example.traysikol.Models.UserAccountModel;
+import com.example.traysikol.Passenger.PassengerHistory;
 import com.example.traysikol.Passenger.PassengerHomeScreen;
 import com.example.traysikol.R;
 import com.google.firebase.database.DataSnapshot;
@@ -91,9 +93,14 @@ public class AdapterHistory extends RecyclerView.Adapter<AdapterHistory.ViewHold
         holder.ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
             @Override
             public void onRatingChanged(RatingBar ratingBar, float v, boolean b) {
-                HashMap<String, Object> hashMap = new HashMap<>();
-                hashMap.put("rating", v);
-                reference.child("Commutes").child(model.getKey()).updateChildren(hashMap);
+                if(b) {
+                    HashMap<String, Object> hashMap = new HashMap<>();
+                    hashMap.put("rating", v);
+                    hashMap.put("isRated", true);
+
+                    reference.child("Commutes").child(model.getKey()).updateChildren(hashMap);
+                    Extensions.CreateNotification(activity, PassengerHistory.class, "Thank you for your rating.");
+                }
             }
         });
     }
