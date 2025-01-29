@@ -198,6 +198,7 @@ public class DriversHome extends AppCompatActivity implements OnMapReadyCallback
                     Toast.makeText(DriversHome.this, "No selected trip!", Toast.LENGTH_SHORT).show();
                     return;
                 }
+                commute.setImageResource(R.drawable.commute_icon_selected);
                 ShowCommuteInfo(CurrentCommute);
             }
         });
@@ -246,6 +247,7 @@ public class DriversHome extends AppCompatActivity implements OnMapReadyCallback
                 SetLocation(true);
             }
         });
+        home.setImageResource(R.drawable.home_icon_selected);
 
         //remove driver then set again
         reference.child("OnlineDrivers")
