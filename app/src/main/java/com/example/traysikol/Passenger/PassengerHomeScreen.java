@@ -103,6 +103,8 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
+import org.w3c.dom.Text;
+
 import java.io.IOException;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
@@ -144,6 +146,7 @@ public class PassengerHomeScreen extends AppCompatActivity implements OnMapReady
     FirebaseUser user;
     PassengerHomeScreen.UniqueRandomGenerator generator = new PassengerHomeScreen.UniqueRandomGenerator();
     boolean rated = false;
+    int countStudent = 0, countRegular = 0;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -535,7 +538,8 @@ public class PassengerHomeScreen extends AppCompatActivity implements OnMapReady
                     return;
                 }
                 commute.setImageResource(R.drawable.commute_icon_selected);
-                ShowDialogConfirm(myAddress, myDestinationAddress, GlobalClass.CommuteModel.getFare(), distance, time);
+                ShowPassengersList();
+                //ShowDialogConfirm(myAddress, myDestinationAddress, GlobalClass.CommuteModel.getFare(), distance, time);
                 break;
             case 3:
                 driversNear.setImageResource(R.drawable.drivers_icon_selected);
@@ -800,7 +804,90 @@ public class PassengerHomeScreen extends AppCompatActivity implements OnMapReady
     }
 
     //Address-> Address address = GlobalClass.currentLocation.get(0); -> String addressLine = address.getAddressLine(0);
-    private void ShowDialogConfirm(String address1, String address2, String fare, String distance, String time) {
+    private void ShowPassengersList() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(PassengerHomeScreen.this);
+        View customLayout = getLayoutInflater().inflate(R.layout.layout_passengers_count, null);
+        builder.setView(customLayout);
+        AlertDialog dialog = builder.create();
+        dialog.setCancelable(false);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.getWindow().setDimAmount(0);
+
+        WindowManager.LayoutParams lWindowParams = new WindowManager.LayoutParams();
+        lWindowParams.copyFrom(dialog.getWindow().getAttributes());
+        lWindowParams.width = 700;
+        lWindowParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
+
+        ImageView close = customLayout.findViewById(R.id.closeDialog);
+        close.setOnClickListener(view -> {
+            dialog.dismiss();
+            countStudent = countRegular = 0;
+            ChangeIcons(1);
+        });
+        ImageView minusS = customLayout.findViewById(R.id.minusStudent);
+        ImageView plusS = customLayout.findViewById(R.id.plusStudent);
+        TextView countS = customLayout.findViewById(R.id.countStudent);
+
+        ImageView minusR = customLayout.findViewById(R.id.minusRegular);
+        ImageView plusR = customLayout.findViewById(R.id.plusRegular);
+        TextView countR = customLayout.findViewById(R.id.countRegular);
+
+        countS.setText(String.valueOf(countStudent));
+        countR.setText(String.valueOf(countRegular));
+
+        Button proceed = customLayout.findViewById(R.id.confirmCommute);
+
+        minusS.setOnClickListener(view -> {
+            if(countStudent == 0)
+                return;
+            countStudent -= 1;
+            countS.setText(String.valueOf(countStudent));
+        });
+        plusS.setOnClickListener(view -> {
+            countStudent += 1;
+            countS.setText(String.valueOf(countStudent));
+        });
+        minusR.setOnClickListener(view -> {
+            if(countRegular == 0)
+                return;
+            countRegular -= 1;
+            countR.setText(String.valueOf(countRegular));
+        });
+        plusR.setOnClickListener(view -> {
+            countRegular += 1;
+            countR.setText(String.valueOf(countRegular));
+        });
+
+        proceed.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(countStudent == 0 && countRegular == 0) {
+                    Toast.makeText(PassengerHomeScreen.this, "No passengers.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                double countStudentsTotal = 0;
+                double countRegularTotal = 0;
+                if(countStudent > 0)
+                {
+                    double discountStudents = countStudent * 2;
+                    countStudentsTotal = (GlobalClass.CurrentFare * countStudent) - discountStudents;
+                }
+                if(countRegular > 0) {
+                    countRegularTotal = (GlobalClass.CurrentFare * countRegular);
+                }
+
+                double total = countRegularTotal + countStudentsTotal;
+                GlobalClass.CommuteModel.setRegularCount(countRegular);
+                GlobalClass.CommuteModel.setStudentCount(countStudent);
+                ShowDialogConfirm(myAddress, myDestinationAddress, total , distance, time);
+            }
+        });
+
+        dialog.show();
+        dialog.getWindow().setAttributes(lWindowParams);
+
+    }
+    private void ShowDialogConfirm(String address1, String address2, double fare, String distance, String time) {
         try {
             AlertDialog.Builder builder = new AlertDialog.Builder(PassengerHomeScreen.this);
             View customLayout = getLayoutInflater().inflate(R.layout.layout_confirm_dialog, null);
@@ -831,7 +918,7 @@ public class PassengerHomeScreen extends AppCompatActivity implements OnMapReady
             DecimalFormat df = new DecimalFormat("#.##");
             df.setRoundingMode(RoundingMode.HALF_UP);
             double newFare = GlobalClass.CurrentFare;
-            check.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            /*check.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                     double newFare = GlobalClass.CurrentFare;
@@ -844,17 +931,18 @@ public class PassengerHomeScreen extends AppCompatActivity implements OnMapReady
                     } else {
                         newFare = GlobalClass.CurrentFare;
                     }
-                    fares.setText("₱ " + (df.format(newFare)));
-                    GlobalClass.CommuteModel.setFare(String.valueOf(newFare));
+                    fares.setText("₱ " + (df.format(fare)));
+                    GlobalClass.CommuteModel.setFare(String.valueOf(fare));
                 }
-            });
+            });*/
 
 
             add1.setText(address1);
             add2.setText(address2);
-            fares.setText("₱ " + (df.format(newFare)));
+            fares.setText("₱ " + (df.format(fare)));
             dis.setText(distance);
             tim.setText("Estimated duration: " + time);
+            GlobalClass.CommuteModel.setFare(String.valueOf(fare));
 
             close.setOnClickListener(view -> {
                 dialog.dismiss();
