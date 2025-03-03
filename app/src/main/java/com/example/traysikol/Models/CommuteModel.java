@@ -25,6 +25,8 @@ public class CommuteModel {
     public String address2;
     public float rating;
     public boolean isRated;
+    public int studentCount;
+    public int regularCount;
     @Exclude
     public UserAccountModel DriverAccount;
     @Exclude
@@ -38,7 +40,7 @@ public class CommuteModel {
                         PassengerRoute passengerRoute, boolean isOccupied, CommuteStatus commuteStatus, Date commuteDate,
                         String distance, String fare, String time, String address1, String address2, float rating,
                         UserAccountModel driverAccount, UserAccountModel passengerAccount,
-                        Boolean isRated) {
+                        Boolean isRated,int studentCount,int regularCount) {
         this.key = key;
         this.passengerUid = passengerUid;
         this.driverUid = driverUid;
@@ -57,6 +59,8 @@ public class CommuteModel {
         this.address2 = address2;
         this.rating = rating;
         this.isRated = isRated;
+        this.regularCount = regularCount;
+        this.studentCount = studentCount;
         DriverAccount = driverAccount;
         PassengerAccount = passengerAccount;
     }
@@ -215,6 +219,22 @@ public class CommuteModel {
 
     public UserAccountModel getPassengerAccount() {
         return PassengerAccount;
+    }
+
+    public int getStudentCount() {
+        return studentCount;
+    }
+
+    public void setStudentCount(int studentCount) {
+        this.studentCount = studentCount;
+    }
+
+    public int getRegularCount() {
+        return regularCount;
+    }
+
+    public void setRegularCount(int regularCount) {
+        this.regularCount = regularCount;
     }
 
     public void setPassengerAccount(UserAccountModel passengerAccount) {

@@ -147,6 +147,7 @@
             android:textAlignment="center"
             android:layout_gravity="center"
             android:text="Student"
+            android:visibility="gone"
             />
         <Button
             android:id="@+id/confirmCommute"
