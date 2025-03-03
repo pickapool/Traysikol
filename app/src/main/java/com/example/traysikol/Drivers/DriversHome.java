@@ -435,7 +435,7 @@ public class DriversHome extends AppCompatActivity implements OnMapReadyCallback
         reference.child("Commutes").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                Bitmap b = GlobalClass.UserAccount.getAccountType() == AccountType.Commuter ? BitmapFactory.decodeResource(getResources(), R.drawable.marker1) : BitmapFactory.decodeResource(getResources(), R.drawable.mylocation);
+                Bitmap b = BitmapFactory.decodeResource(getResources(), R.drawable.marker1);
                 Bitmap smallMarker = Bitmap.createScaledBitmap(b, 60, 60, false);
                 googleMaps.clear();
                 SetLocation(false);
