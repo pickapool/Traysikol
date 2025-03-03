@@ -31,6 +31,14 @@
             android:layout_centerVertical="true"
             android:layout_toRightOf="@id/profilePicture"
             />
+            <ImageView
+                android:id="@+id/iconView"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_alignParentEnd="true"
+                android:clickable="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/arrow_right" />
         </RelativeLayout>
 
         <RelativeLayout

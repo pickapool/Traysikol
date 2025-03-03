@@ -1,17 +1,26 @@
 package com.example.traysikol.Adapter;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Context;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.traysikol.CurrentRequest;
 import com.example.traysikol.Extensions;
+import com.example.traysikol.GlobalClass;
 import com.example.traysikol.Models.CommuteModel;
 import com.example.traysikol.Models.UserAccountModel;
 import com.example.traysikol.Passenger.PassengerHistory;
@@ -103,6 +112,65 @@ public class AdapterHistory extends RecyclerView.Adapter<AdapterHistory.ViewHold
                 }
             }
         });
+        holder.view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                try {
+                    LayoutInflater inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                    View dialogView = inflater.inflate(R.layout.activity_drivers_current_request, null);
+
+                    TextView driverName = dialogView.findViewById(R.id.driverFullName);
+                    CircleImageView driverPP = dialogView.findViewById(R.id.driverProfilePicture);
+                    TextView pName = dialogView.findViewById(R.id.passengerFullName);
+                    CircleImageView pPP = dialogView.findViewById(R.id.passengerProfilePicture);
+                    TextView address1 = dialogView.findViewById(R.id.address1);
+                    TextView address2 = dialogView.findViewById(R.id.address2);
+                    TextView fare = dialogView.findViewById(R.id.fare);
+                    TextView distance = dialogView.findViewById(R.id.distance);
+                    TextView time = dialogView.findViewById(R.id.duration);
+
+                    Button cancel = dialogView.findViewById(R.id.cancel);
+                    Button endTrip = dialogView.findViewById(R.id.endTrip);
+
+
+                    cancel.setVisibility(View.INVISIBLE);
+                    endTrip.setVisibility(View.INVISIBLE);
+
+                    ImageView back = dialogView.findViewById(R.id.back);
+                    Extensions.SetProfilePicture(model.DriverAccount.getProfilePicture(), driverPP);
+                    Extensions.SetProfilePicture(GlobalClass.UserAccount.getProfilePicture(), pPP);
+
+                    driverName.setText(model.DriverAccount.getFullName());
+                    pName.setText(GlobalClass.UserAccount.getFullName());
+                    address1.setText(model.getAddress1());
+                    address2.setText(model.getAddress2());
+                    fare.setText(model.getFare());
+                    distance.setText(model.getDistance());
+                    time.setText(model.getTime());
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                    builder.setView(dialogView);
+                    builder.setCancelable(false);
+
+
+
+
+
+                    AlertDialog dialog = builder.create();
+
+                    WindowManager.LayoutParams lWindowParams = new WindowManager.LayoutParams();
+                    lWindowParams.copyFrom(dialog.getWindow().getAttributes());
+                    lWindowParams.width = 700;
+                    lWindowParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
+
+                    dialog.show(); // Show the dialog
+                    dialog.getWindow().setAttributes(lWindowParams);
+                    back.setOnClickListener(view1 -> dialog.dismiss());
+                } catch (Exception ee) {
+                    System.out.println("sad22" +ee.getMessage());
+                }
+            }
+        });
     }
     public class UniqueRandomGenerator {
         private int previousNumber;
@@ -133,6 +201,7 @@ public class AdapterHistory extends RecyclerView.Adapter<AdapterHistory.ViewHold
         TextView time, address1, address2, driverName;
         RatingBar ratingBar;
         CircleImageView profile;
+        ImageView view;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
@@ -142,6 +211,7 @@ public class AdapterHistory extends RecyclerView.Adapter<AdapterHistory.ViewHold
             ratingBar = itemView.findViewById(R.id.ratingBar);
             driverName = itemView.findViewById(R.id.driverName);
             profile = itemView.findViewById(R.id.profilePicture);
+            view = itemView.findViewById(R.id.iconView);
         }
     }
 }
