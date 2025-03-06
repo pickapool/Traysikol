@@ -106,6 +106,10 @@ public class Login extends AppCompatActivity {
         signUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(GlobalClass.AccountType == AccountType.Driver) {
+                    Toast.makeText(Login.this, "Please visit our local service center for assistance of your account.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 Register dialog = new Register();
                 dialog.show(getSupportFragmentManager(), dialog.getTag());
             }
