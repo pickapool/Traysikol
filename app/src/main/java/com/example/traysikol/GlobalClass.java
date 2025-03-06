@@ -6,6 +6,7 @@ import android.location.Location;
 
 import com.example.traysikol.Enums.AccountType;
 import com.example.traysikol.Models.CommuteModel;
+import com.example.traysikol.Models.FareModel;
 import com.example.traysikol.Models.OSRDirectionModels.ORSFeature;
 import com.example.traysikol.Models.OSRDirectionModels.ORSGeometry;
 import com.example.traysikol.Models.OSRDirectionModels.ORSProperties;
@@ -26,8 +27,9 @@ public class GlobalClass {
     public static boolean IsUseLocation = false;
     private static DecimalFormat df = new DecimalFormat("#.##");
     public static double DistanceValue = 0.0;
-    public static double CurrentFare = 0.0;
-
+    public static double CurrentStudentFare = 0.0;
+    public static double CurrentRegularFare = 0.0;
+    public static FareModel Fares = new FareModel();
     public static String convertDistance(double distance) {
         if (distance >= 1000) {
             double kilometers = distance / 1000.0;
@@ -83,5 +85,45 @@ public class GlobalClass {
     public static String PlacesAPI(String query)
     {
         return "https://api.openrouteservice.org/geocode/autocomplete?api_key=5b3ce3597851110001cf6248865cba12d4c44f36b368b2b065a07c00&text="+query;
+    }
+    public static double calculateStudentFare(double distance, FareModel fareModel) {
+        double currentFare = fareModel.getStudentFare();
+        double currentMinDistance = fareModel.getStudentKM() * 1000;
+        double incrementalDistance = 1000;
+
+        if (distance <= currentMinDistance) {
+            return currentFare;
+        }
+
+        while (distance > currentMinDistance) {
+            currentMinDistance += incrementalDistance;
+            currentFare += 5;
+
+            if (currentMinDistance >= distance) {
+                break;
+            }
+        }
+
+        return currentFare;
+    }
+    public static double calculateRegularFare(double distance, FareModel fareModel) {
+        double currentFare = fareModel.getRegularFare();
+        double currentMinDistance = fareModel.getRegularKM() * 1000;
+        double incrementalDistance = 1000;
+
+        if (distance <= currentMinDistance) {
+            return currentFare;
+        }
+
+        while (distance > currentMinDistance) {
+            currentMinDistance += incrementalDistance;
+            currentFare += 5;
+
+            if (currentMinDistance >= distance) {
+                break;
+            }
+        }
+
+        return currentFare;
     }
 }

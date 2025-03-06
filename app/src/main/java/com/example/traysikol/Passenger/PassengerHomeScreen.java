@@ -64,6 +64,7 @@ import com.example.traysikol.Enums.OnlineStatus;
 import com.example.traysikol.Extensions;
 import com.example.traysikol.GlobalClass;
 import com.example.traysikol.Models.CommuteModel;
+import com.example.traysikol.Models.FareModel;
 import com.example.traysikol.Models.OSRDirectionModels.ORSFeature;
 import com.example.traysikol.Models.OSRDirectionModels.ORSGeometry;
 import com.example.traysikol.Models.OSRDirectionModels.ORSResponse;
@@ -751,7 +752,18 @@ public class PassengerHomeScreen extends AppCompatActivity implements OnMapReady
                                 distance = GlobalClass.convertDistance(GlobalClass.GetDistance(orsResponse));
                                 time = GlobalClass.GetTime(orsResponse);
                                 GlobalClass.CommuteModel.setDistance(distance);
-                                double currentFare = 0.0;
+                                reference.child("Fare").addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                        GlobalClass.Fares = dataSnapshot.getValue(FareModel.class);
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                    }
+                                });
+                                /*double currentFare = 0.0;
                                 if(GlobalClass.DistanceValue <= 4000) {
                                     currentFare = 15;
                                 } else if(GlobalClass.DistanceValue > 4000 && GlobalClass.DistanceValue <= 5000) {
@@ -765,10 +777,11 @@ public class PassengerHomeScreen extends AppCompatActivity implements OnMapReady
                                     double toKm = GlobalClass.DistanceValue / 1000;
                                     currentFare = 30 + (toKm * perKM);
                                 }
-                                GlobalClass.CurrentFare = currentFare;
+
+                                //GlobalClass.CurrentFare = currentFare;
                                 DecimalFormat df = new DecimalFormat("#.##");
                                 df.setRoundingMode(RoundingMode.HALF_UP);
-                                GlobalClass.CommuteModel.setFare(df.format(currentFare));
+                                GlobalClass.CommuteModel.setFare(df.format(currentFare));*/
 
                             }
                             dialog.dismiss();
@@ -870,10 +883,10 @@ public class PassengerHomeScreen extends AppCompatActivity implements OnMapReady
                 if(countStudent > 0)
                 {
                     double discountStudents = countStudent * 2;
-                    countStudentsTotal = (GlobalClass.CurrentFare * countStudent) - discountStudents;
+                    countStudentsTotal = (GlobalClass.calculateStudentFare(GlobalClass.DistanceValue, GlobalClass.Fares) * countStudent) - discountStudents;
                 }
                 if(countRegular > 0) {
-                    countRegularTotal = (GlobalClass.CurrentFare * countRegular);
+                    countRegularTotal = (GlobalClass.calculateRegularFare(GlobalClass.DistanceValue, GlobalClass.Fares) * countRegular);
                 }
 
                 double total = countRegularTotal + countStudentsTotal;
@@ -917,7 +930,7 @@ public class PassengerHomeScreen extends AppCompatActivity implements OnMapReady
 
             DecimalFormat df = new DecimalFormat("#.##");
             df.setRoundingMode(RoundingMode.HALF_UP);
-            double newFare = GlobalClass.CurrentFare;
+            double newFare = 0.0;
             /*check.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
