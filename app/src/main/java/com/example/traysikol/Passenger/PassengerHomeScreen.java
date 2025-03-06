@@ -888,6 +888,11 @@ public class PassengerHomeScreen extends AppCompatActivity implements OnMapReady
                 if(countRegular > 0) {
                     countRegularTotal = (GlobalClass.calculateRegularFare(GlobalClass.DistanceValue, GlobalClass.Fares) * countRegular);
                 }
+                int totalPass = countStudent + countRegular;
+                if(totalPass > 5) {
+                    Toast.makeText(PassengerHomeScreen.this, "Maximum passenger is 5.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
 
                 double total = countRegularTotal + countStudentsTotal;
                 GlobalClass.CommuteModel.setRegularCount(countRegular);
