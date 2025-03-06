@@ -79,9 +79,10 @@ public class PassengerHistory extends AppCompatActivity {
                         SimpleDateFormat date = new SimpleDateFormat("MMMMddyyyy");
                         List<CommuteModel> currents = null;
                         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-                            currents = commuteModelList.stream().filter( e ->
-                                    date.format(e.getCommuteDate()).equals(date.format(new Date()))
-                                    ).collect(Collectors.toList());
+                            currents = commuteModelList.stream()
+                                    .filter(e -> date.format(e.getCommuteDate()).equals(date.format(new Date())))
+                                    .sorted((e1, e2) -> e2.getCommuteDate().compareTo(e1.getCommuteDate()))
+                                    .collect(Collectors.toList());
                         }
                         if(currents.size() > 0) {
                             adapterHistory = new AdapterHistory(currents, PassengerHistory.this);

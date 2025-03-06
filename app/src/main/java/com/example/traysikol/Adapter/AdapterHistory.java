@@ -148,6 +148,17 @@ public class AdapterHistory extends RecyclerView.Adapter<AdapterHistory.ViewHold
                     distance.setText(model.getDistance());
                     time.setText(model.getTime());
 
+                    ImageView callDriver = dialogView.findViewById(R.id.driverCall);
+                    ImageView messageDriver = dialogView.findViewById(R.id.driverMessage);
+
+                    ImageView callPassenger = dialogView.findViewById(R.id.passengerCall);
+                    ImageView messagePassenger = dialogView.findViewById(R.id.passengerMessage);
+
+                    callDriver.setVisibility(View.INVISIBLE);
+                    messageDriver.setVisibility(View.INVISIBLE);
+                    callPassenger.setVisibility(View.INVISIBLE);
+                    messagePassenger.setVisibility(View.INVISIBLE);
+
                     AlertDialog.Builder builder = new AlertDialog.Builder(activity);
                     builder.setView(dialogView);
                     builder.setCancelable(false);
