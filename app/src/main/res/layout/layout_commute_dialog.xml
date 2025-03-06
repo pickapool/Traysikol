@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:padding="10dp">
+        android:padding="5dp">
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/profilePicture"
@@ -21,9 +21,9 @@
 
         <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="60dp"
+            android:layout_height="wrap_content"
             android:layout_toRightOf="@id/profilePicture"
-            android:gravity="center"
+            android:gravity="start"
             android:orientation="vertical">
 
             <TextView
@@ -44,7 +44,6 @@
             android:layout_width="wrap_content"
             android:layout_height="60dp"
             android:layout_alignParentRight="true"
-            android:gravity="center"
             android:orientation="vertical">
 
             <TextView
@@ -61,7 +60,43 @@
                 android:text="name" />
         </LinearLayout>
     </RelativeLayout>
-
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_gravity="center"
+        >
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_weight="1"
+            android:layout_marginLeft="20dp"
+            android:src="@drawable/student_icon" />
+        <TextView
+            android:id="@+id/studentCount"
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:width="50dp"
+            android:layout_height="wrap_content"
+            android:text="name"
+            android:gravity="center"
+            android:textColor="#000000" />
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_weight="1"
+            android:src="@drawable/person" />
+        <TextView
+            android:id="@+id/regularCount"
+            android:layout_weight="1"
+            android:width="50dp"
+            android:gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="name"
+            android:textColor="#000000" />
+    </LinearLayout>
     <View
         android:layout_width="250dp"
         android:layout_height="2dp"
@@ -129,7 +164,7 @@
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:layout_width="match_parent"
-        android:layout_height="150dp" />
+        android:layout_height="270dp" />
     <LinearLayout
         android:id="@+id/buttonsRide"
         android:layout_width="match_parent"

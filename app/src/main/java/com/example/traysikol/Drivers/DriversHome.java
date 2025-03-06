@@ -91,7 +91,7 @@ public class DriversHome extends AppCompatActivity implements OnMapReadyCallback
     NavigationView navigationView;
     DrawerLayout drawerLayout;
     FirebaseUser user;
-
+    int countTotalPassengers = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -483,7 +483,11 @@ public class DriversHome extends AppCompatActivity implements OnMapReadyCallback
         TextView address2 = customLayout.findViewById(R.id.address2);
         Button accept = customLayout.findViewById(R.id.accept);
         Button close = customLayout.findViewById(R.id.decline);
+        TextView sCount = customLayout.findViewById(R.id.studentCount);
+        TextView rCount = customLayout.findViewById(R.id.regularCount);
 
+        sCount.setText(String.valueOf(model.getStudentCount()));
+        rCount.setText(String.valueOf(model.getRegularCount()));
         fare.setText("₱ " + model.getFare());
         distance.setText(model.getDistance());
         address1.setText(model.getAddress1());
@@ -496,8 +500,9 @@ public class DriversHome extends AppCompatActivity implements OnMapReadyCallback
                 count = CommuteModels.stream().filter(e ->
                         e.commuteStatus == CommuteStatus.InProgress && e.isOccupied()
                 ).collect(Collectors.toList()).size();
-                if (count > 0) {
-                    Toast.makeText(DriversHome.this, "You are currently occupied!", Toast.LENGTH_SHORT).show();
+                //if (count > 0) {
+                if (countTotalPassengers > 5) {
+                    Toast.makeText(DriversHome.this, "Maximum passenger allowed is 5!", Toast.LENGTH_SHORT).show();
                 } else {
                     HashMap<String, Object> hashMap = new HashMap<>();
                     hashMap.put("driverUid", FirebaseAuth.getInstance().getCurrentUser().getUid());
@@ -615,6 +620,7 @@ public class DriversHome extends AppCompatActivity implements OnMapReadyCallback
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 CommuteModels = new ArrayList<>();
+                countTotalPassengers = 0;
                 for (DataSnapshot snapshot1 : snapshot.getChildren()) {
                     CommuteModel model = snapshot1.getValue(CommuteModel.class);
                     reference.child("Accounts").child(model.getPassengerUid()).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -624,6 +630,11 @@ public class DriversHome extends AppCompatActivity implements OnMapReadyCallback
                             model.PassengerAccount = passenger;
                             model.DriverAccount = GlobalClass.UserAccount;
                             CommuteModels.add(model);
+
+                            if(model.getCommuteStatus() == CommuteStatus.InProgress){
+                                countTotalPassengers += (model.getRegularCount() + model.getStudentCount());
+                                //Toast.makeText(DriversHome.this, String.valueOf(countTotalPassengers), Toast.LENGTH_SHORT).show();
+                            }
                         }
 
                         @Override
@@ -632,6 +643,7 @@ public class DriversHome extends AppCompatActivity implements OnMapReadyCallback
                         }
                     });
                 }
+
             }
 
             @Override
