@@ -140,7 +140,9 @@ public class DriversHome extends AppCompatActivity implements OnMapReadyCallback
                     SignOut();
                 } else if (itemId == R.id.myRide)
                 {
-                    int count = 0;
+                    Intent ii = new Intent(DriversHome.this, DriverCurrentRequests.class);
+                    startActivity(ii);
+                    /*int count = 0;
                     if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
                         List<CommuteModel>  list = CommuteModels.stream().filter(e ->
                                 e.commuteStatus == CommuteStatus.InProgress && e.isOccupied()
@@ -153,7 +155,7 @@ public class DriversHome extends AppCompatActivity implements OnMapReadyCallback
                         } else {
                             Toast.makeText(DriversHome.this, "There are no current trips.", Toast.LENGTH_SHORT).show();
                         }
-                    }
+                    }*/
                 } else if(itemId == R.id.contactUs) {
                     showDialog("Got questions, feedback, or concerns? We’re here to help! Reach out to us through the following channels:  \n" +
                             "- Email TRICYRIDE@gmail.com  \n" +

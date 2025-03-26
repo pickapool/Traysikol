@@ -46,6 +46,9 @@
             android:name=".Drivers.DriversHome"
             android:exported="false" />
         <activity
+            android:name=".Drivers.DriverCurrentRequests"
+            android:exported="false" />
+        <activity
             android:name=".Passenger.PassengerSaveDestination"
             android:exported="false" />
 

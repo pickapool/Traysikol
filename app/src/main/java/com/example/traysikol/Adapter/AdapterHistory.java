@@ -163,10 +163,6 @@ public class AdapterHistory extends RecyclerView.Adapter<AdapterHistory.ViewHold
                     builder.setView(dialogView);
                     builder.setCancelable(false);
 
-
-
-
-
                     AlertDialog dialog = builder.create();
 
                     WindowManager.LayoutParams lWindowParams = new WindowManager.LayoutParams();

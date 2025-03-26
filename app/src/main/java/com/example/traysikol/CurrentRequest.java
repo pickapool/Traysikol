@@ -28,10 +28,14 @@ import android.widget.Toast;
 import com.example.traysikol.Enums.AccountType;
 import com.example.traysikol.Enums.CommuteStatus;
 import com.example.traysikol.Models.CommuteModel;
+import com.example.traysikol.Models.UserAccountModel;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
@@ -81,12 +85,36 @@ public class CurrentRequest extends DialogFragment {
         ImageView back = view.findViewById(R.id.back);
         Button cancel = view.findViewById(R.id.cancel);
         Button endTrip = view.findViewById(R.id.endTrip);
+        reference.child("Accounts").child(commuteModel.getDriverUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                UserAccountModel driverModel = snapshot.getValue(UserAccountModel.class);
+                commuteModel.setDriverAccount(driverModel);
 
-        Extensions.SetProfilePicture(commuteModel.DriverAccount.getProfilePicture(), driverPP);
-        Extensions.SetProfilePicture(commuteModel.PassengerAccount.getProfilePicture(), pPP);
+                Extensions.SetProfilePicture(driverModel.getProfilePicture(), driverPP);
+                driverName.setText(driverModel.getFirstname() == null ? "No Driver" : commuteModel.DriverAccount.getFullName());
+            }
 
-        driverName.setText(commuteModel.DriverAccount.getFirstname() == null ? "No Driver" : commuteModel.DriverAccount.getFullName());
-        pName.setText(commuteModel.PassengerAccount.getFullName());
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+        reference.child("Accounts").child(commuteModel.getPassengerUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                UserAccountModel passenger = snapshot.getValue(UserAccountModel.class);
+                commuteModel.setPassengerAccount(passenger);
+                Extensions.SetProfilePicture(passenger.getProfilePicture(), pPP);
+                pName.setText(passenger.getFullName());
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
         address1.setText(commuteModel.getAddress1());
         address2.setText(commuteModel.getAddress2());
         fare.setText(commuteModel.getFare());
