@@ -81,6 +81,7 @@ public class CurrentRequest extends DialogFragment {
         TextView fare = view.findViewById(R.id.fare);
         TextView distance = view.findViewById(R.id.distance);
         TextView time = view.findViewById(R.id.duration);
+        TextView totalPassenger = view.findViewById(R.id.totalPassenger);
 
         ImageView back = view.findViewById(R.id.back);
         Button cancel = view.findViewById(R.id.cancel);
@@ -120,7 +121,7 @@ public class CurrentRequest extends DialogFragment {
         fare.setText(commuteModel.getFare());
         distance.setText(commuteModel.getDistance());
         time.setText(commuteModel.getTime());
-
+        totalPassenger.setText(commuteModel.getRegularCount() + commuteModel.getStudentCount());
         RelativeLayout rel1 = view.findViewById(R.id.rel1);
         RelativeLayout rel2 = view.findViewById(R.id.rel2);
 
